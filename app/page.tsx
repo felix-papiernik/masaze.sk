@@ -1,18 +1,32 @@
 "use client"
 
+import { register } from "module";
+import { signup } from "../actions/userController";
 import { FormControl, RadioGroup, FormControlLabel, Radio, Box, FormLabel, TextField, Stack, Grid, Button, Typography } from "@mui/material";
 import Link from "next/link";
-import React from "react";
+import React, { useActionState } from "react";
 import { useState } from "react";
+import { Role } from "../types/Role";
+
+
+
+export interface User {
+    role: Role ,
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    phone: string,
+}
+
+export interface SignUpForm extends User {
+    password2: string,
+    adminCode: string,
+}
 
 export default function Page() {
 
-    const enum Role {
-        customer = "zákazník",
-        masseur = "masér"
-    }
-
-    const [data, setdata] = useState({
+    const emptyForm = {
         role: Role.customer,
         email: "",
         password: "",
@@ -21,36 +35,49 @@ export default function Page() {
         lastName: "",
         phone: "",
         adminCode: "",
-    });
+    }
 
-    console.log(data)
+    const [data, setdata] = useState<SignUpForm>({...emptyForm});
+
+    const [errors, setErrors] = useState<any>({});
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const result = await signup(data);
+        if (result.status === 400) {
+            setErrors(result.data?.errors ?? {});
+        } else {
+            // Handle successful signup (e.g., redirect to login page)
+            setdata({...emptyForm});
+            setErrors({});
+        }
+    };
 
     return (
         <Stack direction={"column"} alignItems={"center"}>
             <h1>Registrácia</h1>
-            <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2, border: "1px solid grey", borderRadius: 4, maxWidth: { md: "sm" } }}>
-                <FormControl>
-                    <FormLabel>Registrovať sa ako</FormLabel>
-                    <RadioGroup
-                        aria-label="role"
-                        aria-labelledby="role-radio-buttons-group-label"
-                        value={data.role}
-                        onChange={(event) => setdata({ ...data, role: event.target.value as Role })}
-                        name="role-radio-buttons-group"
-                        row
-                    >
-                        <FormControlLabel
-                            value={Role.customer}
-                            control={<Radio />}
-                            label="Zákazník"
-                        />
-                        <FormControlLabel
-                            value={Role.masseur}
-                            control={<Radio />}
-                            label="Masér"
-                        />
-                    </RadioGroup>
-                </FormControl>
+            <Box component={"form"} onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2, padding: 2, border: "1px solid grey", borderRadius: 4, maxWidth: { md: "sm" } }}>
+                <FormLabel>Registrovať sa ako</FormLabel>
+
+                <RadioGroup
+                    aria-label="role"
+                    aria-labelledby="role-radio-buttons-group-label"
+                    name="role"
+                    value={data.role}
+                    onChange={(v) => setdata({ ...data, role: v.target.value as Role })}
+                    row
+                >
+                    <FormControlLabel
+                        value={Role.customer}
+                        control={<Radio />}
+                        label="Zákazník"
+                    />
+                    <FormControlLabel
+                        value={Role.masseur}
+                        control={<Radio />}
+                        label="Masér"
+                    />
+                </RadioGroup>
                 {data.role === Role.masseur && <TextField
                     value={data.adminCode}
                     label={"Administračný kód pre vytvorenie masérstva"}
@@ -58,6 +85,8 @@ export default function Page() {
                     onChange={(v) => setdata({ ...data, adminCode: v.target.value })}
                     fullWidth
                     autoComplete="off"
+                    helperText={errors?.adminCode ?? "Kontaktujte administrátora pre získanie kódu"}
+                    error={!!errors?.adminCode}
                 />}
                 <Grid container spacing={2} columns={2}>
                     <Grid item xs={1}>
@@ -84,6 +113,8 @@ export default function Page() {
                             label={"Email"}
                             type="email"
                             onChange={(v) => setdata({ ...data, email: v.target.value })}
+                            error={!!errors?.email}
+                            helperText={errors?.email ?? ""}
                             fullWidth
                         />
                     </Grid>
@@ -112,12 +143,14 @@ export default function Page() {
                     onChange={(v) => setdata({ ...data, password2: v.target.value })}
                     autoComplete="off"
                 />
-                <Button variant="contained" color="primary" onClick={() => console.log(data)}>Registrovať</Button>
+                <Button variant="contained" color="primary" type="submit">Registrovať</Button>
             </Box>
+
             <Stack direction="row" spacing={2} justifyContent={"space-between"} pt={1}>
                 <Typography>Už máte účet?</Typography>
                 <Link href="/login">Prihlásiť sa</Link>
             </Stack>
+
         </Stack>
     );
 }
