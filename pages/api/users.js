@@ -3,8 +3,6 @@ require('dotenv').config();
 
 const prisma = new PrismaClient();
 
-import { NextApiRequest, NextApiResponse } from 'next';
-
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, phone, firstName, lastName, password, role } = req.body;

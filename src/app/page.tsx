@@ -14,14 +14,11 @@ export default function Home() {
         />
    */
 
-
-  console.log(process.env.JWT_SECRET)
-
   return (
     <>
-      <h1>Hello World</h1>
+      <h1>Domov</h1>
       <p>
-        Welcome to <strong>Create Next App!</strong>
+        Vitaj na stranke <strong>masaze.sk</strong>
       </p>
     </>
   )
