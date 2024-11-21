@@ -8,7 +8,7 @@ import { z } from 'zod';
 /**
  * https://nextjs.org/learn/dashboard-app/adding-authentication
  */
-async function getUser(email: string): Promise<User | null> {
+export async function getUser(email: string): Promise<User | null> {
     try {
         const prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
@@ -28,6 +28,10 @@ export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,
     providers: [
         Credentials({
+            credentials: {
+                email: { label: "Email", type: "text" },
+                password: { label: "Password", type: "password" }
+            },
             async authorize(credentials) {
                 const parsedCredentials = z
                     .object({ email: z.string().email(), password: z.string().min(8) })
