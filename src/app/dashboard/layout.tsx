@@ -1,49 +1,62 @@
-import Link from "next/link";
-import { signOut } from "../../../auth";
-import { getSession } from 'next-auth/react';
-import { PrismaClient } from '@prisma/client';
+"use client";
 
-const prisma = new PrismaClient();
+// src/app/dashboard/layout.tsx
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+const RBAC_MENU = {
+    SUPERADMIN: [
+        { label: "Nástenka", href: "/dashboard/" },
+        { label: "Používateľské role", href: "/dashboard/roles/" },
+        { label: "Masáže", href: "/dashboard/masaze/" },
+        { label: "Môj účet", href: "/dashboard/my-account/" },
+    ],
+    OWNER: [
+        { label: "Nástenka", href: "/dashboard/" },
+        { label: "Môj účet", href: "/dashboard/my-account/" },
+    ],
+    MASSEUR: [
+        { label: "Nástenka", href: "/dashboard/" },
+        { label: "Masáže", href: "/dashboard/masaze/" },
+    ],
+    CLIENT: [
+        { label: "Nástenka", href: "/dashboard/" },
+        { label: "Môj účet", href: "/dashboard/my-account/" },
+    ],
+};
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
+    const {data: session} = useSession();
+    // const token = await getToken({ secret: process.env.SECRET });
 
-    // const session = await getSession();
-
-    // const sUser = session?.user;
-
-    // if (!sUser) {
-    //     return <div>Unauthorized</div>
+    // // Ensure token exists
+    // if (!token) {
+    //     throw new Error("Unauthorized"); // Optionally redirect if needed
     // }
-    
-    // const user = await fetch(`/api/get-current-user?email=${sUser.email}`).then(res => res.json());
+
+    //const userRole = token.role as keyof typeof RBAC_MENU || "CLIENT";
+    const userRole = session?.user?.role as keyof typeof RBAC_MENU || "CLIENT";
+    const menuItems = RBAC_MENU[userRole] || [];
 
     return (
         <div style={{ background: "green", padding: 16 }}>
             <h1>Layout</h1>
             <ul style={{ display: "flex", gap: "20px" }}>
-                <li>
-                    <Link href="/dashboard/">Nástenka</Link>
-                </li>
-                <li>
-                    <Link href="/dashboard/roles/">Používatelia</Link>
-                </li>
-                <li>
-                    <Link href="/dashboard/masaze/">Masáže</Link>
-                </li>
+                {menuItems.map((item) => (
+                    <li key={item.href}>
+                        <Link href={item.href}>{item.label}</Link>
+                    </li>
+                ))}
             </ul>
-            {
-            // false && <button onClick={async () => {
-            //     "use server";
-            //     await signOut();
-            // }}>Odlásiť sa</button>
-            }
             {children}
-            <button onClick={
-                async () => {
-                    "use server";
-                    await signOut();
-                }
-            }>Odhlásiť sa</button>
+            <button
+                onClick={async () => {
+                    //"use server";
+                    console.log("Sign-out triggered"); // Add signOut logic here
+                }}
+            >
+                Odhlásiť sa
+            </button>
         </div>
     );
 }
