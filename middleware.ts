@@ -1,17 +1,32 @@
-import NextAuth from 'next-auth';
-import { authConfig } from './auth.config';
- 
-export default NextAuth(authConfig).auth;
+import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { Role } from '@prisma/client';
 
-/**
- * The advantage of employing Middleware for this task is that the protected routes 
- * will not even start rendering until the Middleware verifies the authentication, 
- * enhancing both the security and performance of your application.
- */
+export async function middleware(req: NextRequest) {
+    const token = await getToken({ req, secret: process.env.SECRET });
+    
+    if (!token) {
+        return NextResponse.redirect(new URL('/login', req.url));
+    }
+
+    const role = token?.role as Role;
+    const forbiddenRoutes = {
+        SUPERADMIN: [],
+        OWNER: ["/dashboard/roles"],
+        MASSEUR: ["/dashboard/roles"],
+        CLIENT: ["/dashboard/roles", "/dashboard/masaze"],
+    };
+
+    const pathname = req.nextUrl.pathname;
+    const restrictedRoutes = forbiddenRoutes[role] || [];
+    
+    if (restrictedRoutes.some(route => pathname.startsWith(route))) {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    return NextResponse.next();
+}
+
 export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  //matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-  matcher: '/((?!api|_next/static|_next/image|.*\\.png$|$|about/).*)',
-  //matcher: '/((?!_next/static|_next/image|.*\\.png$|$|about/).*)',
-  
+    matcher: ['/dashboard/:path*']
 };
