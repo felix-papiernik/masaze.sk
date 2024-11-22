@@ -38,6 +38,12 @@ export default async function Layout({ children }: { children: React.ReactNode }
             // }}>Odlásiť sa</button>
             }
             {children}
+            <button onClick={
+                async () => {
+                    "use server";
+                    await signOut();
+                }
+            }>Odhlásiť sa</button>
         </div>
     );
 }

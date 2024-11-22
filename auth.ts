@@ -10,7 +10,7 @@ export async function getUser(email: string) {
     return prisma.user.findUnique({ where: { email } });
 }
 
-export default NextAuth({
+export const { auth, signIn, signOut } = NextAuth({
     providers: [
         CredentialsProvider({
             credentials: {
@@ -18,6 +18,7 @@ export default NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
+                console.log("authorize")
                 const parsedCredentials = z.object({
                     email: z.string().email(),
                     password: z.string().min(8)
@@ -45,10 +46,13 @@ export default NextAuth({
     },
     callbacks: {
         jwt: async ({ token, user }) => {
+            console.log("jwt")
             if (user) {
+                console.log("user in jwt")
                 token.id = user.id;
                 token.role = user.role; // Store role in token
             }
+            console.log("return tokeb ", token)
             return token;
         },
         session: async ({ session, token }) => {
@@ -59,6 +63,7 @@ export default NextAuth({
             return session;
         },
         async authorized({ token, req }) {
+            console.log("authorized")
             if (!token) return false;
 
             const role : Role = token.role;
