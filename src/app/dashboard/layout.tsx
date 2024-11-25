@@ -1,8 +1,8 @@
-"use client";
-
-// src/app/dashboard/layout.tsx
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { auth, signOut } from "../../../auth";
+import { Role } from "@prisma/client";
+import SignOutButton from "@/components/SignOutButton";
+// import { getServerSession} from "next-auth";
 
 const RBAC_MENU = {
     SUPERADMIN: [
@@ -26,17 +26,18 @@ const RBAC_MENU = {
 };
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-    const {data: session} = useSession();
-    // const token = await getToken({ secret: process.env.SECRET });
+    const session = await auth();
+    if (!session) {
+        return Response.redirect("/login");
+    }
 
-    // // Ensure token exists
-    // if (!token) {
-    //     throw new Error("Unauthorized"); // Optionally redirect if needed
-    // }
+    const { user } = session;
+    //console.log("user: ", user);
 
-    //const userRole = token.role as keyof typeof RBAC_MENU || "CLIENT";
-    const userRole = session?.user?.role as keyof typeof RBAC_MENU || "CLIENT";
+    const userRole = user.role;
     const menuItems = RBAC_MENU[userRole] || [];
+
+
 
     return (
         <div style={{ background: "green", padding: 16 }}>
@@ -49,14 +50,19 @@ export default async function Layout({ children }: { children: React.ReactNode }
                 ))}
             </ul>
             {children}
-            <button
-                onClick={async () => {
-                    //"use server";
-                    console.log("Sign-out triggered"); // Add signOut logic here
-                }}
-            >
-                Odhlásiť sa
-            </button>
+            <form action={async () => {
+                'use server';
+                await signOut();
+            }}>
+                <button>Odhlásiť sa</button>
+            </form>
         </div>
     );
 }
+
+/**
+ * <button onClick={() => {
+                "use server";
+                console.log("Sign-out triggered";
+            })}>Odhlásiť sa</button>
+ */

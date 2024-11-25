@@ -11,14 +11,20 @@ export const authConfig = {
 
             const authToken = await getToken({ req: request, secret: process.env.SECRET });
             console.log("authToken: ", authToken)
-            
+
+            const { pathname, searchParams } = request.nextUrl;
+
             //you can get token like this (and verify it... :( ))
             //const { authToken } = (await request.json()) ?? {}
-            
+
             if (!authToken) {
                 return false;
-                //return false;
             }
+
+            if (pathname.startsWith('/login')) {
+                const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+                return Response.redirect(new URL(callbackUrl, request.url));
+              }
 
             const role: Role = authToken.role as Role;
             const forbiddenRoutes: { [key in Role]: string[] } = {
@@ -28,14 +34,12 @@ export const authConfig = {
                 CLIENT: ["/dashboard/roles", "/dashboard/masaze"],
             };
 
-            const pathname = request.nextUrl.pathname;
             const restrictedRoutes = forbiddenRoutes[role] || [];
 
             // Restrict access to forbidden routes
             if (restrictedRoutes.some(route => pathname.startsWith(route))) {
                 console.log("can't access route ", pathname)
                 return Response.redirect(new URL("/dashboard/", request.nextUrl).toString());
-                //return false;
             }
 
             return true;
@@ -47,13 +51,20 @@ export const authConfig = {
                 token.id = user.id;
                 token.role = user.role; // Store role in token
             }
-            console.log("return tokeb ", token)
+            //console.log("return token: ", token)
             return token;
         },
         session: async ({ session, token }) => {
-            if (session.user) {
+            //this didn't provide role, for some reason it set role always to CLIENT
+            // if (session.user) {
+            //     session.user.id = token.id;
+            //     session.user.role = token.role; // Pass role to session
+            // }
+            if (session) {
                 session.user.id = token.id;
-                session.user.role = token.role; // Pass role to session
+                session.user.role = token.role;
+            } else {
+                console.log("NO SESSION")
             }
             return session;
         },
