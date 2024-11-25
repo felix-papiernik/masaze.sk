@@ -4,7 +4,7 @@ import { getToken } from 'next-auth/jwt';
 
 export const authConfig = {
     pages: {
-        signIn: '/login',
+        signIn: '/prihlasenie',
     },
     callbacks: {
         async authorized({ request }) {
@@ -21,7 +21,7 @@ export const authConfig = {
                 return false;
             }
 
-            if (pathname.startsWith('/login')) {
+            if (pathname.startsWith('/prihlasenie')) {
                 const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
                 return Response.redirect(new URL(callbackUrl, request.url));
               }

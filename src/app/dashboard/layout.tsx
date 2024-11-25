@@ -1,8 +1,5 @@
 import Link from "next/link";
 import { auth, signOut } from "../../../auth";
-import { Role } from "@prisma/client";
-import SignOutButton from "@/components/SignOutButton";
-// import { getServerSession} from "next-auth";
 
 const RBAC_MENU = {
     SUPERADMIN: [
@@ -28,7 +25,7 @@ const RBAC_MENU = {
 export default async function Layout({ children }: { children: React.ReactNode }) {
     const session = await auth();
     if (!session) {
-        return Response.redirect("/login");
+        return Response.redirect("/prihlasenie");
     }
 
     const { user } = session;
@@ -36,8 +33,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
     const userRole = user.role;
     const menuItems = RBAC_MENU[userRole] || [];
-
-
 
     return (
         <div style={{ background: "green", padding: 16 }}>
@@ -59,10 +54,3 @@ export default async function Layout({ children }: { children: React.ReactNode }
         </div>
     );
 }
-
-/**
- * <button onClick={() => {
-                "use server";
-                console.log("Sign-out triggered";
-            })}>Odhlásiť sa</button>
- */

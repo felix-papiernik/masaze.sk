@@ -1,4 +1,3 @@
-import { signOut } from "../../../auth";
 
 export default function Page() {
     return (

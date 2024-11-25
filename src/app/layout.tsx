@@ -16,12 +16,15 @@ export default function RootLayout({
       <body>
         <header>
           <nav>
-            <ul>
+            <ul style={{display: "flex", flexDirection: "row", gap: 40}}>
               <li>
                 <Link href={"/"}>Domov</Link>
               </li>
               <li>
-                <Link href={"/login"}>Prihlasit sa</Link>
+                <Link href={"/prihlasenie"}>Prihlasit sa</Link>
+              </li>
+              <li>
+                <Link href={"/registracia"}>Registrácia</Link>
               </li>
               <li>
                 <Link href={"/dashboard"}>Dashboard</Link>

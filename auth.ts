@@ -14,7 +14,7 @@ export async function getUser(email: string) {
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,
     pages: {
-        signIn: '/login',
+        signIn: '/prihlasenie',
     },
     providers: [
         CredentialsProvider({
