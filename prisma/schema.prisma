@@ -14,9 +14,18 @@ datasource db {
 }
 
 model User {
-  id  Int @id @default(autoincrement())
-  email     String   @unique
-  phone   String @unique
-  firstName      String
-  lastName      String
+  id        Int    @id @default(autoincrement())
+  email     String @unique
+  password  String
+  phone     String // if there'd be user with same number, new user couldn't write his number
+  firstName String
+  lastName  String
+  role      Role   @default(CLIENT)
+}
+
+enum Role {
+  SUPERADMIN
+  OWNER
+  MASSEUR
+  CLIENT
 }
