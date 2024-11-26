@@ -29,13 +29,13 @@ export async function authenticate(
 }
 
 
-function delay(ms: number) {
+export async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
 export async function signUp(
-  prevState: Record<string, string> | undefined,
+  currentState: any,
   formData: FormData,
 ) {
   try {
@@ -70,7 +70,9 @@ export async function signUp(
           errors[err.path[0]] = err.message;
         }
       });
-      return errors;
+      const toRet = {errors, data: formData};
+      console.log("data to return", toRet);
+      return toRet;
     }
 
     const bcrypt = require('bcrypt');
@@ -89,12 +91,21 @@ export async function signUp(
     });
 
     if (!user) {
-      return "Nepodarilo sa vytvoriť používateľa";
+      return {
+        msg: "Nepodarilo sa vytvoriť používateľa",
+        data: formData
+      };
     }
 
-    return {}; // No errors mean success
+    return {
+      msg: "Registrácia prebehla úspešne",
+      data: undefined
+    }; 
   } catch (error) {
     console.error("Sign-up error:", error);
-    return "Došlo k chybe pri registrácii. Skúste znova.";
+    return {
+      msg: "Došlo k chybe pri registrácii. Skúste znova.",
+      data: formData
+    };
   }
 }
