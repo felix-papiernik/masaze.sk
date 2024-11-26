@@ -1,11 +1,7 @@
 'use client';
 
-import { signUp } from '@/lib/actions';
-import { init } from 'next/dist/compiled/webpack/webpack';
-import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { useActionState } from 'react';
 
 export const createUserData = {
     firstName: '',
@@ -30,7 +26,7 @@ export default function page() {
         setError(null);
 
         try {
-            const response = await fetch(`/api/signup`, {
+            const response = await fetch(`/api/signup/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -49,7 +45,7 @@ export default function page() {
                 setError(data.error || null);
             }
         } catch (err) {
-            // console.error('Sign-up error:', err);
+             console.error('Sign-up error:', err);
             setError("Nastala chyba, skúste to znova");
         } finally {
             setIsSubmitting(false);

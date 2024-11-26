@@ -1,4 +1,4 @@
-//  "use server";
+"use server";
 
 import { delay } from '@/lib/actions';
 import prisma from '@/lib/prisma';
@@ -30,6 +30,7 @@ export default async function handler(
         const userData: CreateUserData = req.body;
         // console.log("typeof req.body", typeof req.body);
 
+        console.log("userData", userData);
         const userObject = {
             email: userData.email,
             phone: userData.phone,
@@ -69,7 +70,15 @@ export default async function handler(
             });
         }
 
-        const user = await prisma.user.create({ data: userData });
+        const bcrypt = require('bcrypt');
+        require('dotenv').config();
+        const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.HASH!));
+        const user = await prisma.user.create({
+            data: {
+                ...userData,
+                password: hashedPassword
+            }
+        });
         return res.status(200).json({
             ok: true,
             message: "Používateľ bol úspešne vytvorený",
@@ -83,6 +92,6 @@ export default async function handler(
                     return res.status(400).json({ ok: false, error: "Používateľ s týmto emailom už existuje" });
             }
         }
-        return res.status(500).json({ ok: false, error: "Nastala neočakávaná chyba" });
+        return res.status(500).json({ ok: false, error: "Nastala neočakávaná chyba" + error });
     }
 }

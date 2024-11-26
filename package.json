@@ -27,5 +27,8 @@
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "typescript": "^5"
-  }
+  },
+  "overrides": {
+    "oidc-token-hash": "5.0.1"
+ }
 }
