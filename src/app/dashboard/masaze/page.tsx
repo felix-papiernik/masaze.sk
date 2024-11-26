@@ -2,7 +2,7 @@
 export default function Page() {
     return (
         <div>
-            <h3>Masaze</h3>
+            <h1>Masáže</h1>
         </div>
     );
 }

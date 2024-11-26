@@ -21,13 +21,10 @@ export default function RootLayout({
                 <Link href={"/"}>Domov</Link>
               </li>
               <li>
-                <Link href={"/prihlasenie"}>Prihlasit sa</Link>
+                <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
               </li>
               <li>
                 <Link href={"/registracia"}>Registrácia</Link>
-              </li>
-              <li>
-                <Link href={"/dashboard"}>Dashboard</Link>
               </li>
             </ul>
           </nav>

@@ -15,6 +15,7 @@ const RBAC_MENU = {
     MASSEUR: [
         { label: "Nástenka", href: "/dashboard/" },
         { label: "Masáže", href: "/dashboard/masaze/" },
+        { label: "Môj účet", href: "/dashboard/my-account/" },
     ],
     CLIENT: [
         { label: "Nástenka", href: "/dashboard/" },

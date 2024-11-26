@@ -21,10 +21,10 @@ export const authConfig = {
                 return false;
             }
 
-            if (pathname.startsWith('/prihlasenie')) {
+            if (pathname.startsWith('/prihlasenie') || pathname.startsWith('/registracia')) {
                 const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
                 return Response.redirect(new URL(callbackUrl, request.url));
-              }
+            }
 
             const role: Role = authToken.role as Role;
             const forbiddenRoutes: { [key in Role]: string[] } = {
