@@ -7,10 +7,16 @@ import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
+import bcrypt from 'bcrypt';
+import dotenv from "dotenv";
+dotenv.config();
+
+type CreateUserData = Pick<User, "email" | "phone" | "firstName" | "lastName" | "password">;
+
 export type Response = {
     ok: boolean;
     message?: string;
-    data?: any;
+    data?: CreateUserData;
     error?: string;
 }
 
@@ -70,8 +76,6 @@ export default async function handler(
             });
         }
 
-        const bcrypt = require('bcrypt');
-        require('dotenv').config();
         const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.HASH!));
         const user = await prisma.user.create({
             data: {

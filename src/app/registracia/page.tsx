@@ -11,17 +11,16 @@ export const createUserData = {
     password: '',
 }
 
-export default function page() {
+export default function Page() {
 
-    const [formData, setFormData] = useState<typeof createUserData>({ ...createUserData });
+    const [formData, setFormData] = useState({ ...createUserData });
 
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setIsSubmitting(true);
         setError(null);
 
@@ -35,7 +34,7 @@ export default function page() {
             console.log("body", JSON.stringify(formData));
 
             if (response.ok) {
-                const res = response.status;
+                //const res = response.status;
                 // console.log("response.json()", res);
                 alert("Registrácia prebehla úspešne");
                 router.push('/prihlasenie');
@@ -59,7 +58,7 @@ export default function page() {
             <h1>Registrácia</h1>
 
             <form
-                onSubmit={handleSubmit}
+                // onSubmit={handleSubmit}
                 style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 12, maxWidth: 500, padding: 8 }}
             >
                 {Object.keys(formData).map((key) => (
@@ -82,9 +81,9 @@ export default function page() {
                     {error}
                 </span>}
                 <button
-                    type="submit"
+                    // type="submit"
                     disabled={isSubmitting}
-                    onClick={(e) => handleSubmit}>{isSubmitting ? "Odosiela sa..." : "Registrovať sa"}</button>
+                    onClick={handleSubmit}>{isSubmitting ? "Odosiela sa..." : "Registrovať sa"}</button>
             </form>
         </div>
     )

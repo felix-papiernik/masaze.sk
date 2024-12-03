@@ -1,3 +1,4 @@
+import { Box, Stack, Typography } from "@mui/material";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -13,26 +14,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <header>
-          <nav>
-            <ul style={{display: "flex", flexDirection: "row", gap: 40}}>
-              <li>
-                <Link href={"/"}>Domov</Link>
-              </li>
-              <li>
-                <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
-              </li>
-              <li>
-                <Link href={"/registracia"}>Registrácia</Link>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        {children}
-        <footer>
-          <p>&copy; 2024</p>
-        </footer>
+      <body style={{ height: "100%", margin: 0 }}>
+        <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
+          <Stack component="header" sx={{ justifyContent: "space-between", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
+            <Link href={"/"}>masaze.sk</Link>
+            <Stack component="nav" direction="row" gap={4}>
+              <Link href={"/"}>Domov</Link>
+              <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
+              <Link href={"/registracia"}>Registrácia</Link>
+            </Stack>
+          </Stack>
+          <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
+            {children}
+          </Box>
+          <Box component="footer" sx={{ padding: 2, backgroundColor: "grey" }}>
+            <Typography>&copy; 2024</Typography>
+          </Box>
+        </Stack>
       </body>
     </html>
   );

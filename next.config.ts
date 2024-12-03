@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   
   //without this, i'd get Did you mean to import "next/server.js"?] { code: 'ERR_MODULE_NOT_FOUND',
   transpilePackages: ['next-auth'],
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
+  //output: "export"
 };
 
 export default nextConfig;
