@@ -29,3 +29,22 @@ export async function authenticate(
     throw error;
   }
 }
+
+export async function authenticateUsingFormData(
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      console.log("auth error", error);
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Nesprávne prihlasovacie údaje.';
+        default:
+          return 'Nastala chyba.' + error;
+      }
+    }
+    throw error;
+  }
+}

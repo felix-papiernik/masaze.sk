@@ -18,5 +18,5 @@ export const config = {
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
      */
   // matcher: '/((?!api|_next/static|_next/image|.*\\.png$|$|/).*)',
-  matcher: '/((?!api|registracia|_next/static|_next/image|.*\\.png$|$|/).*)',
+  matcher: '/((?!api|_next/static|_next/image|.*\\.png$|$|/).*)',
 };

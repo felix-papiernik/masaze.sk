@@ -10,18 +10,18 @@ export const authConfig = {
         async authorized({ request }) {
 
             const authToken = await getToken({ req: request, secret: process.env.SECRET });
-            console.log("authToken: ", authToken)
+            //console.log("authToken: ", authToken)
 
             const { pathname, searchParams } = request.nextUrl;
 
             //you can get token like this (and verify it... :( ))
             //const { authToken } = (await request.json()) ?? {}
 
-            if (!authToken) {
+            if (!authToken && pathname.startsWith("/registracia")) {
+                return true;
+            } else if (!authToken) {
                 return false;
-            }
-
-            if (pathname.startsWith('/prihlasenie') || pathname.startsWith('/registracia')) {
+            } else if (authToken && (pathname.startsWith('/prihlasenie') || pathname.startsWith('/registracia'))) {
                 const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
                 return Response.redirect(new URL(callbackUrl, request.url));
             }
