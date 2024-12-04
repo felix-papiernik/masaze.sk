@@ -3,10 +3,12 @@
 import { deleteUser, updateUser } from "@/lib/actions";
 import { validateupdateUserData } from "@/lib/zodValidations";
 import { Box, TextField, Button } from "@mui/material";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 
 export default function Page() {
+
+    //const { data: session } = useSession();
 
     const [isDeleting, setIsDeleting] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -50,7 +52,16 @@ export default function Page() {
     return (
         <div>
             <h1>Môj účet</h1>
-            <Box component="form" onSubmit={handleUpdateUser} sx={{ my: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+            
+            <Box component="form" onSubmit={handleDeleteUser} mb={4}>
+                <Button type="submit" disabled={isDeleting} variant="contained">{isDeleting ? "Vymazáva sa..." : "Vymazať účet"}</Button>
+            </Box>
+        </div>
+    )
+}
+
+/*
+<Box component="form" onSubmit={handleUpdateUser} sx={{ my: 4, display: "flex", flexDirection: "column", gap: 2 }}>
                 <TextField
                     label="Meno"
                     name="firstName"
@@ -65,9 +76,4 @@ export default function Page() {
                 />
                 <Button type="submit" disabled={isUpdating} variant="contained">{isUpdating ? "Aktualizuje sa..." : "Aktualizovať"}</Button>
             </Box>
-            <Box component="form" onSubmit={handleDeleteUser} mb={4}>
-                <Button type="submit" disabled={isDeleting} variant="contained">{isDeleting ? "Vymazáva sa..." : "Vymazať účet"}</Button>
-            </Box>
-        </div>
-    )
-}
+*/
