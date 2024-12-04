@@ -2,12 +2,16 @@
 
 import { AuthError } from 'next-auth';
 import { signIn } from '../../auth';
-import { PrismaClient, Role } from '@prisma/client';
-import { z } from 'zod';
+import dotenv from "dotenv";
+import prisma from './prisma';
+import { validateupdateUserData } from './zodValidations';
+dotenv.config();
 
-require('dotenv').config();
-const prisma = new PrismaClient();
+// require('dotenv').config();
 
+export async function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export async function authenticate(
   prevState: string | undefined,
@@ -19,93 +23,100 @@ export async function authenticate(
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          return 'Invalid credentials.';
+          return 'Nesprávne prihlasovacie údaje.';
         default:
-          return 'Something went wrong.';
+          return 'Nastala chyba, skúste to znova.';
       }
     }
     throw error;
   }
 }
 
-
-export async function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
-export async function signUp(
-  currentState: any,
+export async function authenticateUsingFormData(
   formData: FormData,
 ) {
   try {
-    await delay(1000);
-
-    const userData = {
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      password: formData.get('password') as string,
-      firstName: formData.get('firstName') as string,
-      lastName: formData.get('lastName') as string,
-    };
-
-
-
-    // Validate user input using Zod
-    const parsedUser = z.object({
-      email: z.string().email("Zadajte platný email"),
-      phone: z.string()
-        .min(10, "Tel.číslo musí mať aspoň 10 znakov")
-        .max(13, "Tel.číslo musí mať maximálne 13 znakov"),
-      password: z.string().min(8, "Heslo musí mať aspoň 8 znakov"),
-      firstName: z.string().min(1, "Meno je povinné"),
-      lastName: z.string().min(1, "Priezvisko je povinné"),
-    }).safeParse(userData);
-
-    if (!parsedUser.success) {
-      // Map Zod errors to fields
-      let errors: Record<string, string> = {};
-      parsedUser.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          errors[err.path[0]] = err.message;
-        }
-      });
-      const toRet = {errors, data: formData};
-      console.log("data to return", toRet);
-      return toRet;
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      console.log("auth error", error);
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Nesprávne prihlasovacie údaje.';
+        default:
+          return 'Nastala chyba.' + error;
+      }
     }
+    throw error;
+  }
+}
 
-    const bcrypt = require('bcrypt');
-    const hashedPassword = await bcrypt.hash(parsedUser.data.password, parseInt(process.env.HASH!));
+/**
+ * CRUD DELETE USER
+ */
+export async function deleteUser(
+  id: number,
+) {
+  //console.log("server delete")
+  let ret = {
+    success: false,
+    message: "",
+  }
 
-    // Create user in Prisma
-    const user = await prisma.user.create({
-      data: {
-        email: parsedUser.data.email,
-        phone: parsedUser.data.phone,
-        firstName: parsedUser.data.firstName,
-        lastName: parsedUser.data.lastName,
-        password: hashedPassword,
-        role: Role.CLIENT, // Default role
+  try {
+    await prisma.user.delete({
+      where: {
+        id: id,
       },
     });
-
-    if (!user) {
-      return {
-        msg: "Nepodarilo sa vytvoriť používateľa",
-        data: formData
-      };
-    }
-
-    return {
-      msg: "Registrácia prebehla úspešne",
-      data: undefined
-    }; 
+    ret.success = true;
+    ret.message = "Používateľ bol úspešne odstránený";
   } catch (error) {
-    console.error("Sign-up error:", error);
-    return {
-      msg: "Došlo k chybe pri registrácii. Skúste znova.",
-      data: formData
-    };
+    ret.message = "Nastala chyba pri odstraňovaní používateľa: " + error;
   }
+
+  return ret;
+}
+
+/**
+ * CRUD UPDATE USER
+ */
+export async function updateUser(
+  id: number,
+  firstName: string,
+  lastName: string,
+) {
+  console.log("server update")
+  let ret = {
+    success: false,
+    message: "",
+  }
+
+  if (validateupdateUserData({
+    firstName,
+    lastName
+  }).error ) {
+    return {
+      success: false,
+      message: "Nesprávne údaje",
+    }
+  }
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        firstName: firstName,
+        lastName: lastName
+      }
+    });
+    ret.success = true;
+    ret.message = "Používateľ bol úspešne aktualizovaný";
+  } catch (error) {
+    ret.message = "Nastala chyba pri úprave používateľa: " + error;
+  }
+
+  return ret;
 }

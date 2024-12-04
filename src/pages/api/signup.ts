@@ -3,17 +3,23 @@
 import { delay } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { z } from 'zod';
+
+import bcrypt from 'bcrypt';
+import dotenv from "dotenv";
+import { CreateUserData, validateCreateUserData } from '@/lib/zodValidations';
+dotenv.config();
 
 export type Response = {
     ok: boolean;
     message?: string;
-    data?: any;
+    data?: CreateUserData;
     error?: string;
 }
 
+/**
+ * CRUD CREATE USER
+ */
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Response>
@@ -26,7 +32,6 @@ export default async function handler(
     try {
         await delay(1000);
 
-        type CreateUserData = Pick<User, "email" | "phone" | "firstName" | "lastName" | "password">;
         const userData: CreateUserData = req.body;
         // console.log("typeof req.body", typeof req.body);
 
@@ -41,15 +46,7 @@ export default async function handler(
 
         console.log("userObject", userObject);
 
-        const parsedUser = z.object({
-            email: z.string().min(1, "Email je povinný").email("Nesprávny formát emailu"),
-            phone: z.string()
-                .min(10, "Tel.číslo musí mať aspoň 10 znakov")
-                .max(13, "Tel.číslo musí mať maximálne 13 znakov"),
-            password: z.string().min(8, "Heslo musí mať aspoň 8 znakov"),
-            firstName: z.string().min(1, "Krstné meno je povinné"),
-            lastName: z.string().min(1, "Priezvisko je povinné"),
-        }).safeParse(userObject);
+        const parsedUser = validateCreateUserData(userObject);
 
         if (!parsedUser.success) {
             // const errors: Record<string, string[]> = {};
@@ -70,8 +67,6 @@ export default async function handler(
             });
         }
 
-        const bcrypt = require('bcrypt');
-        require('dotenv').config();
         const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.HASH!));
         const user = await prisma.user.create({
             data: {
