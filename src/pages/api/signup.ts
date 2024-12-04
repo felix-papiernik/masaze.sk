@@ -3,9 +3,7 @@
 import { delay } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { z } from 'zod';
 
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
@@ -19,6 +17,9 @@ export type Response = {
     error?: string;
 }
 
+/**
+ * CRUD CREATE USER
+ */
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Response>

@@ -28,7 +28,7 @@ export default function RootLayout({
             {children}
           </Box>
           <Box component="footer" sx={{ padding: 2, backgroundColor: "grey" }}>
-            <Typography>&copy; 2024</Typography>
+            <Typography textAlign={"center"}>&copy; 2024 masaze.sk</Typography>
           </Box>
         </Stack>
       </body>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth, signOut } from "../../../auth";
+import { Button, Stack } from "@mui/material";
 
 const RBAC_MENU = {
     SUPERADMIN: [
@@ -36,15 +37,10 @@ export default async function Layout({ children }: { children: React.ReactNode }
     const menuItems = RBAC_MENU[userRole] || [];
 
     return (
-        <div style={{ background: "green", padding: 16 }}>
-            <h1>Layout</h1>
-            <ul style={{ display: "flex", gap: "20px" }}>
-                {menuItems.map((item) => (
-                    <li key={item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                    </li>
-                ))}
-            </ul>
+        <div style={{ background: "lightGrey", padding: 16 }}>
+            <Stack direction="row" spacing={2}>
+                {menuItems.map((item, index) => <Link key={index} href={item.href}>{item.label}</Link>)}
+            </Stack>
             {children}
             <form action={async () => {
                 'use server';

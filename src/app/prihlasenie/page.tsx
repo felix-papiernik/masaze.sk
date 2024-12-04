@@ -13,10 +13,10 @@ export default function Page() {
     email: "",
     password: "",
   }
-  const [formData, setFormData] = useState({ ...credentials });
+  
   const [errors, setErrors] = useState({ ...credentials, general: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -65,10 +65,8 @@ export default function Page() {
           name="email"
           type="email"
           required
-          value={formData.email}
           error={errors.email !== ""}
           helperText={errors.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
         <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="password">Heslo</InputLabel>
@@ -77,8 +75,6 @@ export default function Page() {
             name="password"
             type={showPassword ? 'text' : 'password'}
             required
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             error={errors.password !== ""}
             endAdornment={
               <InputAdornment position="end">

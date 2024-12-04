@@ -30,3 +30,13 @@ export const validateLoginData = (data: LoginData) => {
 
     return parsedUser;
 }
+
+export type UpdateUserData = Pick<User, "firstName" | "lastName">;
+export const validateupdateUserData = (data: UpdateUserData) => {
+    const parsedUser = z.object({
+        firstName: z.string().min(1, "Krstné meno je povinné"),
+        lastName: z.string().min(1, "Priezvisko je povinné"),
+    }).safeParse(data);
+
+    return parsedUser;
+}
