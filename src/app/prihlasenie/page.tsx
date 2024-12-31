@@ -30,7 +30,7 @@ export default function Page() {
 
     const parsedUser = validateLoginData({ email, password });
 
-    console.log("validacia na strane klienta")
+    console.log("CLIENT FORM VALIDATION")
 
     if (!parsedUser.success) {
       let newErrors = { ...credentials };

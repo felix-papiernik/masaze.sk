@@ -27,7 +27,7 @@ export default function Page() {
         setErrors({ ...createUserData, general: "" });
 
         const parsedUser = validateCreateUserData(formData);
-        console.log("validacia na strane klienta")
+        console.log("CLIENT FORM VALIDATION - registracia")
         if (!parsedUser.success) {
             let newErrors = { ...createUserData };
             parsedUser.error.errors.forEach((err) => {

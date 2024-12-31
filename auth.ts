@@ -23,7 +23,7 @@ export const { auth, signIn, signOut } = NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                console.log("authorize")
+                console.log("SERVER FORM VALIDATION - authorize")
                 const parsedCredentials = z.object({
                     email: z.string().email(),
                     password: z.string().min(8)

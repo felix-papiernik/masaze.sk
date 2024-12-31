@@ -38,6 +38,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
     return (
         <div style={{ background: "lightGrey", padding: 16 }}>
+            <h5>Vitajte, {user?.email}, tvoja používateľská roľa je: {userRole}</h5>
+
             <Stack direction="row" spacing={2}>
                 {menuItems.map((item, index) => <Link key={index} href={item.href}>{item.label}</Link>)}
             </Stack>

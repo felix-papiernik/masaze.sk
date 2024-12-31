@@ -32,10 +32,11 @@ export default async function handler(
     try {
         await delay(1000);
 
+        console.log("SERVER FORM VALIDATION - registracia")
         const userData: CreateUserData = req.body;
         // console.log("typeof req.body", typeof req.body);
 
-        console.log("userData", userData);
+        //console.log("userData", userData);
         const userObject = {
             email: userData.email,
             phone: userData.phone,
@@ -44,7 +45,7 @@ export default async function handler(
             lastName: userData.lastName
         }
 
-        console.log("userObject", userObject);
+        //console.log("userObject", userObject);
 
         const parsedUser = validateCreateUserData(userObject);
 
