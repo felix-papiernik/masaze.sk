@@ -1,70 +1,89 @@
-"use client";
-
 import { deleteUser, updateUser } from "@/lib/actions";
 import { validateupdateUserData } from "@/lib/zodValidations";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Stack } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { FormEvent, useActionState, useState } from "react";
 import { auth } from "../../../../auth";
+import UserDataForm from "./UserDataForm";
+import prisma from "@/lib/prisma";
 
 export default async function Page() {
 
-    //const { data: session } = useSession();
+    // const { data: session } = useSession();
     const session = await auth();
     if (!session) {
         return Response.redirect("/prihlasenie");
     }
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false);
 
-    async function handleDeleteUser(event: React.FormEvent<HTMLFormElement>) {
-        setIsDeleting(true);
-        event.preventDefault();
+    //const [isDeleting, setIsDeleting] = useState(false);
+    //const [isUpdating, setIsUpdating] = useState(false);
 
-        const restext = await deleteUser(Number(session?.user?.id));
-        // const restext = await deleteUser(35);
-        setIsDeleting(false);
+    // async function handleDeleteUser(event: React.FormEvent<HTMLFormElement>) {
+    //     setIsDeleting(true);
+    //     event.preventDefault();
 
-        alert(restext.message);
-        if (restext.success) {
-            await signOut();
+    //     // const response = await deleteUser(Number(session?.user?.id));
+    //     // // const restext = await deleteUser(35);
+    //     // setIsDeleting(false);
+
+    //     // alert(response.message);
+    //     // if (response.success) {
+    //     //     await signOut();
+    //     // }
+    // }
+
+    // async function handleUpdateUser(event: React.FormEvent<HTMLFormElement>) {
+
+    //     setIsUpdating(true);
+    //     event.preventDefault();
+    //     const formData = new FormData(event.currentTarget);
+
+    //     const parsedupdateUser = validateupdateUserData({
+    //         firstName: formData.get("firstName") as string,
+    //         lastName: formData.get("lastName") as string
+    //     });
+
+    //     console.log("validacia na strane klienta")
+
+    //     if (!parsedupdateUser.success) {
+    //         alert("Nepodarilo sa aktualizovať údaje");
+    //         return;
+    //     } else {
+    //         await updateUser(21, formData.get("firstName") as string, formData.get("lastName") as string);
+    //         //revalidatePath("/dashboard");
+    //     }
+    //     setIsUpdating(false);
+    // }
+    const userId = Number(session?.user?.id);
+    console.log("user id je: " + userId);
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId
         }
-    }
+    }).catch((error) => {
+        console.error(error);
+    }).then((user) => {
+        return user;
+    });
 
-    async function handleUpdateUser(event: React.FormEvent<HTMLFormElement>) {
-
-        setIsUpdating(true);
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-
-        const parsedupdateUser = validateupdateUserData({
-            firstName: formData.get("firstName") as string,
-            lastName: formData.get("lastName") as string
-        });
-
-        console.log("validacia na strane klienta")
-
-        if (!parsedupdateUser.success) {
-            alert("Nepodarilo sa aktualizovať údaje");
-            return;
-        } else {
-            await updateUser(21, formData.get("firstName") as string, formData.get("lastName") as string);
-            //revalidatePath("/dashboard");
-        }
-        setIsUpdating(false);
+    let initialState = {
+        id: userId,
+        firstName: user!.firstName,
+        lastName: user!.lastName
     }
 
     return (
         <div>
             <h1>Môj účet</h1>
-            <Box component="form" onSubmit={handleDeleteUser} mb={4}>
-                <Button
-                    type="submit"
-                    disabled={isDeleting}
-                    variant="contained">
-                    {isDeleting ? "Vymazáva sa..." : "Vymazať účet"}
-                </Button>
-            </Box>
+            <UserDataForm user={initialState}/>
+
+            <Button
+                type="submit"
+                disabled={true}
+                variant="contained"
+                sx={{ marginBottom: 2 }}>
+                Vymazať účet
+            </Button>
         </div>
     )
 }
@@ -72,7 +91,16 @@ export default async function Page() {
 
 
 
-
+/*
+<Box component="form" onSubmit={handleDeleteUser} mb={4}>
+                <Button
+                    type="submit"
+                    disabled={isDeleting}
+                    variant="contained">
+                    {isDeleting ? "Vymazáva sa..." : "Vymazať účet"}
+                </Button>
+            </Box>
+*/
 
 
 

@@ -1,5 +1,5 @@
 
-export default function Home() {
+export default function Page() {
 
   /**
    * Nezabudni skusit pouzit Image komponentu z Next.js
