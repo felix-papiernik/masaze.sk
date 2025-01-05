@@ -1,7 +1,7 @@
 'use server';
 
 import { AuthError } from 'next-auth';
-import { signIn } from '../../auth';
+import { signIn, signOut } from '../../auth';
 import dotenv from "dotenv";
 import prisma from './prisma';
 import { validateupdateUserData } from './zodValidations';
@@ -64,11 +64,11 @@ export async function deleteUser(
   }
 
   try {
-    await prisma.user.delete({
-      where: {
-        id: id,
-      },
-    });
+    // await prisma.user.delete({
+    //   where: {
+    //     id: id,
+    //   },
+    // });
     ret.success = true;
     ret.message = "Používateľ bol úspešne odstránený";
   } catch (error) {
@@ -119,4 +119,8 @@ export async function updateUser(
   }
 
   return ret;
+}
+
+export async function signOutUser() {
+  await signOut();
 }

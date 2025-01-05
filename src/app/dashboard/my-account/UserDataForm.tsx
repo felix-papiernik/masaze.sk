@@ -35,7 +35,7 @@ export default function UserDataForm(props: props) {
         }
     }); 
 
-    const handleUserDataUpdate = async () => {
+    const handleUserUpdate = async () => {
         event?.preventDefault();
         setPending(true);
         
@@ -45,8 +45,22 @@ export default function UserDataForm(props: props) {
         setPending(false);
     }
 
+    const handleDeleteUser = async (event: React.FormEvent<HTMLFormElement>) =>{
+        //setIsDeleting(true);
+        event.preventDefault();
+
+        // const response = await deleteUser(Number(session?.user?.id));
+        // // const restext = await deleteUser(35);
+        // setIsDeleting(false);
+
+        // alert(response.message);
+        // if (response.success) {
+        //     await signOut();
+        // }
+    }
+
     return (
-        <Stack component="form" onSubmit={handleUserDataUpdate} mb={4} direction={"column"} gap={2}>
+        <Stack component="form" onSubmit={handleUserUpdate} mb={4} direction={"column"} gap={2}>
             <TextField
                 variant='outlined'
                 label='Meno'
