@@ -29,7 +29,10 @@ export default async function Page() {
     let initialState = {
         id: userId,
         firstName: user!.firstName,
-        lastName: user!.lastName
+        lastName: user!.lastName,
+        email: user!.email,
+        phone: user!.phone,
+        password: user!.password
     }
 
     return (

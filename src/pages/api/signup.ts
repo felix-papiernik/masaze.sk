@@ -2,7 +2,7 @@
 
 import { delay } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import bcrypt from 'bcrypt';
@@ -72,7 +72,8 @@ export default async function handler(
         const user = await prisma.user.create({
             data: {
                 ...userData,
-                password: hashedPassword
+                password: hashedPassword,
+                role: userData.email === process.env.ADMIN_EMAIL ? Role.SUPERADMIN : Role.CLIENT
             }
         });
         return res.status(200).json({

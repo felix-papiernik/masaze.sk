@@ -4,7 +4,7 @@ import { AuthError } from 'next-auth';
 import { signIn, signOut } from '../../auth';
 import dotenv from "dotenv";
 import prisma from './prisma';
-import { validateupdateUserData } from './zodValidations';
+import { UpdateUserData, validateUpdateUserData } from './zodValidations';
 dotenv.config();
 
 // require('dotenv').config();
@@ -83,8 +83,7 @@ export async function deleteUser(
  */
 export async function updateUser(
   id: number,
-  firstName: string,
-  lastName: string,
+  updateUserData: UpdateUserData,
 ) {
   console.log("server update")
   let ret = {
@@ -92,9 +91,11 @@ export async function updateUser(
     message: "",
   }
 
-  if (validateupdateUserData({
-    firstName,
-    lastName
+  if (validateUpdateUserData({
+    firstName: updateUserData.firstName,
+    lastName: updateUserData.lastName,
+    email: updateUserData.email,
+    phone: updateUserData.phone,
   }).error ) {
     return {
       success: false,
@@ -108,8 +109,7 @@ export async function updateUser(
         id: id
       },
       data: {
-        firstName: firstName,
-        lastName: lastName
+        ...updateUserData
       }
     });
     ret.success = true;
