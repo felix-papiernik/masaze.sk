@@ -28,7 +28,7 @@ export const authConfig = {
 
             const role: Role = authToken.role as Role;
             const forbiddenRoutes: { [key in Role]: string[] } = {
-                SUPERADMIN: [],
+                ADMIN: [],
                 OWNER: ["/dashboard/roles"],
                 MASSEUR: ["/dashboard/roles"],
                 CLIENT: ["/dashboard/roles", "/dashboard/masaze"],

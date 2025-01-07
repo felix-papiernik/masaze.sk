@@ -5,6 +5,7 @@ import { signIn, signOut } from '../../auth';
 import dotenv from "dotenv";
 import prisma from './prisma';
 import { UpdateUserData, validateUpdateUserData } from './zodValidations';
+import { Role } from '@prisma/client';
 dotenv.config();
 
 // require('dotenv').config();
@@ -64,11 +65,11 @@ export async function deleteUser(
   }
 
   try {
-    // await prisma.user.delete({
-    //   where: {
-    //     id: id,
-    //   },
-    // });
+    await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
     ret.success = true;
     ret.message = "Používateľ bol úspešne odstránený";
   } catch (error) {
@@ -96,7 +97,7 @@ export async function updateUser(
     lastName: updateUserData.lastName,
     email: updateUserData.email,
     phone: updateUserData.phone,
-  }).error ) {
+  }).error) {
     return {
       success: false,
       message: "Nesprávne údaje",
@@ -116,6 +117,44 @@ export async function updateUser(
     ret.message = "Používateľ bol úspešne aktualizovaný";
   } catch (error) {
     ret.message = "Nastala chyba pri úprave používateľa: " + error;
+  }
+
+  return ret;
+}
+
+/**
+ * CRUD UPDATE USER
+ */
+export async function updateRole(
+  id: number,
+  role: Role
+) {
+  console.log("server update")
+  let ret = {
+    success: false,
+    message: "",
+  }
+
+  if (role === undefined || !Object.keys(Role).some((v) => v === role)) {
+    return {
+      success: false,
+      message: "Nesprávna rola",
+    }
+  }
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        role: role,
+      }
+    });
+    ret.success = true;
+    ret.message = "Používateľská rola bola úspešne aktualizovaná";
+  } catch (error) {
+    ret.message = "Nastala chyba pri úprave role: " + error;
   }
 
   return ret;

@@ -3,10 +3,9 @@ import { auth, signOut } from "../../../auth";
 import { Button, Stack } from "@mui/material";
 
 const RBAC_MENU = {
-    SUPERADMIN: [
+    ADMIN: [
         { label: "Nástenka", href: "/dashboard/" },
         { label: "Používateľské role", href: "/dashboard/roles/" },
-        { label: "Masáže", href: "/dashboard/masaze/" },
         { label: "Môj účet", href: "/dashboard/my-account/" },
     ],
     OWNER: [
@@ -33,7 +32,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     const { user } = session;
     //console.log("user: ", user);
 
-    const userRole = user.role;
+    const userRole = user?.role!;
     const menuItems = RBAC_MENU[userRole] || [];
 
     return (
@@ -41,7 +40,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <h5>Vitajte, {user?.email}, tvoja používateľská roľa je: {userRole}</h5>
 
             <Stack direction="row" spacing={2}>
-                {menuItems.map((item, index) => <Link key={index} href={item.href}>{item.label}</Link>)}
+                {menuItems.map((item : any, index : number) => <Link key={index} href={item.href}>{item.label}</Link>)}
             </Stack>
             {children}
             <form action={async () => {

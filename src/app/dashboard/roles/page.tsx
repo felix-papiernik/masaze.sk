@@ -1,9 +1,15 @@
-export default function Page() {
+import UsersTable from "@/components/UsersTable";
+import prisma from "@/lib/prisma"
+
+
+export default async function Page() {
+
+    const users = await prisma.user.findMany();
+
     return (
         <div>
             <h1>Používateľské role</h1>
-            <h2>This page can only be viewed by SUPER_ADMIN</h2>
-            <p>Roles page content</p>
+            <UsersTable users={users} />
         </div>
     )
 }

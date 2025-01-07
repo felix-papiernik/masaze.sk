@@ -135,7 +135,9 @@ export default function UserDataForm(props: props) {
             <Button
                 type="submit"
                 disabled={pending}
-                variant="contained">
+                variant="contained"
+                sx={{ width: "14rem" }}
+                >
                 {pending ? "Aktualizuje sa..." : "Aktualizovať údaje"}
             </Button>
         </Stack>
