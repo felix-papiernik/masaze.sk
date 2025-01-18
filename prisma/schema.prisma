@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  email     String @unique
-  password  String
-  phone     String // if there'd be user with same number, new user couldn't write his number
-  firstName String
-  lastName  String
-  role      Role   @default(CLIENT)
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  phone       String // if there'd be user with same number, new user couldn't write his number
+  firstName   String
+  lastName    String
+  role        Role          @default(CLIENT)
+  Appointment Appointment[]
 }
 
 enum Role {
@@ -30,4 +31,120 @@ enum Role {
   CLIENT
 }
 
+model MassageType {
+  id              Int           @id @default(autoincrement())
+  name            String
+  description     String
+  price           Float
+  durationMinutes Int
+  Appointment     Appointment[]
+}
 
+enum Status {
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
+model Appointment {
+  id               Int         @id @default(autoincrement())
+  created_at       DateTime
+  appointment_date DateTime
+  client           User        @relation(fields: [client_id], references: [id])
+  client_id        Int
+  massage          MassageType @relation(fields: [massage_id], references: [id])
+  massage_id       Int
+  status           Status      @default(PENDING)
+}
+
+model os_udaje {
+  id         Int     @id @default(autoincrement())
+  meno       String
+  priezvisko String
+  email      String
+  telefon    String
+  vymazane   Boolean @default(false)
+  maser      maser?
+  klient     klient?
+}
+
+model maser {
+  id          Int           @id @default(autoincrement())
+  os_udaje    os_udaje      @relation(fields: [os_udaje_id], references: [id])
+  os_udaje_id Int           @unique
+  hash_heslo  String
+  zamestnanec zamestnanec[]
+  rezervacia  rezervacia[]
+  vymazane    Boolean       @default(false)
+}
+
+model klient {
+  id          Int          @id @default(autoincrement())
+  os_udaje    os_udaje     @relation(fields: [os_udaje_id], references: [id])
+  os_udaje_id Int          @unique
+  hash_heslo  String
+  rezervacia  rezervacia[]
+}
+
+model zamestnanec {
+  id           Int       @id @default(autoincrement())
+  maser        maser     @relation(fields: [maser_id], references: [id])
+  maser_id     Int
+  maserstvo    maserstvo @relation(fields: [maserstvo_id], references: [id])
+  maserstvo_id Int
+  mzda         Float
+  od           DateTime
+  do           DateTime?
+  potvrdene    Boolean   @default(false)
+}
+
+model maserstvo {
+  id          Int           @id @default(autoincrement())
+  nazov       String
+  login       String
+  hash_heslo  String
+  mesto       String
+  psc         String
+  ulica       String
+  cislo_domu  String
+  zamestnanec zamestnanec[]
+  typ_masaze  typ_masaze[]
+}
+
+enum status_rezervacie {
+  potvrdena
+  dokoncena
+  zrusena
+}
+
+model rezervacia {
+  id        Int               @id @default(autoincrement())
+  maser     maser             @relation(fields: [maser_id], references: [id])
+  maser_id  Int
+  klient    klient            @relation(fields: [klient_id], references: [id])
+  klient_id Int
+  termin    DateTime
+  status    status_rezervacie @default(potvrdena)
+  vymazane  Boolean           @default(false)
+}
+
+model cennik_masaze {
+  id            Int        @id @default(autoincrement())
+  od            DateTime
+  do            DateTime?
+  typ_masaze    typ_masaze @relation(fields: [typ_masaze_id], references: [id])
+  typ_masaze_id Int
+  cena          Float
+  vymazane      Boolean    @default(false)
+}
+
+model typ_masaze {
+  id             Int             @id @default(autoincrement())
+  nazov          String
+  popis          String
+  trvanie_minuty Int
+  maserstvo      maserstvo?      @relation(fields: [maserstvo_id], references: [id])
+  maserstvo_id   Int
+  vymazane       Boolean         @default(false)
+  cennik_masaze  cennik_masaze[]
+}

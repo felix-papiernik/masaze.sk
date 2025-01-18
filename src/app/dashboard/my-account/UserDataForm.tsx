@@ -43,7 +43,7 @@ export default function UserDataForm(props: props) {
             error: ""
         }
     });
-
+    
     console.log(userData);
 
     const handleUserUpdate = async () => {
@@ -131,15 +131,25 @@ export default function UserDataForm(props: props) {
                 helperText={userData.phone.error}
                 error={!!userData.phone.error}
             />
-
-            <Button
-                type="submit"
-                disabled={pending}
-                variant="contained"
-                sx={{ width: "14rem" }}
+            <Stack direction={"row"} gap={2}>
+                <Button
+                    type="submit"
+                    disabled={pending}
+                    variant="contained"
+                    sx={{ width: "14rem" }}
                 >
-                {pending ? "Aktualizuje sa..." : "Aktualizovať údaje"}
-            </Button>
+                    {pending ? "Aktualizuje sa..." : "Aktualizovať údaje"}
+                </Button>
+                <Button
+                    type="submit"
+                    disabled={pending}
+                    variant="outlined"
+                    sx={{ width: "14rem" }}
+                >
+                    Zmeniť heslo
+                </Button>
+            </Stack>
+            {updated && <p>Údaje boli úspešne aktualizované</p>}
         </Stack>
     )
 }

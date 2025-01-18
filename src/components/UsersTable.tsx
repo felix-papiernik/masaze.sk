@@ -5,7 +5,6 @@ import prisma, { USER } from '@/lib/prisma'
 import { MenuItem, Select } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Role } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
 import React, { useState } from 'react'
 
 export default function UsersTable(props: { users: USER[] }) {
@@ -31,12 +30,13 @@ export default function UsersTable(props: { users: USER[] }) {
             headerName: 'Rola',
             width: 150,
             renderCell: (params) => {
-                //return <span>{params.value}</span>
                 return (
                     <Select value={params.value} size='small' onChange={(e) => {
                         params.row.email != "felixpapiernik42@gmail.com" && updateUserRole(params.row.id, e.target.value);
                     }
-                    }>
+                    }
+                    disabled={params.row.email == "felixpapiernik42@gmail.com"}
+                    >
                         <MenuItem value={Role.ADMIN}>Admin</MenuItem>
                         <MenuItem value={Role.MASSEUR}>Masér</MenuItem>
                         <MenuItem value={Role.CLIENT}>Klient</MenuItem>
@@ -53,7 +53,6 @@ export default function UsersTable(props: { users: USER[] }) {
         if (response.success) {
             setUsers(users.map(user => user.id === userId ? { ...user, role } : user));
         }
-        console.log(response);
     }
 
     const paginationModel = { page: 0, pageSize: 10 };

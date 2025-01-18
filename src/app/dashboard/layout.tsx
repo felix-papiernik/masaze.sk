@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth, signOut } from "../../../auth";
 import { Button, Stack } from "@mui/material";
+import SignOutButton from "@/components/SignOutButton";
 
 const RBAC_MENU = {
     ADMIN: [
@@ -43,12 +44,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
                 {menuItems.map((item : any, index : number) => <Link key={index} href={item.href}>{item.label}</Link>)}
             </Stack>
             {children}
-            <form action={async () => {
-                'use server';
-                await signOut();
-            }}>
-                <button>Odhlásiť sa</button>
-            </form>
+            <SignOutButton />
         </div>
     );
 }
