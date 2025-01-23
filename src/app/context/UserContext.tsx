@@ -13,34 +13,11 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
     children: ReactNode;
+    initialUser?: User | null; // Serverom inicializovaný používateľ
 }
 
-export function UserProvider({ children }: UserProviderProps) {
-    const [user, setUser] = useState<User | null>(null);
-
-    // Dekódovanie tokenu z cookies pri prvom načítaní
-    useEffect(() => {
-        const fetchUserFromToken = async () => {
-            const cookie = document.cookie
-                .split('; ')
-                .find((row) => row.startsWith('auth_token='))
-                ?.split('=')[1];
-
-            if (cookie) {
-                try {
-                    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-                    const { payload } = await jwtVerify(cookie, secret);
-                    //setUser(payload as User);
-                    console.log("payload from refresh context", payload)
-                } catch (err) {
-                    console.error('Invalid token', err);
-                }
-            }
-        };
-
-        fetchUserFromToken();
-        //console.log("user from context", user)
-    }, []);
+export function UserProvider({ children, initialUser }: UserProviderProps) {
+    const [user, setUser] = useState<User | null>(initialUser || null);
 
     return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 }

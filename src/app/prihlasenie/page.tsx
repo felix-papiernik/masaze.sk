@@ -5,12 +5,13 @@ import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, I
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zodValidations";
 import { useUser } from "../context/UserContext";
+import { useRouter } from "next/navigation";
 
 
 export default function Page() {
 
   const { setUser } = useUser();
-
+  const router = useRouter();
   //TODO
   const credentials = {
     email: "felixpapiernik42@gmail.com",
@@ -31,6 +32,7 @@ export default function Page() {
       const data = await response.json();
       setUser(data.user); // Uloženie používateľa do Contextu
       console.log("user set in context", data.user);
+      router.push("/dashboard");
     } else {
       setErrors({ ...credentials, general: "Nepodarilo sa prihlasit felixa" });
     }
