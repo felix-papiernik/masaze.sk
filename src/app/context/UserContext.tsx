@@ -1,31 +1,35 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { User } from '@prisma/client';
-import { jwtVerify } from 'jose/jwt/verify';
+import { createContext, useContext, useState, ReactNode } from "react";
+import { User } from "@prisma/client";
 
 interface UserContextType {
-    user: User | null;
-    setUser: (user: User | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-interface UserProviderProps {
-    children: ReactNode;
-    initialUser?: User | null; // Serverom inicializovaný používateľ
-}
+export function UserProvider({
+  children,
+  initialUser,
+}: {
+  children: ReactNode;
+  initialUser: User | null;
+}) {
+  const [user, setUser] = useState<User | null>(initialUser);
 
-export function UserProvider({ children, initialUser }: UserProviderProps) {
-    const [user, setUser] = useState<User | null>(initialUser || null);
-
-    return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export function useUser() {
-    const context = useContext(UserContext);
-    if (!context) {
-        throw new Error('useUser must be used within a UserProvider');
-    }
-    return context;
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
 }

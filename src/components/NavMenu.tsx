@@ -9,6 +9,8 @@ import { User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { useRouter } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { getUserFromServerCookies } from '@/lib/utils';
+import { jwtDecrypt } from 'jose';
 
 interface NavMenuProps {
     user: User | null;
@@ -31,10 +33,10 @@ export default function NavMenu(props: NavMenuProps) {
         }
       }
 */
+
     const { setUser, user } = useUser();
-    const [propsUser, setPropsUser] = useState<User | null>(props.user);
     const router = useRouter();
-    console.log("user from context", user);
+
     const handleSignOut = async () => {
         try {
             const response = await fetch('/api/signout', {
@@ -54,21 +56,15 @@ export default function NavMenu(props: NavMenuProps) {
         }
     };
 
-    useEffect(() => {
-        if (user == null) {
-            setPropsUser(null);
-        }
-    }, [user])
-
     return (
-        propsUser == null && user == null ? (<>
+        user == null ? (<>
             <Link href={"/"}>Domov</Link>
             <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
             <Link href={"/registracia"}>Registrácia</Link>
         </>) : (<>
             <Link href={"/"}>Domov</Link>
             <Link href={"/dashboard"}>Nástenka</Link>
-            <Typography variant="h6">Email: avasvvasdvas</Typography>
+            <Typography variant="h6">{user?.firstName + " " + user.lastName}</Typography>
             <Button
                 onClick={handleSignOut}
                 type="button"

@@ -6,6 +6,9 @@ import { UserProvider } from "./context/UserContext";
 import { User } from "@prisma/client";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
+import { getUserFromServerCookies } from "@/lib/utils";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,41 +19,21 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  let user: User | null = null;
-  // Načítanie údajov z HTTP-only cookies na serveri
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
-
-  if (token) {
-    try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const { payload } = await jwtVerify(token, secret);
-      user = payload as User; // Predpokladáme, že payload obsahuje údaje používateľa
-    } catch (err) {
-      console.error("Invalid or expired token:", err);
-    }
-  }
+}) {
+  let user = await getUserFromServerCookies();
 
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>
         <UserProvider initialUser={user}>
           <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
-            <Stack component="header" sx={{ justifyContent: "space-between", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
-              <Link href={"/"}>masaze.sk</Link>
-              <Stack component="nav" direction="row" gap={4} alignItems="center">
-                <NavMenu user={user}/>
-              </Stack>
-            </Stack>
+            <Header user={user} />
             <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
               {children}
             </Box>
-            <Box component="footer" sx={{ padding: 2, backgroundColor: "grey" }}>
-              <Typography textAlign={"center"}>&copy; 2024 masaze.sk</Typography>
-            </Box>
+            <Footer />
           </Stack>
         </UserProvider>
       </body>

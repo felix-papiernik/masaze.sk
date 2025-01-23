@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button, Stack } from "@mui/material";
 import SignOutButton from "@/components/SignOutButton";
+import { getUserFromServerCookies } from "@/lib/utils";
 
 const RBAC_MENU = {
     ADMIN: [
@@ -25,10 +26,12 @@ const RBAC_MENU = {
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 
+    let user = await getUserFromServerCookies();
+
     return (
         <div style={{ background: "lightGrey", padding: 16 }}>
             <h5>Vitajte na nástenke</h5>
-
+            <div>Tvoja rola je: {user?.role}</div>
 
             {children}
         </div>
