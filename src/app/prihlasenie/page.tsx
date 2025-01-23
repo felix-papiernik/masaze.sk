@@ -1,25 +1,50 @@
 'use client';
 
 import { useState } from "react";
-import { authenticateUsingFormData } from "../../lib/actions";
 import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zodValidations";
+import { useUser } from "../context/UserContext";
 
 
 export default function Page() {
 
+  const { setUser } = useUser();
+
+  //TODO
   const credentials = {
-    email: "",
-    password: "",
+    email: "felixpapiernik42@gmail.com",
+    password: "heslo123",
   }
-  
+
+  const handleLogin = async () => {
+    event?.preventDefault();
+    setIsSubmitting(true);
+
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setUser(data.user); // Uloženie používateľa do Contextu
+      console.log("user set in context", data.user);
+    } else {
+      setErrors({ ...credentials, general: "Nepodarilo sa prihlasit felixa" });
+    }
+    setIsSubmitting(false);
+  };
+
+
+
   const [errors, setErrors] = useState({ ...credentials, general: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  /*async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
     setErrors({ ...credentials, general: "" });
@@ -53,13 +78,13 @@ export default function Page() {
     } else {
       return Response.redirect("/dashboard");
     }
-  }
+  }*/
 
 
   return (
     <Box sx={{ width: { xs: "100%", md: "60vw", lg: "600px" }, mx: "auto" }}>
-      <Typography variant="h1" mb={2} textAlign={"center"}>Prihlásenie</Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Typography variant="h2" mt={4} mb={2} textAlign={"center"}>Prihlásiť demo účet</Typography>
+      <Box component="form" onSubmit={handleLogin} sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           label="Email"
           name="email"
@@ -94,7 +119,7 @@ export default function Page() {
           <FormHelperText error>{errors.password}</FormHelperText>
         </FormControl>
         <Typography color="error">{errors.general}</Typography>
-        <Button type="submit" disabled={isSubmitting} variant="contained">Prihlásiť sa</Button>
+        <Button type="submit" disabled={isSubmitting} variant="contained">Prihlásiť felixpapiernik42 heslo123</Button>
       </Box>
     </Box>
   )

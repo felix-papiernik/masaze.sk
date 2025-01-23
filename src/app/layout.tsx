@@ -2,6 +2,7 @@ import NavMenu from "@/components/NavMenu";
 import { Box, Stack, Typography } from "@mui/material";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { UserProvider } from "./context/UserContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,20 +17,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>
-        <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
-          <Stack component="header" sx={{ justifyContent: "space-between", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
-            <Link href={"/"}>masaze.sk</Link>
-            <Stack component="nav" direction="row" gap={4} alignItems="center">
-              <NavMenu />
+        <UserProvider>
+          <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
+            <Stack component="header" sx={{ justifyContent: "space-between", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
+              <Link href={"/"}>masaze.sk</Link>
+              <Stack component="nav" direction="row" gap={4} alignItems="center">
+                <NavMenu />
+              </Stack>
             </Stack>
+            <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
+              {children}
+            </Box>
+            <Box component="footer" sx={{ padding: 2, backgroundColor: "grey" }}>
+              <Typography textAlign={"center"}>&copy; 2024 masaze.sk</Typography>
+            </Box>
           </Stack>
-          <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
-            {children}
-          </Box>
-          <Box component="footer" sx={{ padding: 2, backgroundColor: "grey" }}>
-            <Typography textAlign={"center"}>&copy; 2024 masaze.sk</Typography>
-          </Box>
-        </Stack>
+        </UserProvider>
       </body>
     </html>
   );

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { auth, signOut } from "../../../auth";
 import { Button, Stack } from "@mui/material";
 import SignOutButton from "@/components/SignOutButton";
 
@@ -25,19 +24,19 @@ const RBAC_MENU = {
 };
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-    const session = await auth();
-    if (!session) {
-        return Response.redirect("/prihlasenie");
-    }
-
-    const { user } = session;
-    //console.log("user: ", user);
-
-    const userRole = user?.role!;
-    const menuItems = RBAC_MENU[userRole] || [];
 
     return (
         <div style={{ background: "lightGrey", padding: 16 }}>
+            <h5>Vitajte na nástenke</h5>
+
+
+            {children}
+        </div>
+    );
+}
+
+/*
+<div style={{ background: "lightGrey", padding: 16 }}>
             <h5>Vitajte, {user?.email}, tvoja používateľská roľa je: {userRole}</h5>
 
             <Stack direction="row" spacing={2}>
@@ -46,5 +45,4 @@ export default async function Layout({ children }: { children: React.ReactNode }
             {children}
             <SignOutButton />
         </div>
-    );
-}
+*/

@@ -2,19 +2,15 @@
 
 import { Button } from "@mui/material";
 import React, {  } from "react";
-import { auth } from "../../../../auth";
+//import { auth } from "../../../../auth";
 import UserDataForm from "./UserDataForm";
 import prisma from "@/lib/prisma";
 import DeleteUserButton from "./DeleteUserButton";
 
 export default async function Page() {
 
-    const session = await auth();
-    if (!session) {
-        return Response.redirect("/prihlasenie");
-    }
-
-    const userId = Number(session?.user?.id);
+//todo
+    const userId = 2
     console.log("user id je: " + userId);
     const user = await prisma.user.findUnique({
         where: {

@@ -1,7 +1,5 @@
 'use server';
 
-import { AuthError } from 'next-auth';
-import { signIn, signOut } from '../../auth';
 import dotenv from "dotenv";
 import prisma from './prisma';
 import { UpdateUserData, validateUpdateUserData } from './zodValidations';
@@ -13,7 +11,7 @@ dotenv.config();
 export async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-
+/*
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
@@ -50,7 +48,7 @@ export async function authenticateUsingFormData(
     }
     throw error;
   }
-}
+}*/
 
 /**
  * CRUD DELETE USER
@@ -161,5 +159,6 @@ export async function updateRole(
 }
 
 export async function signOutUser() {
-  await signOut();
+  console.log("demo signing out TODO");
+  //await signOut();
 }

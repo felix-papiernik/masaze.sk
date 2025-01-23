@@ -1,15 +1,17 @@
+"use client";
+
 import React from 'react'
-import { auth, signOut } from '../../auth';
 import Link from 'next/link';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import SignOutButton from './SignOutButton';
+import { useUser } from '@/app/context/UserContext';
 
-export default async function NavMenu() {
+export default function NavMenu() {
 
-    const session = await auth();
+    const { user } = useUser();
 
-    return (
-        !session ? (<>
+    /*
+!session ? (<>
             <Link href={"/"}>Domov</Link>
             <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
             <Link href={"/registracia"}>Registrácia</Link>
@@ -17,6 +19,18 @@ export default async function NavMenu() {
             <Link href={"/"}>Domov</Link>
             <Link href={"/dashboard"}>Nástenka</Link>
             <SignOutButton />
+        </>)
+    */
+
+    return (
+        !user ? (<>
+            <Link href={"/"}>Domov</Link>
+            <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
+            <Link href={"/registracia"}>Registrácia</Link>
+        </>) : (<>
+            <Link href={"/"}>Domov</Link>
+            <Link href={"/dashboard"}>Nástenka</Link>
+            <Typography variant="h6">Email: {user?.email}</Typography>
         </>)
     )
 }
