@@ -4,18 +4,14 @@ import { useState } from "react";
 import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zod";
-import { useEntity } from "../../context/EntityContext";
-import { redirect, useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { createSession } from "@/lib/actions";
 
 
 export default function Page() {
 
-  const { setEntity } = useEntity();
   const { setAuth } = useAuth();
-  const router = useRouter();
   //TODO
   const credentials = {
     email: "felixpapiernik42@gmail.com",
@@ -26,34 +22,16 @@ export default function Page() {
     event?.preventDefault();
     setIsSubmitting(true);
 
-    // const response = await fetch('/api/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(credentials),
-    // });
 
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   setEntity(data.entity);
-    //   //setUser(data.user); // Uloženie používateľa do Contextu
-    //   //console.log("user set in context", data.user);
-    //   router.push("/dashboard");
-    // } else {
-    //   //todo
-    //   setErrors({ ...credentials, general: "Nepodarilo sa prihlasit felixa" });
-    // }
-    const response = await fetch('/api/loginAuth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
-    });
+    const validatedLoginData = validateLoginData(credentials);
+    if (validatedLoginData.success) {
 
-    
+    }
     const createAuthSession = await createSession(credentials.email, credentials.password);
 
     if (createAuthSession) {
       setAuth(createAuthSession);
-      redirect("/dashboard");
+      redirect("/u/nastenka/");
     } else {
       //todo
       setErrors({ ...credentials, general: "Nepodarilo sa prihlasit" });
@@ -63,7 +41,7 @@ export default function Page() {
 
 
 
-  const [errors, setErrors] = useState({ ...credentials, general: "" });
+  const [errors, setErrors] = useState({ email: "", password: "", general: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);

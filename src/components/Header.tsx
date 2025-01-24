@@ -16,14 +16,13 @@ export default function Header() {
         <Stack component="header" sx={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
             <Link href={"/"}>masaze.sk</Link>
             <Stack component="nav" direction="row" gap={4} alignItems="center">
-                <Link href={"/"}>Domov</Link>
                 {
                     auth == null ? (<>
-                        <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
-                        <Link href={"/registracia"}>Registrácia</Link>
+                        <Link href={"/prihlasenie/"}>Prihlásiť sa</Link>
+                        <Link href={"/registracia/"}>Registrácia</Link>
                     </>) : (<>
-                        <Link href={"/dashboard"}>Nástenka</Link>
-                        <Link href={"/my-account"}>Môj účet - {auth.entity}</Link>
+                        <Link href={"/u/nastenka/"}>Nástenka</Link>
+                        <Link href={"/u/moj-ucet/"}>Môj účet - {auth.entity}</Link>
                         <SignOutButton />
                     </>)
                 }

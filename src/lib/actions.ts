@@ -3,10 +3,10 @@
 import dotenv from "dotenv";
 import prisma from './prisma';
 import { UpdateUserData, validateUpdateUserData } from './zod';
-import { Role } from '@prisma/client';
+import { klient, maser, maserstvo, Role } from '@prisma/client';
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import { EntityData, EntityDataPayload } from "./types";
+import { Entity, EntityData, EntityDataPayload } from "./types";
 import { revalidatePath } from "next/cache";
 //dotenv.config();
 
@@ -206,38 +206,38 @@ export async function updateKlient(klientId: number, meno: string, priezvisko: s
 
 
 
-import {  SignJWT } from "jose";
+import { SignJWT } from "jose";
 import { redirect } from "next/navigation"
 import { Auth, AuthPayload } from "./types";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 const cookieO = {
-    name: 'session',
-    options: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        sameSite: 'strict',
-    },
-    duration: 60 * 60 * 6, // 6 hours
+  name: 'session',
+  options: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    sameSite: 'strict',
+  },
+  duration: 60 * 60 * 6, // 6 hours
 }
 
 export async function encrypt(payload: AuthPayload) {
-    return new SignJWT(payload) // Payload tokenu
-        .setProtectedHeader({ alg: 'HS256' }) // Algoritmus na podpisovanie
-        .setIssuedAt() // Nastavenie času vydania
-        .setExpirationTime('6h') // Nastavenie expiračného času (6h) alebo "1d"
-        .sign(secret);
+  return new SignJWT(payload) // Payload tokenu
+    .setProtectedHeader({ alg: 'HS256' }) // Algoritmus na podpisovanie
+    .setIssuedAt() // Nastavenie času vydania
+    .setExpirationTime('6h') // Nastavenie expiračného času (6h) alebo "1d"
+    .sign(secret);
 }
 
 export async function decrypt(session: any): Promise<AuthPayload | null> {
-    try {
-        const { payload } = await jwtVerify(session, secret, { algorithms: ['HS256'] });
-        return payload as AuthPayload;
-    } catch (error) {
-        return null;
-    }
+  try {
+    const { payload } = await jwtVerify(session, secret, { algorithms: ['HS256'] });
+    return payload as AuthPayload;
+  } catch (error) {
+    return null;
+  }
 }
 
 /*export async function createSession(auth: Auth) {
@@ -250,23 +250,23 @@ export async function decrypt(session: any): Promise<AuthPayload | null> {
     redirect("/u/dashboard");
 }*/
 
-export  const createSession = async (email: string, password: string) : Promise<Auth | null>=> {
+export const createSession = async (email: string, password: string): Promise<Auth | null> => {
   const klient = await prisma.klient.findUnique({ where: { email: email } });
-    const maser = await prisma.maser.findUnique({ where: { email: email } });
-    const maserstvo = await prisma.maserstvo.findUnique({ where: { login: email } });
+  const maser = await prisma.maser.findUnique({ where: { email: email } });
+  const maserstvo = await prisma.maserstvo.findUnique({ where: { login: email } });
 
-    if (klient == null && maser == null && maserstvo == null) {
-        return null;
-    }
-    
-    const authData = {
-        id: klient?.id || maser?.id || maserstvo?.id,
-        entity: klient ? 'klient' : maser ? 'maser' : 'maserstvo',
-        klient: !!klient,
-        maser: !!maser,
-        maserstvo: !!maserstvo,
-    } as Auth;
-  
+  if (klient == null && maser == null && maserstvo == null) {
+    return null;
+  }
+
+  const authData = {
+    id: klient?.id || maser?.id || maserstvo?.id,
+    entity: klient ? 'klient' : maser ? 'maser' : 'maserstvo',
+    klient: !!klient,
+    maser: !!maser,
+    maserstvo: !!maserstvo,
+  } as Auth;
+
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 6); // 6 hours
   //const session = await encrypt({ authData: auth, exp: expires.getTime() });
   const session = await encrypt({ authData });
@@ -277,18 +277,44 @@ export  const createSession = async (email: string, password: string) : Promise<
 }
 
 export async function verifySession(): Promise<Auth | null> {
-    const cookie = (await cookies()).get(cookieO.name)?.value;
-    const session = await decrypt(cookie);
+  const cookie = (await cookies()).get(cookieO.name)?.value;
+  const session = await decrypt(cookie);
 
-    if (!session) {
-        console.log("!session redirecting to /prihlasenie")
-        return null;
-    }
+  if (!session) {
+    console.log("!session redirecting to /prihlasenie")
+    return null;
+  }
 
-    return { ...session.authData };
+  return { ...session.authData };
 }
 
 export async function deleteSession() {
-    (await cookies()).delete(cookieO.name);
-    redirect("/prihlasenie");
+  (await cookies()).delete(cookieO.name);
+  redirect("/prihlasenie");
 }
+
+export async function getUser({ id, role }: { id: number, role: Entity }) : Promise<klient | maser | maserstvo | null> {
+  switch (role) {
+    case "klient":
+      return await prisma.klient.findUnique({
+        where: {
+          id: id
+        }
+      });
+    case "maser":
+      return await prisma.maser.findUnique({
+        where: {
+          id: id
+        }
+      });
+    case "maserstvo":
+      return await prisma.maserstvo.findUnique({
+        where: {
+          id: id
+        }
+      });
+    default:
+      return null;
+  }
+}
+// export async function 

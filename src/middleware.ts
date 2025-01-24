@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
   // const cookie = req.headers.get('cookie');
   // const token = cookie?.split('; ').find((c) => c.startsWith('session='))?.split('=')[1];
 
-  // console.log("middleware run")
+  console.log("middleware run")
 
   // // Ak token neexistuje, presmeruj na prihlasovaciu stránku
   // if (!token) {
@@ -48,11 +48,11 @@ export async function middleware(req: NextRequest) {
     //   return NextResponse.redirect(new URL('/403', req.url)); // Ak nie je admin, presmeruj na 403
     // }
     const path = req.nextUrl.pathname;
-    if (path.startsWith("/prihlasenie")) {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
+    if (path.startsWith("/prihlasenie") || path.endsWith("/u")) {
+      return NextResponse.redirect(new URL('/u/nastenka', req.url));
     }
-    if (auth.entity == "klient" && !path.startsWith("/dashboard") && !path.startsWith("/my-account")) {
-      return NextResponse.redirect(new URL('/403', req.url)); // Ak nie je admin, presmeruj na 403
+    if (auth.klient && !path.startsWith("/u/nastenka") && !path.startsWith("/u/moj-ucet")) {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
 
 
