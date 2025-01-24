@@ -3,11 +3,10 @@ import type { Metadata } from "next";
 import { EntityProvider } from "../context/EntityContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getEntityDataFromServerCookies } from "@/lib/actions";
+import { decrypt, getEntityDataFromServerCookies } from "@/lib/actions";
 import { AuthProvider } from "@/context/AuthContext";
 import { Auth } from "@/lib/types";
 import { cookies } from "next/headers";
-import { decrypt, verifySession } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "Create Next App",

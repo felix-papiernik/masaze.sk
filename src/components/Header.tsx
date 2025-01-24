@@ -23,7 +23,7 @@ export default function Header() {
                         <Link href={"/registracia"}>Registrácia</Link>
                     </>) : (<>
                         <Link href={"/dashboard"}>Nástenka</Link>
-                        <Link href={"/my-account"}>Môj účet</Link>
+                        <Link href={"/my-account"}>Môj účet - {auth.entity}</Link>
                         <SignOutButton />
                     </>)
                 }

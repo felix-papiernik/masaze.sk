@@ -1,7 +1,6 @@
 "server only";
 
 import prisma from '@/lib/prisma';
-import { createSession } from '@/lib/session';
 import { Auth, EntityData, EntityDataPayload } from '@/lib/types';
 import { User } from '@prisma/client';
 import { serialize } from 'cookie';

@@ -18,7 +18,7 @@ const cookieO = {
     duration: 60 * 60 * 6, // 6 hours
 }
 
-export async function encrypt(payload: AuthPayload) {
+ async function encrypt(payload: AuthPayload) {
     return new SignJWT(payload) // Payload tokenu
         .setProtectedHeader({ alg: 'HS256' }) // Algoritmus na podpisovanie
         .setIssuedAt() // Nastavenie času vydania
@@ -26,7 +26,7 @@ export async function encrypt(payload: AuthPayload) {
         .sign(secret);
 }
 
-export async function decrypt(session: any): Promise<AuthPayload | null> {
+ async function decrypt(session: any): Promise<AuthPayload | null> {
     try {
         const { payload } = await jwtVerify(session, secret, { algorithms: ['HS256'] });
         return payload as AuthPayload;
@@ -35,7 +35,7 @@ export async function decrypt(session: any): Promise<AuthPayload | null> {
     }
 }
 
-export async function createSession(auth: Auth) {
+ async function createSession(auth: Auth) {
     const expires = new Date(Date.now() + 1000 * 60 * 60 * 6); // 6 hours
     //const session = await encrypt({ authData: auth, exp: expires.getTime() });
     const session = await encrypt({ authData: auth });
@@ -45,7 +45,7 @@ export async function createSession(auth: Auth) {
     redirect("/u/dashboard");
 }
 
-export async function verifySession(): Promise<Auth | null> {
+ async function verifySession(): Promise<Auth | null> {
     const cookie = (await cookies()).get(cookieO.name)?.value;
     const session = await decrypt(cookie);
 
@@ -57,7 +57,7 @@ export async function verifySession(): Promise<Auth | null> {
     return { ...session.authData };
 }
 
-export async function deleteSession() {
+ async function deleteSession() {
     (await cookies()).delete(cookieO.name);
     redirect("/prihlasenie");
 }

@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { EntityData, EntityDataPayload } from "./types";
 import { revalidatePath } from "next/cache";
-dotenv.config();
+//dotenv.config();
 
 // require('dotenv').config();
 
@@ -272,8 +272,8 @@ export  const createSession = async (email: string, password: string) : Promise<
   const session = await encrypt({ authData });
   const cookiesSet = await cookies();
   cookiesSet.set(cookieO.name, session, { ...cookies, expires });
-
-  redirect("/u/dashboard");
+  return authData;
+  //redirect("/u/dashboard");
 }
 
 export async function verifySession(): Promise<Auth | null> {
@@ -282,7 +282,7 @@ export async function verifySession(): Promise<Auth | null> {
 
     if (!session) {
         console.log("!session redirecting to /prihlasenie")
-        redirect("/prihlasenie");
+        return null;
     }
 
     return { ...session.authData };

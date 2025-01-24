@@ -18,7 +18,7 @@ export function AuthProvider({
   initialAuth: Auth | null;
 }) {
   const [auth, setAuth] = useState<Auth | null>(initialAuth);
-
+  console.log("auth render", auth);
   return (
     <AuthContext.Provider value={{ auth: auth, setAuth: setAuth }}>
       {children}

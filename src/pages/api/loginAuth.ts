@@ -1,7 +1,7 @@
 "use server";
 
+import { createSession } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import { createSession } from '@/lib/session';
 import { Auth } from '@/lib/types';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -43,7 +43,7 @@ export default async function handler(req: LoginRequest, res: NextApiResponse<Su
     } as Auth;
 
     console.log("creating session with auth data: ", authData);
-    createSession(authData);
+    createSession(email, password);
     res.status(200).json({ auth: authData });
     console.log("returing auth data: ", authData);
 }
