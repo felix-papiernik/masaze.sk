@@ -4,11 +4,11 @@ import { Stack } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 import { SignOutButton } from './SignOutButton'
-import { useUser } from '@/context/EntityContext';
+import { useEntity } from '@/context/EntityContext';
 
 export default function Header() {
 
-    const { entity } = useUser();
+    const { entity } = useEntity();
 
     return (
         <Stack component="header" sx={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
@@ -21,6 +21,7 @@ export default function Header() {
                         <Link href={"/registracia"}>Registrácia</Link>
                     </>) : (<>
                         <Link href={"/dashboard"}>Nástenka</Link>
+                        <Link href={"/my-account"}>Môj účet</Link>
                         <SignOutButton />
                     </>)
                 }

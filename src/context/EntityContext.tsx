@@ -26,7 +26,7 @@ export function EntityProvider({
   );
 }
 
-export function useUser() {
+export function useEntity() {
   const context = useContext(EntityContext);
   if (!context) {
     throw new Error("useUser must be used within a UserProvider");

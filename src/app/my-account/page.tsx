@@ -1,41 +1,63 @@
+"use server";
 
-
-import { Button } from "@mui/material";
-import React, {  } from "react";
-//import { auth } from "../../../../auth";
+import React, { } from "react";
 import UserDataForm from "./UserDataForm";
 import prisma from "@/lib/prisma";
 import DeleteUserButton from "./DeleteUserButton";
+import { useEntity } from "@/context/EntityContext";
+import { getEntityDataFromServerCookies } from "@/lib/actions";
+import KlientAccount from "./KlientAccount";
+import { revalidatePath } from "next/cache";
+import { Stack } from "@mui/material";
 
 export default async function Page() {
 
-//todo
-    const userId = 2
-    console.log("user id je: " + userId);
-    const user = await prisma.user.findUnique({
+    const ent = await getEntityDataFromServerCookies();
+    const klient = await prisma.klient.findUnique({
         where: {
-            id: userId
+            id: ent?.id
         }
     }).catch((error) => {
         console.error(error);
-    }).then((user) => {
-        return user;
+        return null;
     });
 
     let initialState = {
-        id: userId,
-        firstName: user!.firstName,
-        lastName: user!.lastName,
-        email: user!.email,
-        phone: user!.phone,
-        password: user!.password
+        id: ent?.id || 0,
+        firstName: "firstName",
+        lastName: "lastName",
+        email: "email",
+        phone: "phone",
+        password: "password",
+    }
+
+    const updateKlient = async (meno: string, priezvisko: string) => {
+        await prisma.klient.update({
+            where: {
+                id: ent?.id
+            },
+            data: {
+                meno: meno,
+                priezvisko: priezvisko
+            }
+        }).catch((error) => {
+            console.error(error);
+        }).then((user) => {
+            console.log("Klient updated");
+            revalidatePath("/my-account");
+        });
     }
 
     return (
         <div>
-            <h1>Môj účet</h1>
-            <UserDataForm user={initialState}/>
-            <DeleteUserButton id={userId}/>
+            <h1>Môj účet role {ent?.entity}</h1>
+            <Stack mb={4} direction={"column"} gap={2}>
+                {
+                    ent?.klient ? <KlientAccount klient={klient} /> : <>TODO</>
+                }
+            </Stack>
+            <UserDataForm user={initialState} />
+            <DeleteUserButton id={ent?.id ?? 0} />
         </div>
     )
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import { useUser } from "@/context/EntityContext";
+import { useEntity } from "@/context/EntityContext";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export function SignOutButton() {
 
-    const { setEntity } = useUser();
+    const { setEntity } = useEntity();
     const router = useRouter();
     const signOut = async () => {
         const response = await fetch('/api/signout', {

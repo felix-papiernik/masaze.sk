@@ -2,10 +2,9 @@
 
 import { delay, updateUser } from '@/lib/actions';
 import { USER } from '@/lib/prisma';
-import { Box, Button, Stack, TextField } from '@mui/material';
-import React, { useActionState, useState } from 'react'
-import { auth } from '../../../../auth';
-import { validateCreateUserData, validateUpdateUserData } from '@/lib/zod';
+import { Button, Stack, TextField } from '@mui/material';
+import React, { useState } from 'react'
+import { validateUpdateUserData } from '@/lib/zod';
 
 
 interface props {
