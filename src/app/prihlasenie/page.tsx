@@ -22,7 +22,6 @@ export default function Page() {
     event?.preventDefault();
     setIsSubmitting(true);
 
-
     const validatedLoginData = validateLoginData(credentials);
     if (validatedLoginData.success) {
 
