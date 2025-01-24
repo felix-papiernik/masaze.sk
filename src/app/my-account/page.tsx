@@ -5,17 +5,18 @@ import UserDataForm from "./UserDataForm";
 import prisma from "@/lib/prisma";
 import DeleteUserButton from "./DeleteUserButton";
 import { useEntity } from "@/context/EntityContext";
-import { getEntityDataFromServerCookies } from "@/lib/actions";
+import { getEntityDataFromServerCookies, verifySession } from "@/lib/actions";
 import KlientAccount from "./KlientAccount";
 import { revalidatePath } from "next/cache";
 import { Stack } from "@mui/material";
 
 export default async function Page() {
 
-    const ent = await getEntityDataFromServerCookies();
+    const auth = await verifySession();
+
     const klient = await prisma.klient.findUnique({
         where: {
-            id: ent?.id
+            id: auth?.id
         }
     }).catch((error) => {
         console.error(error);
@@ -23,7 +24,7 @@ export default async function Page() {
     });
 
     let initialState = {
-        id: ent?.id || 0,
+        id: auth?.id || 0,
         firstName: "firstName",
         lastName: "lastName",
         email: "email",
@@ -34,7 +35,7 @@ export default async function Page() {
     const updateKlient = async (meno: string, priezvisko: string) => {
         await prisma.klient.update({
             where: {
-                id: ent?.id
+                id: auth?.id
             },
             data: {
                 meno: meno,
@@ -50,14 +51,14 @@ export default async function Page() {
 
     return (
         <div>
-            <h1>Môj účet role {ent?.entity}</h1>
+            <h1>Môj účet role {auth?.entity}</h1>
             <Stack mb={4} direction={"column"} gap={2}>
                 {
-                    ent?.klient ? <KlientAccount klient={klient} /> : <>TODO</>
+                    auth?.klient ? <KlientAccount klient={klient} /> : <>TODO</>
                 }
             </Stack>
             <UserDataForm user={initialState} />
-            <DeleteUserButton id={ent?.id ?? 0} />
+            <DeleteUserButton id={auth?.id ?? 0} />
         </div>
     )
 }
