@@ -1,8 +1,7 @@
 "use client";
 
+import { EntityData } from "@/lib/types";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { User } from "@prisma/client";
-import { EntityData } from "@/schema/TokenPayload";
 
 interface EntityContextType {
   entity: EntityData | null;

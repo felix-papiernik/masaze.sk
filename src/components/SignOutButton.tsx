@@ -1,13 +1,33 @@
+"use client";
+
+import { useUser } from "@/context/EntityContext";
 import { Button } from "@mui/material";
-import { signOut } from "../../auth";
+import { useRouter } from "next/navigation";
 
+export function SignOutButton() {
 
-export default function SignOutButton() {
+    const { setEntity } = useUser();
+    const router = useRouter();
+    const signOut = async () => {
+        const response = await fetch('/api/signout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+            console.log("user logged out");
+            setEntity(null);
+            router.push("/prihlasenie");
+        } else {
+            console.log("error logging out");
+        }
+    }
+
     return (
         <Button
-            onClick={async () => { "use server"; await signOut(); }}
+            onClick={signOut}
             type="button"
             variant="contained"
-        >Odhlásiť sa</Button>
+        >Odhlásiť sa KLIENT kompo</Button>
     );
 }

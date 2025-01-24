@@ -1,4 +1,4 @@
-import { getEntityDataFromServerCookies, updateFirstName } from "@/lib/actions";
+import { getEntityDataFromServerCookies } from "@/lib/actions";
 import prisma from "@/lib/prisma";
 import { klient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -10,7 +10,7 @@ export default async function Dashboard() {
     let data;
     let klient : klient | null = null;
 
-    if (entity?.entity == "klient") {
+    if (entity?.klient) {
         klient = await prisma.klient.findUnique({
             where: {
                 id: entity.id

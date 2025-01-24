@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-
 import { NextRequest } from 'next/server';
-import { EntityData, UserTokenPayload } from './schema/TokenPayload';
-import { verifyToken } from './lib/jwt';
+import { EntityData } from './lib/types';
+import { verifyToken } from './lib/utils';
 
 const paths = {
 
@@ -58,15 +56,5 @@ export async function middleware(req: NextRequest) {
  * enhancing both the security and performance of your application.
  */
 export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
-  // matcher: '/((?!api|_next/static|_next/image|.*\\.png$|$|/).*)',
-  //naposledy matcher: '/((?!api|_next/static|_next/image|.*\\.png$|$|/).*)',
   matcher: ['/dashboard/:path*', '/admin/:path*', '/protected/:path*'],
 };

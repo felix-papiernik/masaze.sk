@@ -1,6 +1,6 @@
 'use client';
 
-import { CreateUserData, validateCreateUserData } from '@/lib/zodValidations';
+import { CreateUserData, validateCreateUserData } from '@/lib/zod';
 import { Box, Typography, Button, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';

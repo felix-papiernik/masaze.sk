@@ -1,6 +1,6 @@
 // /pages/api/login.js
 import prisma from '@/lib/prisma';
-import { EntityData, EntityDataPayload, UserTokenPayload } from '@/schema/TokenPayload';
+import { EntityData, EntityDataPayload } from '@/lib/types';
 import { User } from '@prisma/client';
 import { serialize } from 'cookie';
 import { SignJWT } from 'jose/jwt/sign';
@@ -39,6 +39,9 @@ export default async function handler(req: LoginRequest, res: NextApiResponse<Su
     const entityData = {
         id: klient?.id || maser?.id || maserstvo?.id,
         entity: klient ? 'klient' : maser ? 'maser' : 'maserstvo',
+        klient: !!klient,
+        maser: !!maser,
+        maserstvo: !!maserstvo,
     } as EntityData;
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);

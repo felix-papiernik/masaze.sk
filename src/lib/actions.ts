@@ -2,12 +2,11 @@
 
 import dotenv from "dotenv";
 import prisma from './prisma';
-import { UpdateUserData, validateUpdateUserData } from './zodValidations';
+import { UpdateUserData, validateUpdateUserData } from './zod';
 import { Role } from '@prisma/client';
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { EntityData, EntityDataPayload } from "@/schema/TokenPayload";
 import { jwtVerify } from "jose";
+import { EntityData, EntityDataPayload } from "./types";
 dotenv.config();
 
 // require('dotenv').config();
@@ -162,58 +161,6 @@ export async function updateRole(
   return ret;
 }
 
-export async function signOutUser() {
-  console.log("demo signing out TODO");
-  //await signOut();
-}
-
-export async function updateFirstName(data: FormData) {
-  console.log("updateFirstName");
-  const id = parseInt(data.get("userId") as string);
-  const updatedUser = await prisma.user.update(
-    {
-      where: { id },
-      data: { firstName: "FF" },
-    }
-  )
-  if (updatedUser) {
-    const cookieStore = await cookies();
-    cookieStore.set("auth_token", updatedUser.firstName, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
-    });
-
-    console.log("firstname updated")
-    revalidatePath("/dashboard");
-  }
-  
-  revalidatePath("/dashboard");
-}
-
-export const getUserFromServerCookies = async () : Promise<EntityData | null> => {
-  console.log("getting cookies from server...")
-  /*let user: User | null = null;
-  // Načítanie údajov z HTTP-only cookies na serveri
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
-
-  if (token) {
-      try {
-          const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-          const { payload } = await jwtVerify(token, secret);
-          user = payload as User; // Predpokladáme, že payload obsahuje údaje používateľa
-      } catch (err) {
-          console.error("Invalid or expired token:", err);
-      }
-  }
-  console.log("returning user from server cookies: ", user)
-  return user;*/
-  
-  return null;
-}
-
 export const getEntityDataFromServerCookies = async () : Promise<EntityData | null> => {
   let ed: EntityData | null = null;
   // Načítanie údajov z HTTP-only cookies na serveri
@@ -230,6 +177,6 @@ export const getEntityDataFromServerCookies = async () : Promise<EntityData | nu
           console.error("Invalid or expired token:", err);
       }
   }
-  console.log("returning EntityData from server cookies: ", ed)
+  //console.log("returning EntityData from server cookies: ", ed)
   return ed;
 }

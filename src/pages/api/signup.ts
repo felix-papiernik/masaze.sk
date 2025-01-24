@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
-import { CreateUserData, validateCreateUserData } from '@/lib/zodValidations';
+import { CreateUserData, validateCreateUserData } from '@/lib/zod';
 dotenv.config();
 
 export type Response = {
@@ -73,7 +73,7 @@ export default async function handler(
             data: {
                 ...userData,
                 password: hashedPassword,
-                role: userData.email === process.env.ADMIN_EMAIL ? Role.SUPERADMIN : Role.CLIENT
+                role: userData.email === process.env.ADMIN_EMAIL ? Role.ADMIN : Role.CLIENT
             }
         });
         return res.status(200).json({

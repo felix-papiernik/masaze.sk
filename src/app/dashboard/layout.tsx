@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button, Stack } from "@mui/material";
-import SignOutButton from "@/components/SignOutButton";
 import { getEntityDataFromServerCookies } from "@/lib/actions";
+import { SignOutButton } from "@/components/SignOutButton";
 
 const RBAC_MENU = {
     ADMIN: [
@@ -34,6 +34,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <div>Tvoja rola je: {entityData?.entity}</div>
 
             {children}
+
+            <SignOutButton />
         </div>
     );
 }
