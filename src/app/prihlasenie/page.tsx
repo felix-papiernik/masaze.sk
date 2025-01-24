@@ -24,7 +24,7 @@ export default function Page() {
 
     const validatedLoginData = validateLoginData(credentials);
     if (validatedLoginData.success) {
-
+      console.log("validation success");
     }
     const createAuthSession = await createSession(credentials.email, credentials.password);
 
