@@ -4,6 +4,10 @@ import { EntityProvider } from "../context/EntityContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getEntityDataFromServerCookies } from "@/lib/actions";
+import { AuthProvider } from "@/context/AuthContext";
+import { Auth } from "@/lib/types";
+import { cookies } from "next/headers";
+import { decrypt, verifySession } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,18 +22,29 @@ export default async function RootLayout({
   //context neprezije pri refreshi stranky,
   //takze nacitam pouzivatela z cookies
   let entityData = await getEntityDataFromServerCookies();
+  let initialAuth: Auth | null = null;
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
+  if (session) {
+    initialAuth = { ...session.authData };
+  }
+
+  console.log("root layout initialAuth: ", initialAuth);
 
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>
         <EntityProvider initialEntity={entityData}>
-          <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
-            <Header/>
-            <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
-              {children}
-            </Box>
-            <Footer />
-          </Stack>
+          <AuthProvider initialAuth={initialAuth}>
+            <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
+              <Header />
+              <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
+                {children}
+              </Box>
+              <Footer />
+            </Stack>
+          </AuthProvider>
         </EntityProvider>
       </body>
     </html>

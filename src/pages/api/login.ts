@@ -1,6 +1,8 @@
-// /pages/api/login.js
+"server only";
+
 import prisma from '@/lib/prisma';
-import { EntityData, EntityDataPayload } from '@/lib/types';
+import { createSession } from '@/lib/session';
+import { Auth, EntityData, EntityDataPayload } from '@/lib/types';
 import { User } from '@prisma/client';
 import { serialize } from 'cookie';
 import { SignJWT } from 'jose/jwt/sign';
@@ -18,6 +20,7 @@ interface LoginRequest extends NextApiRequest {
 interface ErrorResponse {
     error: string;
 }
+
 
 interface SuccessResponse {
     entity: EntityData;
@@ -54,7 +57,7 @@ export default async function handler(req: LoginRequest, res: NextApiResponse<Su
         .sign(secret);
 
     // Nastavenie cookies s tokenom
-    const cookie = serialize('auth_token', token, {
+    const cookie = serialize('session', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',

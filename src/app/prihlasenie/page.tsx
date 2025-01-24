@@ -5,13 +5,16 @@ import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, I
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zod";
 import { useEntity } from "../../context/EntityContext";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { useAuth } from "@/context/AuthContext";
+import { createSession } from "@/lib/actions";
 
 
 export default function Page() {
 
   const { setEntity } = useEntity();
+  const { setAuth } = useAuth();
   const router = useRouter();
   //TODO
   const credentials = {
@@ -23,21 +26,37 @@ export default function Page() {
     event?.preventDefault();
     setIsSubmitting(true);
 
-    const response = await fetch('/api/login', {
+    // const response = await fetch('/api/login', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(credentials),
+    // });
+
+    // if (response.ok) {
+    //   const data = await response.json();
+    //   setEntity(data.entity);
+    //   //setUser(data.user); // Uloženie používateľa do Contextu
+    //   //console.log("user set in context", data.user);
+    //   router.push("/dashboard");
+    // } else {
+    //   //todo
+    //   setErrors({ ...credentials, general: "Nepodarilo sa prihlasit felixa" });
+    // }
+    const response = await fetch('/api/loginAuth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      setEntity(data.entity);
-      //setUser(data.user); // Uloženie používateľa do Contextu
-      //console.log("user set in context", data.user);
-      router.push("/dashboard");
+    
+    const createAuthSession = await createSession(credentials.email, credentials.password);
+
+    if (createAuthSession) {
+      setAuth(createAuthSession);
+      redirect("/dashboard");
     } else {
       //todo
-      setErrors({ ...credentials, general: "Nepodarilo sa prihlasit felixa" });
+      setErrors({ ...credentials, general: "Nepodarilo sa prihlasit" });
     }
     setIsSubmitting(false);
   };
@@ -124,7 +143,7 @@ export default function Page() {
           <FormHelperText error>{errors.password}</FormHelperText>
         </FormControl>
         <Typography color="error">{errors.general}</Typography>
-        <Button type="submit" disabled={isSubmitting} variant="contained">Prihlásiť felixpapiernik42 heslo123</Button>
+        <Button type="submit" disabled={isSubmitting} variant="contained">Prihlásiť klienta felixpapiernik42 heslo123</Button>
       </Box>
     </Box>
   )

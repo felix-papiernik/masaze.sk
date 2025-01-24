@@ -5,10 +5,12 @@ import Link from 'next/link'
 import React from 'react'
 import { SignOutButton } from './SignOutButton'
 import { useEntity } from '@/context/EntityContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
 
     const { entity } = useEntity();
+    const { auth } = useAuth();
 
     return (
         <Stack component="header" sx={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
@@ -16,7 +18,7 @@ export default function Header() {
             <Stack component="nav" direction="row" gap={4} alignItems="center">
                 <Link href={"/"}>Domov</Link>
                 {
-                    entity == null ? (<>
+                    auth == null ? (<>
                         <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
                         <Link href={"/registracia"}>Registrácia</Link>
                     </>) : (<>
