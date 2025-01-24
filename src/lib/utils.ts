@@ -1,26 +1,8 @@
 import { User } from "@prisma/client";
 import { jwtDecrypt, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+//import { cookies } from "next/headers";
 
-export const getUserFromServerCookies = async () => {
-    console.log("getting cookies from server...")
-    let user: User | null = null;
-    // Načítanie údajov z HTTP-only cookies na serveri
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth_token")?.value;
 
-    if (token) {
-        try {
-            const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-            const { payload } = await jwtVerify(token, secret);
-            user = payload as User; // Predpokladáme, že payload obsahuje údaje používateľa
-        } catch (err) {
-            console.error("Invalid or expired token:", err);
-        }
-    }
-    console.log("returning user from server cookies: ", user)
-    return user;
-}
 
 /*
 export const getUserFromLocalCookies = () => {

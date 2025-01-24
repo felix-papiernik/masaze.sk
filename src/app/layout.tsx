@@ -2,13 +2,13 @@ import NavMenu from "@/components/NavMenu";
 import { Box, Stack, Typography } from "@mui/material";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { UserProvider } from "./context/UserContext";
+import { EntityProvider } from "./context/UserContext";
 import { User } from "@prisma/client";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import { getUserFromServerCookies } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getEntityDataFromServerCookies, getUserFromServerCookies } from "@/lib/actions";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,20 +22,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let user = await getUserFromServerCookies();
+  let entityData = await getEntityDataFromServerCookies();
 
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>
-        <UserProvider initialUser={user}>
+        <EntityProvider initialEntity={entityData}>
           <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
-            <Header user={user} />
+            <Header initialEntity={entityData}/>
             <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
               {children}
             </Box>
             <Footer />
           </Stack>
-        </UserProvider>
+        </EntityProvider>
       </body>
     </html>
   );

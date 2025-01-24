@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
 import { NextRequest } from 'next/server';
-import { UserTokenPayload } from './schema/TokenPayload';
+import { EntityData, UserTokenPayload } from './schema/TokenPayload';
 import { verifyToken } from './lib/jwt';
 
+const paths = {
 
+}
 
 export async function middleware(req: NextRequest) {
   // Získaj cookies z požiadavky
@@ -24,17 +26,20 @@ export async function middleware(req: NextRequest) {
     //const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
     const decoded = await verifyToken(token, process.env.JWT_SECRET as string)
 
-    if (typeof decoded !== 'object' || !('role' in decoded)) {
+    if (typeof decoded !== 'object') {
       throw new Error('Invalid token structure');
     }
 
-    const user = decoded as UserTokenPayload;
+    const entity = decoded as EntityData;
 
-    console.log("middleware user", user)
+    console.log("middleware entity", entity)
 
-    // Kontrola prístupu na základe role
+    // Kontrola prístupu na základe role todo
     const path = req.nextUrl.pathname;
-    if (path.startsWith('/dashboard') && user.email !== 'felixpapiernik42@gmail.com') {
+    if (entity && path.startsWith("/prihlasenie")) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+    if (entity.entity == "klient" && !path.startsWith("/dashboard") && !path.startsWith("/my-account")) {
       return NextResponse.redirect(new URL('/403', req.url)); // Ak nie je admin, presmeruj na 403
     }
 

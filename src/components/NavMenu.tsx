@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import { Button, Typography } from '@mui/material';
@@ -9,14 +7,12 @@ import { User } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { useRouter } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { getUserFromServerCookies } from '@/lib/utils';
 import { jwtDecrypt } from 'jose';
+import { getUserFromServerCookies } from '@/lib/actions';
+import { SignOutEntityButton } from './SignOutEntityButton';
 
-interface NavMenuProps {
-    user: User | null;
-}
 
-export default function NavMenu(props: NavMenuProps) {
+export default async function NavMenu() {
 
     /*let user: User | null = null;
       // Načítanie údajov z HTTP-only cookies na serveri
@@ -33,11 +29,9 @@ export default function NavMenu(props: NavMenuProps) {
         }
       }
 */
-
-    const { setUser, user } = useUser();
-    const router = useRouter();
-
-    const handleSignOut = async () => {
+    const entity = await getUserFromServerCookies();
+    console.log("entity", entity);
+    /*const handleSignOut = async () => {
         try {
             const response = await fetch('/api/signout', {
                 method: 'GET',
@@ -54,22 +48,17 @@ export default function NavMenu(props: NavMenuProps) {
         } catch (err) {
             console.error('Chyba pri odhlásení:', err);
         }
-    };
+    };*/
 
     return (
-        user == null ? (<>
+        entity == null ? (<>
             <Link href={"/"}>Domov</Link>
             <Link href={"/prihlasenie"}>Prihlásiť sa</Link>
             <Link href={"/registracia"}>Registrácia</Link>
         </>) : (<>
             <Link href={"/"}>Domov</Link>
             <Link href={"/dashboard"}>Nástenka</Link>
-            <Typography variant="h6">{user?.firstName + " " + user.lastName}</Typography>
-            <Button
-                onClick={handleSignOut}
-                type="button"
-                variant="contained"
-            >Odhlásiť sa</Button>
+            <SignOutEntityButton />
         </>)
     )
 }

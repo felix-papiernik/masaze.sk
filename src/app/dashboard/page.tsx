@@ -1,27 +1,51 @@
-"use client";
-
-import { getUserFromServerCookies } from "@/lib/utils";
-import { useUser } from "../context/UserContext";
+import { getEntityDataFromServerCookies, updateFirstName } from "@/lib/actions";
 import prisma from "@/lib/prisma";
+import { klient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { updateFirstName } from "@/lib/actions";
 
 export default async function Dashboard() {
 
-    const user = await getUserFromServerCookies();
+    const entity = await getEntityDataFromServerCookies();
 
+    let data;
+    let klient : klient | null = null;
 
+    if (entity?.entity == "klient") {
+        klient = await prisma.klient.findUnique({
+            where: {
+                id: entity.id
+            }
+        })
+
+    }
+
+    const updateMeno = async (e: any) => {
+        "use server";
+        const formData = new FormData(e.target);
+        const updatedUser = await prisma.klient.update({
+            where: {
+                id: klient?.id
+            },
+            data: {
+                meno: "FFF"
+            }
+        })
+        if (updatedUser) {
+            revalidatePath("/dashboard");
+        }
+    }
 
     return (
         <div style={{ background: "grey" }}>
             <h1>Dashboard</h1>
             <h2>Aj ked je toto serverovy kompo</h2>
-            <div>tu je info o pouzivatelovi: {user?.email} a meno {user?.firstName}</div>
-            <form action={updateFirstName}>
-                <input type="hidden" value={user?.id} name="userId" />
-                <button type="submit" >Update firstname to "FFF"</button>
-            </form>
-
+            <div>tu je info o prihlasenom pouzivatelovi, rola je: {entity?.entity}</div>
+            {entity?.entity == "klient" &&
+                <form action={updateMeno}>
+                    <div>Tvoje meno je {klient?.meno}</div>
+                    <button type="submit" >Update meno to "FFF"</button>
+                </form>
+            }
         </div>
     )
 }

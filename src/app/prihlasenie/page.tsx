@@ -6,11 +6,12 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zodValidations";
 import { useUser } from "../context/UserContext";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 
 export default function Page() {
 
-  const { setUser } = useUser();
+  const { setEntity } = useUser();
   const router = useRouter();
   //TODO
   const credentials = {
@@ -30,10 +31,12 @@ export default function Page() {
 
     if (response.ok) {
       const data = await response.json();
-      setUser(data.user); // Uloženie používateľa do Contextu
-      console.log("user set in context", data.user);
+      setEntity(data.entity);
+      //setUser(data.user); // Uloženie používateľa do Contextu
+      //console.log("user set in context", data.user);
       router.push("/dashboard");
     } else {
+      //todo
       setErrors({ ...credentials, general: "Nepodarilo sa prihlasit felixa" });
     }
     setIsSubmitting(false);

@@ -2,32 +2,33 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 import { User } from "@prisma/client";
+import { EntityData } from "@/schema/TokenPayload";
 
-interface UserContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+interface EntityContextType {
+  entity: EntityData | null;
+  setEntity: (entity: EntityData | null) => void;
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+const EntityContext = createContext<EntityContextType | undefined>(undefined);
 
-export function UserProvider({
+export function EntityProvider({
   children,
-  initialUser,
+  initialEntity,
 }: {
   children: ReactNode;
-  initialUser: User | null;
+  initialEntity: EntityData | null;
 }) {
-  const [user, setUser] = useState<User | null>(initialUser);
+  const [entity, setEntity] = useState<EntityData | null>(initialEntity);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <EntityContext.Provider value={{ entity: entity, setEntity: setEntity }}>
       {children}
-    </UserContext.Provider>
+    </EntityContext.Provider>
   );
 }
 
 export function useUser() {
-  const context = useContext(UserContext);
+  const context = useContext(EntityContext);
   if (!context) {
     throw new Error("useUser must be used within a UserProvider");
   }

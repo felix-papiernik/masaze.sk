@@ -64,26 +64,34 @@ model os_udaje {
   email      String
   telefon    String
   vymazane   Boolean @default(false)
-  maser      maser?
-  klient     klient?
+  maser      maser?  @relation(fields: [maserId], references: [id])
+  klient     klient? @relation(fields: [klientId], references: [id])
+  maserId    Int?
+  klientId   Int?
 }
 
 model maser {
   id          Int           @id @default(autoincrement())
-  os_udaje    os_udaje      @relation(fields: [os_udaje_id], references: [id])
-  os_udaje_id Int           @unique
+  meno        String
+  priezvisko  String
+  email       String        @unique
+  telefon     String
   hash_heslo  String
   zamestnanec zamestnanec[]
   rezervacia  rezervacia[]
   vymazane    Boolean       @default(false)
+  os_udaje    os_udaje[]
 }
 
 model klient {
-  id          Int          @id @default(autoincrement())
-  os_udaje    os_udaje     @relation(fields: [os_udaje_id], references: [id])
-  os_udaje_id Int          @unique
-  hash_heslo  String
-  rezervacia  rezervacia[]
+  id         Int          @id @default(autoincrement())
+  hash_heslo String
+  meno       String
+  priezvisko String
+  email      String       @unique
+  telefon    String
+  rezervacia rezervacia[]
+  os_udaje   os_udaje[]
 }
 
 model zamestnanec {
@@ -101,7 +109,7 @@ model zamestnanec {
 model maserstvo {
   id          Int           @id @default(autoincrement())
   nazov       String
-  login       String
+  login       String        @unique
   hash_heslo  String
   mesto       String
   psc         String

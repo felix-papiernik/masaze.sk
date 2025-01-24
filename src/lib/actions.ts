@@ -6,6 +6,8 @@ import { UpdateUserData, validateUpdateUserData } from './zodValidations';
 import { Role } from '@prisma/client';
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { EntityData, EntityDataPayload } from "@/schema/TokenPayload";
+import { jwtVerify } from "jose";
 dotenv.config();
 
 // require('dotenv').config();
@@ -188,4 +190,46 @@ export async function updateFirstName(data: FormData) {
   }
   
   revalidatePath("/dashboard");
+}
+
+export const getUserFromServerCookies = async () : Promise<EntityData | null> => {
+  console.log("getting cookies from server...")
+  /*let user: User | null = null;
+  // Načítanie údajov z HTTP-only cookies na serveri
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
+
+  if (token) {
+      try {
+          const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+          const { payload } = await jwtVerify(token, secret);
+          user = payload as User; // Predpokladáme, že payload obsahuje údaje používateľa
+      } catch (err) {
+          console.error("Invalid or expired token:", err);
+      }
+  }
+  console.log("returning user from server cookies: ", user)
+  return user;*/
+  
+  return null;
+}
+
+export const getEntityDataFromServerCookies = async () : Promise<EntityData | null> => {
+  let ed: EntityData | null = null;
+  // Načítanie údajov z HTTP-only cookies na serveri
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
+
+  if (token) {
+      try {
+          const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+          const { payload } = await jwtVerify(token, secret);
+          let p = payload as EntityDataPayload; // Predpokladáme, že payload obsahuje údaje používateľa
+          ed = p.entityData;
+      } catch (err) {
+          console.error("Invalid or expired token:", err);
+      }
+  }
+  console.log("returning EntityData from server cookies: ", ed)
+  return ed;
 }
