@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Stack, TextField, Button } from "@mui/material";
+import { Stack, TextField, Button, Typography, Select, MenuItem, FormControl, FormLabel, InputLabel, FormHelperText } from "@mui/material";
 import { createSession, delay, updatePouzivatel } from "@/lib/actions";
 import { validateUpdateUserData } from "@/lib/zod";
 import { Auth } from "@/lib/types";
+import DeleteUserButton from "./DeleteUserButton";
 
 export default function Page() {
 
@@ -67,7 +68,7 @@ export default function Page() {
 
     return (
         <div>
-            <h1>Môj účet role {auth?.pouzivatel.je_admin ? "admin" : "čitateľ"}</h1>
+            <Typography variant="h3" mb={4}>Môj účet</Typography>
             <Stack component="form" onSubmit={handleUserUpdate} mb={4} direction={"column"} gap={2}>
                 <TextField
                     variant='outlined'
@@ -96,6 +97,21 @@ export default function Page() {
                     helperText={userData.email.error}
                     error={!!userData.email.error}
                 />
+                <FormControl variant="outlined">
+                    <InputLabel id="rola">Roľa</InputLabel>
+                    <Select
+                        labelId="rola"
+                        label="Roľa"
+                        variant="outlined"
+                        value={auth.pouzivatel.je_admin ? "admin" : "citatel"}
+                        disabled
+                        sx={{ width: "14rem" }}
+                    >
+                        <MenuItem value="admin">Admin</MenuItem>
+                        <MenuItem value="citatel">Čitateľ</MenuItem>
+                    </Select>
+                    <FormHelperText>Kontaktujte správcu pre zmenu role</FormHelperText>
+                </FormControl>
                 <Stack direction={"row"} gap={2}>
                     <Button
                         type="submit"
@@ -106,13 +122,14 @@ export default function Page() {
                         {pending ? "Aktualizuje sa..." : "Aktualizovať údaje"}
                     </Button>
                     <Button
-                        type="submit"
+                        type="button"
                         disabled={pending}
                         variant="outlined"
                         sx={{ width: "14rem" }}
                     >
-                        Zmeniť heslo
+                        Zmeniť heslo TODO
                     </Button>
+                    <DeleteUserButton />
                 </Stack>
                 {updated && <p>Údaje boli úspešne aktualizované</p>}
             </Stack>

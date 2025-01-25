@@ -8,7 +8,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
     return (
         <Stack spacing={2} sx={{ background: "lightGrey", padding: 2 }}>
-            <Typography variant="h2" component={"h1"}>Správa systému</Typography>
             {children}
             <div>
                 <SignOutButton />

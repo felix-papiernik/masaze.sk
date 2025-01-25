@@ -1,7 +1,7 @@
 "use client";
 
 import { addDemoKnihaAndRelations, deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { kniha } from '@prisma/client';
 import React, { useEffect, useState } from 'react'
 
@@ -21,24 +21,14 @@ export default function Knihy() {
         setLoading(false);
     }
 
-    async function addDemoKnihu() {
-        setLoading(true);
-        const demoKniha = await addDemoKnihaAndRelations();
-        nacitajKnihy();
-    }
-
-    async function deleteDemoKnihu() {
-        await deleteDemoKnihaAndRelations();
-        nacitajKnihy();
-    }
-
     useEffect(() => {
         nacitajKnihy();
     }, []);
 
     return (
         <>
-            <h1>Knihy</h1>{
+            <Typography variant="h1">Knihy</Typography>
+            {
                 loading == true ? <p>Načítavam...</p> : (
                     <>
                         {knihy.length == 0 &&
@@ -53,16 +43,6 @@ export default function Knihy() {
 
                 )
             }
-            <Button
-                type="button"
-                onClick={addDemoKnihu}
-            >Pridať demo knihu</Button>
-            <Button
-                type="button"
-                onClick={deleteDemoKnihu}
-            >
-                Vymazať demo knihu
-            </Button>
         </>
     )
 }

@@ -1,12 +1,14 @@
 "use client";
 
 import CustomSnackbar from '@/components/CustomSnackbar';
-import { deleteUser, signOutUser } from '@/lib/actions';
+import { useAuth } from '@/context/AuthContext';
+import { deletePouzivatel, deleteSession } from '@/lib/actions';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
 import React, { useState } from 'react'
 
-export default function DeleteUserButton({ id }: { id: number }) {
+export default function DeleteUserButton() {
 
+    const {auth, setAuth} = useAuth();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [snackbarData, setSnackbarData] = useState({ open: false, message: "" });
     const [isDeleting, setIsDeleting] = useState(false);
@@ -18,12 +20,15 @@ export default function DeleteUserButton({ id }: { id: number }) {
     const handleDeleteUser = async () => {
         try {
             setIsDeleting(true);
-            const response = await deleteUser(id);
+            //const deletedSuccessfully = await deletePouzivatel(auth!.pouzivatel.id);
+            const deletedSuccessfully = true
     
-            if (response.success) {
-                await signOutUser();
+            if (deletedSuccessfully) {
+                setAuth(null);
+                await deleteSession();
+                setSnackbarData({ open: true, message: "Účet bol úspešne vymazaný." });
             } else {
-                setSnackbarData({ open: true, message: "Failed to delete account. Try again." });
+                setSnackbarData({ open: true, message: "Účet sa nepodarilo vymazať." });
             }
         } catch (error) {
             console.error("Error deleting user:", error);
@@ -40,13 +45,12 @@ export default function DeleteUserButton({ id }: { id: number }) {
                 disabled={isDeleting}
                 onClick={() => setDialogOpen(true)}
                 type="button"
-                variant="contained"
-                sx={{ marginBottom: 2 }}
+                variant="outlined"
             >
                 Vymazať účet
             </Button>
             <Dialog open={dialogOpen} onClose={handleClose}>
-                <DialogTitle>Naozaj chcete vymazať svoj účet?</DialogTitle>
+                <DialogTitle>Naozaj chcete vymazať svoj účet? NEZMAZE SA NAOZAJ</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleClose}>Nie</Button>
                     <Button onClick={handleDeleteUser} autoFocus>

@@ -7,6 +7,8 @@ import { jwtVerify } from "jose";
 import { SignJWT } from "jose";
 import { redirect } from "next/navigation"
 import { Auth, AuthPayload } from "./types";
+
+import bcrypt from 'bcryptjs';
 //dotenv.config();
 
 // require('dotenv').config();
@@ -67,7 +69,7 @@ export async function verifySession(): Promise<Auth | null> {
   const session = await decrypt(cookie);
 
   if (!session) {
-    console.log("!session redirecting to /prihlasenie")
+    //console.log("!session redirecting to /prihlasenie")
     return null;
   }
 
@@ -85,19 +87,18 @@ export interface ErrorResponse {
   error: string;
 }
 
-export async function validateLogin({ email, password }: { email: string, password: string }): Promise<pouzivatel | ErrorResponse> {
+export async function tryToLogin({ email, password }: { email: string, password: string }): Promise<pouzivatel | ErrorResponse> {
   let pouzivatel = await prisma.pouzivatel.findUnique({
     where: {
       email: email,
     }
   });
+
   if (pouzivatel === null) {
     return { error: "Používateľ neexistuje" };
-  } else if (pouzivatel.hash_heslo !== password) {//TODO: hash hesla
-    return { error: "Nesprávne heslo" };
-  }
-
-  return pouzivatel;
+  } 
+  const passwordMatch = bcrypt.compareSync(password, pouzivatel.hash_heslo);
+  return passwordMatch ? pouzivatel : { error: "Nesprávne heslo" };
 }
 
 
@@ -156,12 +157,13 @@ interface CreatePouzivatelData {
 }
 export const createPouzivatel = async (createPouzivatelData: CreatePouzivatelData): Promise<pouzivatel | ErrorResponse> => {
   try {
+    const hashedPassword = await bcrypt.hash(createPouzivatelData.heslo, 10);
     let pouzivatelCreate = await prisma.pouzivatel.create({
       data: {
         meno: createPouzivatelData.meno,
         priezvisko: createPouzivatelData.priezvisko,
         email: createPouzivatelData.email,
-        hash_heslo: createPouzivatelData.heslo,
+        hash_heslo: hashedPassword,
         je_admin: false
       }
     })
@@ -184,6 +186,19 @@ export const getKnihy = async () => {
   return await prisma.kniha.findMany();
 }
 
+export const deletePouzivatel = async (id: number) => {
+  try {
+    await prisma.pouzivatel.delete({
+      where: {
+        id: id
+      }
+    })
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export const addDemoKnihaAndRelations = async () => {
   const autor = await prisma.autor.create({
     data: {
@@ -200,7 +215,7 @@ export const addDemoKnihaAndRelations = async () => {
     },
   });
 
-  const pocetKnih = await prisma.kniha.count(); 
+  const pocetKnih = await prisma.kniha.count();
   return await prisma.kniha.create({
     data: {
       nazov: "Demo kniha " + pocetKnih,

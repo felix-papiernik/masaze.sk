@@ -6,8 +6,9 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zod";
 import { redirect } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { createSession, validateLogin } from "@/lib/actions";
+import { createSession, tryToLogin } from "@/lib/actions";
 import { pouzivatel } from "@prisma/client";
+import { redirectUrlAfterLogin } from "@/lib/utils";
 
 
 export default function Page() {
@@ -48,8 +49,8 @@ export default function Page() {
     }
 
     //const createAuthSession = await createSession(credentials.email, credentials.password);
-    let userLoginTry = await validateLogin({ email: formState.email.value, password: formState.password.value });
-    console.log("userLoginTry", userLoginTry);
+    let userLoginTry = await tryToLogin({ email: formState.email.value, password: formState.password.value });
+    // console.log("userLoginTry", userLoginTry);
     if ("error" in userLoginTry) {
       setFormState({ ...formState, isSubmitting: false, generalError: userLoginTry.error });
       return;
@@ -59,14 +60,14 @@ export default function Page() {
     await createSession({ pouzivatel });
 
     setAuth({ pouzivatel });
-    redirect(pouzivatel.je_admin ? "u/admin/knihy" : "/u/moje-knihy");
+    redirect(redirectUrlAfterLogin(pouzivatel.je_admin));
   };
 
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Box sx={{ width: { xs: "100%", md: "60vw", lg: "600px" }, mx: "auto" }}>
-      <Typography variant="h2" mt={4} mb={2} textAlign={"center"}>Prihlásiť sa</Typography>
+      <Typography variant="h1" mt={4} mb={2} textAlign={"center"}>Prihlásiť sa</Typography>
       <Box component="form" onSubmit={handleLogin} sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           label="Email"

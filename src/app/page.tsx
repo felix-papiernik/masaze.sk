@@ -1,6 +1,7 @@
 "use client"
 
 import { useAuth } from "@/context/AuthContext"
+import { Box, Typography } from "@mui/material"
 import Link from "next/link"
 
 export default function Page() {
@@ -20,19 +21,18 @@ export default function Page() {
   const { auth } = useAuth()
 
   return (
-    <>
-      <h1>Domov</h1>
-      <p>
-        Vitaj na stranke <strong>citaj.sk</strong>
-      </p>
-      <p style={{paddingBottom: 24}}>Táto stránka slúži na prezeranie si kníh, autorov a žánrov, no hlavne na vedenie zoznamu kníh,
+    <Box sx={{ width: { xs: "100%", md: "60vw", lg: "700px" }, mx: "auto" }}>
+      <Typography variant="h1" my={4} textAlign={"center"}>
+        Vitaj u nás na stranke
+        <Typography variant="h1" component={"span"} color="primary"> citaj.sk</Typography>
+      </Typography>
+      <Typography variant="body1">Táto stránka slúži na prezeranie si kníh, autorov a žánrov, no hlavne na vedenie zoznamu kníh,
         ktoré si si už prečítal alebo si ešte len chceš prečítať
-      </p>
+      </Typography>
       {auth == null ? (
         <>
-          <p>
-            <strong>Pre prístup k tejto funkcionalite sa musíš prihlásiť alebo sa zaregistrovať</strong>
-          </p>
+          <Typography variant="body1" mt={4} mb={1}>Pre prístup k tejto funkcionalite sa musíš prihlásiť alebo sa zaregistrovať</Typography>
+          
           <Link href={"/prihlasenie"} style={{ marginRight: 16 }}>Prihlásiť sa</Link>
           <Link href={"/registracia"}>Zaregistrovať sa</Link>
         </>
@@ -42,6 +42,6 @@ export default function Page() {
           <Link href={"/knihy"}>Prezerať knihy</Link>
         </>
       )}
-    </>
+    </Box>
   )
 }
