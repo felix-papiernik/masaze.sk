@@ -1,4 +1,5 @@
 import { SignOutButton } from "@/components/SignOutButton";
+import { Stack, Typography } from "@mui/material";
 
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
@@ -6,10 +7,12 @@ export default async function Layout({ children }: { children: React.ReactNode }
     //let entityData = await getEntityDataFromServerCookies();
 
     return (
-        <div style={{ background: "lightGrey", padding: 16 }}>
-            <div>Protected path /u/*</div>
+        <Stack spacing={2} sx={{ background: "lightGrey", padding: 2 }}>
+            <Typography variant="h2" component={"h1"}>Správa systému</Typography>
             {children}
-            <SignOutButton />
-        </div>
+            <div>
+                <SignOutButton />
+            </div>
+        </Stack>
     );
 }

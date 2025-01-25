@@ -1,9 +1,11 @@
-import { Box, Stack } from "@mui/material";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { Box, Stack, ThemeProvider } from "@mui/material";
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getAuthFromCookies } from "@/lib/actions";
 import { AuthProvider } from "@/context/AuthContext";
+import theme from "@/theme";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,15 +26,19 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>
-          <AuthProvider initialAuth={initialAuth}>
-            <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
-              <Header />
-              <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
-                {children}
-              </Box>
-              <Footer />
-            </Stack>
-          </AuthProvider>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <AuthProvider initialAuth={initialAuth}>
+              <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
+                <Header />
+                <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box",  /* backgroundColor: "blue" */ }}>
+                  {children}
+                </Box>
+                <Footer />
+              </Stack>
+            </AuthProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

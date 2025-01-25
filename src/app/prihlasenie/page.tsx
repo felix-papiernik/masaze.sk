@@ -57,8 +57,9 @@ export default function Page() {
 
     const pouzivatel = userLoginTry as pouzivatel;
     await createSession({ pouzivatel });
+
     setAuth({ pouzivatel });
-    redirect(pouzivatel.je_admin ? "u/admin" : "/u/moje-knihy");
+    redirect(pouzivatel.je_admin ? "u/admin/knihy" : "/u/moje-knihy");
   };
 
   const [showPassword, setShowPassword] = useState(false);

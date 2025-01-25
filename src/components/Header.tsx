@@ -2,7 +2,7 @@
 
 import { Stack } from '@mui/material'
 import Link from 'next/link'
-import React from 'react'
+import React, { use } from 'react'
 import { SignOutButton } from './SignOutButton'
 import { useAuth } from '@/context/AuthContext';
 
