@@ -21,13 +21,14 @@ export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
     if (path.startsWith("/prihlasenie") || path.endsWith("/u")) {
       return NextResponse.redirect(new URL('/u/nastenka', req.url));
-    } else if (path.startsWith("/u/nastenka") || path.startsWith("/u/moj-ucet")) {
+    } else if (path.startsWith("/u/moje-knihy") || path.startsWith("/u/moj-ucet")) {
       return NextResponse.next();
     } else if (auth.pouzivatel.je_admin == false && path.startsWith("/u/admin")) {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
-    } else if (auth.pouzivatel.je_admin == true && path.endsWith("/u/admin")) {
-      return NextResponse.redirect(new URL('/u/nastenka', req.url));
-    }
+    } 
+    // else if (auth.pouzivatel.je_admin == true && path.endsWith("/u/admin")) {
+    //   return NextResponse.redirect(new URL('/u/nastenka', req.url));
+    // }
 
     // Ak má používateľ prístup, pokračuj na URL
     return NextResponse.next();

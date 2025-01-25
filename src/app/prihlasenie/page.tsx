@@ -58,14 +58,14 @@ export default function Page() {
     const pouzivatel = userLoginTry as pouzivatel;
     await createSession({ pouzivatel });
     setAuth({ pouzivatel });
-    redirect("/u/nastenka/");
+    redirect(pouzivatel.je_admin ? "u/admin" : "/u/moje-knihy");
   };
 
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Box sx={{ width: { xs: "100%", md: "60vw", lg: "600px" }, mx: "auto" }}>
-      <Typography variant="h2" mt={4} mb={2} textAlign={"center"}>Prihlásiť demo účet</Typography>
+      <Typography variant="h2" mt={4} mb={2} textAlign={"center"}>Prihlásiť sa</Typography>
       <Box component="form" onSubmit={handleLogin} sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           label="Email"
@@ -104,7 +104,7 @@ export default function Page() {
           <FormHelperText error>{formState.password.error}</FormHelperText>
         </FormControl>
         <Typography color="error">{formState.generalError}</Typography>
-        <Button type="submit" disabled={formState.isSubmitting} variant="contained">Prihlásiť klienta felixpapiernik42 heslo123</Button>
+        <Button type="submit" disabled={formState.isSubmitting} variant="contained">Prihlásiť</Button>
       </Box>
     </Box>
   )

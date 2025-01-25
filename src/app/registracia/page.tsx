@@ -80,9 +80,9 @@ export default function Page() {
             setFormState({ ...formState, isSubmitting: false, error: newUser.error });
             return;
         }
-        const a = await createSession({ pouzivatel: newUser } as Auth);
+        await createSession({ pouzivatel: newUser } as Auth);
         setAuth({ pouzivatel: newUser });
-        router.push("/u/nastenka/");
+        router.push(newUser.je_admin ? "u/admin" : "/u/moje-knihy");
     };
 
     return (

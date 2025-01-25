@@ -179,3 +179,67 @@ export const createPouzivatel = async (createPouzivatelData: CreatePouzivatelDat
     return { error: 'Neznáma chyba' };
   }
 }
+
+export const getKnihy = async () => {
+  return await prisma.kniha.findMany();
+}
+
+export const addDemoKnihaAndRelations = async () => {
+  const autor = await prisma.autor.create({
+    data: {
+      meno: "Demo",
+      priezvisko: "Autor",
+      narodnost: "Unknown",
+      datum_nar: new Date(),
+    },
+  });
+
+  const zaner = await prisma.zaner.create({
+    data: {
+      nazov: "Demo zaner",
+    },
+  });
+
+  const pocetKnih = await prisma.kniha.count(); 
+  return await prisma.kniha.create({
+    data: {
+      nazov: "Demo kniha " + pocetKnih,
+      rok_vydania: 2023,
+      pocet_stran: 100,
+      autor: {
+        connect: {
+          id: autor.id ?? 1,
+        },
+      },
+      zaner: {
+        connect: {
+          id: zaner.id ?? 1,
+        },
+      },
+    }
+  })
+}
+
+export const deleteDemoKnihaAndRelations = async () => {
+  const demoKnihy = await prisma.kniha.findMany();
+  let filteredKnihy = demoKnihy.filter(kniha => kniha.nazov.includes("Demo kniha"));
+  await prisma.kniha.deleteMany({
+    where: {
+      id: {
+        in: filteredKnihy.map(kniha => kniha.id),
+      }
+    }
+  });
+  await prisma.autor.deleteMany({
+    where: {
+      meno: "Demo",
+      priezvisko: "Autor",
+    }
+  });
+
+  await prisma.zaner.deleteMany({
+    where: {
+      nazov: "Demo zaner",
+    }
+  });
+}

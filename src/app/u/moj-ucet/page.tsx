@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import UserDataForm from "./UserDataForm";
 import { useAuth } from "@/context/AuthContext";
 import { Stack, TextField, Button } from "@mui/material";
-import { createSession, delay, updateCookiesAuth, updatePouzivatel, updateUser } from "@/lib/actions";
+import { createSession, delay, updatePouzivatel } from "@/lib/actions";
 import { validateUpdateUserData } from "@/lib/zod";
 import { Auth } from "@/lib/types";
 
@@ -68,7 +67,7 @@ export default function Page() {
 
     return (
         <div>
-            <h1>Môj účet role {auth?.pouzivatel.je_admin ? "čitateľ" : "admin"}</h1>
+            <h1>Môj účet role {auth?.pouzivatel.je_admin ? "admin" : "čitateľ"}</h1>
             <Stack component="form" onSubmit={handleUserUpdate} mb={4} direction={"column"} gap={2}>
                 <TextField
                     variant='outlined'
