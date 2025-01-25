@@ -1,64 +1,122 @@
-"use server";
+"use client";
 
-import React, { } from "react";
+import React, { useState } from "react";
 import UserDataForm from "./UserDataForm";
-import prisma from "@/lib/prisma";
-import DeleteUserButton from "./DeleteUserButton";
-import { useEntity } from "@/context/EntityContext";
-import { getEntityDataFromServerCookies, verifySession } from "@/lib/actions";
-import KlientAccount from "./KlientAccount";
-import { revalidatePath } from "next/cache";
-import { Stack } from "@mui/material";
+import { useAuth } from "@/context/AuthContext";
+import { Stack, TextField, Button } from "@mui/material";
+import { createSession, delay, updateCookiesAuth, updatePouzivatel, updateUser } from "@/lib/actions";
+import { validateUpdateUserData } from "@/lib/zod";
+import { Auth } from "@/lib/types";
 
-export default async function Page() {
+export default function Page() {
 
-    const auth = await verifySession();
-
-    const klient = await prisma.klient.findUnique({
-        where: {
-            id: auth?.id
-        }
-    }).catch((error) => {
-        console.error(error);
+    const { auth, setAuth } = useAuth();
+    if (!auth) {
         return null;
+    }
+    const [pending, setPending] = useState(false);
+    const [updated, setUpdated] = useState(false);
+    const [userData, setUserData] = useState({
+        meno: {
+            value: auth?.pouzivatel.meno,
+            error: ""
+        },
+        priezvisko: {
+            value: auth?.pouzivatel.priezvisko,
+            error: ""
+        },
+        email: {
+            value: auth?.pouzivatel.email,
+            error: ""
+        }
     });
 
-    let initialState = {
-        id: auth?.id || 0,
-        firstName: "firstName",
-        lastName: "lastName",
-        email: "email",
-        phone: "phone",
-        password: "password",
-    }
+    console.log(userData);
 
-    const updateKlient = async (meno: string, priezvisko: string) => {
-        await prisma.klient.update({
-            where: {
-                id: auth?.id
-            },
-            data: {
-                meno: meno,
-                priezvisko: priezvisko
-            }
-        }).catch((error) => {
-            console.error(error);
-        }).then((user) => {
-            console.log("Klient updated");
-            revalidatePath("/my-account");
+    const handleUserUpdate = async () => {
+        event?.preventDefault();
+        setPending(true);
+        setUpdated(false);
+
+        await delay(750);
+        const zValidatedData = validateUpdateUserData({
+            meno: userData.meno.value,
+            priezvisko: userData.priezvisko.value,
+            email: userData.email.value
         });
+        if (zValidatedData.error) {
+            setUserData({
+                ...userData,
+                meno: { value: userData.meno.value, error: zValidatedData.error.errors.find(e => e.path.includes('firstName'))?.message || '' },
+                priezvisko: { value: userData.priezvisko.value, error: zValidatedData.error.errors.find(e => e.path.includes('priezvisko'))?.message || '' },
+                email: { value: userData.email.value, error: zValidatedData.error.errors.find(e => e.path.includes('email'))?.message || '' },
+            });
+            setPending(false);
+            return;
+        }
+        const newUser = await updatePouzivatel({
+            ...auth.pouzivatel,
+            meno: userData.meno.value,
+            priezvisko: userData.priezvisko.value,
+            email: userData.email.value
+        })
+        setAuth({ ...auth, pouzivatel: newUser });
+        await createSession({ pouzivatel: newUser } as Auth);
+        setUpdated(true);
+        setPending(false);
     }
 
     return (
         <div>
-            <h1>Môj účet role {auth?.entity}</h1>
-            <Stack mb={4} direction={"column"} gap={2}>
-                {
-                    auth?.klient ? <KlientAccount klient={klient} /> : <>TODO</>
-                }
+            <h1>Môj účet role {auth?.pouzivatel.je_admin ? "čitateľ" : "admin"}</h1>
+            <Stack component="form" onSubmit={handleUserUpdate} mb={4} direction={"column"} gap={2}>
+                <TextField
+                    variant='outlined'
+                    label='Meno'
+                    value={userData.meno.value}
+                    onChange={(e) => setUserData({ ...userData, meno: { value: e.target.value, error: userData.meno.error } })}
+                    required
+                    helperText={userData.meno.error}
+                    error={!!userData.meno.error}
+                />
+                <TextField
+                    variant='outlined'
+                    label='Priezvisko'
+                    value={userData.priezvisko.value}
+                    onChange={(e) => setUserData({ ...userData, priezvisko: { value: e.target.value, error: userData.priezvisko.error } })}
+                    required
+                    helperText={userData.priezvisko.error}
+                    error={!!userData.priezvisko.error}
+                />
+                <TextField
+                    variant='outlined'
+                    label='Email'
+                    value={userData.email.value}
+                    onChange={(e) => setUserData({ ...userData, email: { value: e.target.value, error: userData.email.error } })}
+                    required
+                    helperText={userData.email.error}
+                    error={!!userData.email.error}
+                />
+                <Stack direction={"row"} gap={2}>
+                    <Button
+                        type="submit"
+                        disabled={pending || userData.meno.value === auth?.pouzivatel.meno && userData.priezvisko.value === auth?.pouzivatel.priezvisko && userData.email.value === auth?.pouzivatel.email}
+                        variant="contained"
+                        sx={{ width: "14rem" }}
+                    >
+                        {pending ? "Aktualizuje sa..." : "Aktualizovať údaje"}
+                    </Button>
+                    <Button
+                        type="submit"
+                        disabled={pending}
+                        variant="outlined"
+                        sx={{ width: "14rem" }}
+                    >
+                        Zmeniť heslo
+                    </Button>
+                </Stack>
+                {updated && <p>Údaje boli úspešne aktualizované</p>}
             </Stack>
-            <UserDataForm user={initialState} />
-            <DeleteUserButton id={auth?.id ?? 0} />
         </div>
     )
 }
@@ -122,7 +180,7 @@ export default async function Page() {
 
         const parsedupdateUser = validateupdateUserData({
             firstName: formData.get("firstName") as string,
-            lastName: formData.get("lastName") as string
+            priezvisko: formData.get("priezvisko") as string
         });
 
         console.log("validacia na strane klienta")
@@ -131,7 +189,7 @@ export default async function Page() {
             alert("Nepodarilo sa aktualizovať údaje");
             return;
         } else {
-            await updateUser(21, formData.get("firstName") as string, formData.get("lastName") as string);
+            await updateUser(21, formData.get("firstName") as string, formData.get("priezvisko") as string);
             //revalidatePath("/dashboard");
         }
         setIsUpdating(false);
@@ -172,7 +230,7 @@ export default async function Page() {
                 />
                 <TextField
                     label="Priezvisko"
-                    name="lastName"
+                    name="priezvisko"
                     type="text"
                     required
                 />

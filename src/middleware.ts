@@ -9,53 +9,25 @@ const paths = {
 }
 
 export async function middleware(req: NextRequest) {
-  // Získaj cookies z požiadavky
-  // const cookie = req.headers.get('cookie');
-  // const token = cookie?.split('; ').find((c) => c.startsWith('session='))?.split('=')[1];
-
   console.log("middleware run")
-
-  // // Ak token neexistuje, presmeruj na prihlasovaciu stránku
-  // if (!token) {
-  //   console.log("redirecting to /prihlasenie from middleware")
-  //   return NextResponse.redirect(new URL('/prihlasenie', req.url));
-  // }
   const auth = await verifySession();
+
   if (!auth) {
     console.log("redirecting to /prihlasenie from middleware")
     return NextResponse.redirect(new URL('/prihlasenie', req.url));
   }
 
   try {
-    // Over JWT token
-    //const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    // const decoded = await verifyToken(token, process.env.JWT_SECRET as string)
-
-    // if (typeof decoded !== 'object') {
-    //   throw new Error('Invalid token structure');
-    // }
-
-    // const entity = decoded as EntityData;
-
-    // console.log("middleware entity", entity)
-
-    // // Kontrola prístupu na základe role todo
-    // const path = req.nextUrl.pathname;
-    // /*if (entity && path.startsWith("/prihlasenie")) {
-    //   return NextResponse.redirect(new URL('/dashboard', req.url));
-    // }*/
-    // if (entity.entity == "klient" && !path.startsWith("/dashboard") && !path.startsWith("/my-account")) {
-    //   return NextResponse.redirect(new URL('/403', req.url)); // Ak nie je admin, presmeruj na 403
-    // }
     const path = req.nextUrl.pathname;
     if (path.startsWith("/prihlasenie") || path.endsWith("/u")) {
       return NextResponse.redirect(new URL('/u/nastenka', req.url));
-    }
-    if (auth.klient && !path.startsWith("/u/nastenka") && !path.startsWith("/u/moj-ucet")) {
+    } else if (path.startsWith("/u/nastenka") || path.startsWith("/u/moj-ucet")) {
+      return NextResponse.next();
+    } else if (auth.pouzivatel.je_admin == false && path.startsWith("/u/admin")) {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
+    } else if (auth.pouzivatel.je_admin == true && path.endsWith("/u/admin")) {
+      return NextResponse.redirect(new URL('/u/nastenka', req.url));
     }
-
-
 
     // Ak má používateľ prístup, pokračuj na URL
     return NextResponse.next();

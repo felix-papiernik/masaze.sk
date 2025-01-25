@@ -4,17 +4,15 @@ import { Stack } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 import { SignOutButton } from './SignOutButton'
-import { useEntity } from '@/context/EntityContext';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
 
-    const { entity } = useEntity();
     const { auth } = useAuth();
 
     return (
         <Stack component="header" sx={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
-            <Link href={"/"}>masaze.sk</Link>
+            <Link href={"/"}>citaj.sk</Link>
             <Stack component="nav" direction="row" gap={4} alignItems="center">
                 {
                     auth == null ? (<>
@@ -22,7 +20,14 @@ export default function Header() {
                         <Link href={"/registracia/"}>Registrácia</Link>
                     </>) : (<>
                         <Link href={"/u/nastenka/"}>Nástenka</Link>
-                        <Link href={"/u/moj-ucet/"}>Môj účet - {auth.entity}</Link>
+                        <Link href={"/u/moj-ucet/"}>Môj účet - {auth.pouzivatel.meno}</Link>
+                        {auth.pouzivatel.je_admin && (
+                            <>
+                                <Link href={"/u/admin/knihy"}>Knihy</Link>
+                                <Link href={"/u/admin/autori"}>Autori</Link>
+                                <Link href={"/u/admin/zanre"}>Žánre</Link>
+                            </>
+                        )}
                         <SignOutButton />
                     </>)
                 }

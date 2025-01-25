@@ -1,3 +1,4 @@
+import { pouzivatel } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 
 export type Entity = "klient" | "maser" | "maserstvo";
@@ -11,11 +12,7 @@ export interface EntityData {
 }
 
 export interface Auth {
-    id: number;
-    entity: Entity;
-    klient: boolean;
-    maser: boolean;
-    maserstvo: boolean;
+    pouzivatel: pouzivatel;
 }
 
 export interface EntityDataPayload extends JwtPayload {

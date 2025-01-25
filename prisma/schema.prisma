@@ -156,3 +156,57 @@ model typ_masaze {
   vymazane       Boolean         @default(false)
   cennik_masaze  cennik_masaze[]
 }
+
+model pouzivatel {
+  id               Int                @id @default(autoincrement())
+  meno             String
+  priezvisko       String
+  email            String             @unique
+  hash_heslo       String
+  je_admin         Boolean
+  kniha_pouzivatel kniha_pouzivatel[]
+}
+
+model kniha {
+  id               Int                @id @default(autoincrement())
+  nazov            String
+  rok_vydania      Int
+  pocet_stran      Int
+  autor            autor              @relation(fields: [autor_id], references: [id])
+  autor_id         Int
+  zaner            zaner              @relation(fields: [zaner_id], references: [id])
+  zaner_id         Int
+  kniha_pouzivatel kniha_pouzivatel[]
+}
+
+model autor {
+  id         Int      @id @default(autoincrement())
+  meno       String
+  priezvisko String
+  narodnost  String
+  datum_nar  DateTime
+  kniha      kniha[]
+}
+
+model zaner {
+  id    Int     @id @default(autoincrement())
+  nazov String
+  kniha kniha[]
+}
+
+enum stav {
+  chcemPrecitat
+  precitane
+  vratene
+}
+
+model kniha_pouzivatel {
+  id            Int        @id @default(autoincrement())
+  kniha         kniha      @relation(fields: [kniha_id], references: [id])
+  kniha_id      Int
+  pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id])
+  pouzivatel_id Int
+  precitane     Boolean    @default(false)
+  oblubene      Boolean    @default(false)
+  poznamka      String?
+}
