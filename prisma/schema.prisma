@@ -25,7 +25,7 @@ model pouzivatel {
 
 model kniha {
   id               Int                @id @default(autoincrement())
-  nazov            String
+  nazov            String             @unique
   rok_vydania      Int
   pocet_stran      Int
   autor            autor              @relation(fields: [autor_id], references: [id])
@@ -47,6 +47,7 @@ model autor {
 model zaner {
   id    Int     @id @default(autoincrement())
   nazov String
+  popis String
   kniha kniha[]
 }
 

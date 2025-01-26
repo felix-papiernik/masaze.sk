@@ -10,30 +10,30 @@ export async function middleware(req: NextRequest) {
 
   if (auth) {
     const dashUrl = redirectUrlAfterLogin(auth.pouzivatel.je_admin)
-    try {
-      if (path.startsWith("/prihlasenie") || path.startsWith("/registracia") || path.endsWith("/u")) {
-        return NextResponse.redirect(new URL(dashUrl, req.url));
-      } else if (path.startsWith("/u/moje-knihy") || path.startsWith("/u/moj-ucet")) {
-        return NextResponse.next();
-      } else if (auth.pouzivatel.je_admin == false && path.startsWith("/u/admin")) {
-        return NextResponse.redirect(new URL('/unauthorized', req.url));
-      } else if (auth.pouzivatel.je_admin == true && path.endsWith("/u/admin")) {
-        return NextResponse.redirect(new URL('/u/admin/knihy', req.url));
-      }
 
-      // Ak má používateľ prístup, pokračuj na URL
-      return NextResponse.next();
-    } catch (err) {
-      console.log("error in middleware", err)
-      // Ak token nie je platný alebo je expirovaný, presmeruj na login
-      return NextResponse.redirect(new URL('/prihlasenie', req.url));
+    // Prevent authenticated users from accessing login/registration/bad routes
+    if (path.startsWith("/prihlasenie") || path.startsWith("/registracia") || path.endsWith("/u")
+      || (auth.pouzivatel.je_admin && path === "/u/admin")) {
+      return NextResponse.redirect(new URL(dashUrl, req.url));
     }
-  } 
 
-  if (!auth && !path.startsWith("/prihlasenie") && !path.startsWith("/registracia")) {
+    // Prevent authenticated users from accessing login/registration
+    if (path.startsWith("/prihlasenie") || path.startsWith("/registracia")) {
+      return NextResponse.redirect(new URL(dashUrl, req.url));
+    }
+
+    // Prevent citatel users from accessing admin routes
+    if (auth.pouzivatel.je_admin == false && path.startsWith("/u/admin")) {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
+
+    return NextResponse.next();
+  } else if (!auth && !path.startsWith("/prihlasenie") && !path.startsWith("/registracia")) {
     console.log("redirecting to /prihlasenie from middleware")
     return NextResponse.redirect(new URL('/prihlasenie', req.url));
   }
+  console.log("nextResponse.next")
+  return NextResponse.next();
 }
 
 /**
@@ -42,5 +42,5 @@ export async function middleware(req: NextRequest) {
  * enhancing both the security and performance of your application.
  */
 export const config = {
-  matcher: ['/dashboard/:path*', '/u/:path*', '/prihlasenie', '/registracia'],
+  matcher: ['/dashboard/:path*', '/u/:path*', '/registracia', '/prihlasenie'],
 };

@@ -1,4 +1,3 @@
-import { Role, User } from "@prisma/client";
 import { z } from "zod";
 
 export interface CreateUserData extends UpdateUserData {
@@ -37,7 +36,10 @@ export const validateUpdateUserData = (data: UpdateUserData) => {
     return parsedUser;
 }
 
-export type LoginData = Pick<User, "email" | "password">;
+export type LoginData ={
+    email: string;
+    password: string;
+}
 
 export const validateLoginData = (data: LoginData) => {
     const parsedUser = z.object({
@@ -48,15 +50,12 @@ export const validateLoginData = (data: LoginData) => {
     return parsedUser;
 }
 
+export const validateKnihaData = (data: { nazov: string, rok_vydania: number, pocet_stran: number }) => {
+    const parsedKniha = z.object({
+        nazov: z.string().min(1, "Názov je povinný"),
+        rok_vydania: z.number().int().min(0, "Rok vydania musí byť kladné číslo"),
+        pocet_stran: z.number().int().min(0, "Počet strán musí byť kladné číslo"),
+    }).safeParse(data);
 
-export const UserSchema = z.object({
-    id: z.number(),
-    email: z.string().email("Nesprávna emailová adresa"),
-    password: z.string().min(8, "Heslo musí mať aspoň 8 znakov"),
-    role: z.enum(Object.keys(Role) as [keyof typeof Role]),
-    phone: z.string().min(10, "Telefónne číslo musí mať aspoň 10 znakov").max(12, "Telefónne číslo môže mať najviac 12 znakov"),
-    firstName: z.string(),
-    lastName: z.string(),
-});
-
-export const partialUserSchema = UserSchema.partial();
+    return parsedKniha;
+}

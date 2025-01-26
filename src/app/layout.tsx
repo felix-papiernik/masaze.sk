@@ -21,7 +21,7 @@ export default async function RootLayout({
   //takze nacitam pouzivatela z cookies
   let initialAuth = await getAuthFromCookies();
 
-  console.log("root layout initialAuth: ", initialAuth);
+  //console.log("root layout initialAuth: ", initialAuth);
 
   return (
     <html lang="en">

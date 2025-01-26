@@ -1,13 +1,15 @@
 "use client";
 
+import KnihaCard from '@/components/KnihaCard';
 import { addDemoKnihaAndRelations, deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { kniha } from '@prisma/client';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 
 export default function Knihy() {
     //const vsetkyKnihy = await getKnihy()
-    const [knihy, setKnihy] = useState<kniha[]>([]);
+    const [knihy, setKnihy] = useState<Awaited<ReturnType<typeof getKnihy>>>([]);
     const [loading, setLoading] = useState(true);
     //ked si otvorim knihu a vratim sa spat, nech sa mi zobrazi to co bolo, nie znova vsetky knihy
     //moznosti:
@@ -38,16 +40,19 @@ export default function Knihy() {
 
     return (
         <>
-            <h1>Knihy</h1>{
+            <h1>Knihy</h1>
+            {
                 loading == true ? <p>Načítavam...</p> : (
                     <>
-                        {knihy.length == 0 &&
-                            <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>}
-                        <ul>{
-                            knihy.map(k => (
-                                <li key={k.id}>{k.nazov}, počet strán: {k.pocet_stran}</li>
-                            ))
-                        }</ul>
+                        {knihy.length == 0 ?
+                            <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
+                            :
+                            <Stack spacing={2} padding={2}>
+                                {knihy.map(k => (
+                                    <KnihaCard key={k.id} kniha={k} autor={k.autor} redirectUrl='/u/admin/knihy' />
+                                ))}
+                            </Stack>
+                        }
 
                     </>
 
@@ -63,6 +68,11 @@ export default function Knihy() {
             >
                 Vymazať demo knihu
             </Button>
+            <Button
+                component={Link}
+                href='/u/admin/knihy/nova'
+                variant='contained'
+            >Vytvoriť novú knihu</Button>
         </>
     )
 }
