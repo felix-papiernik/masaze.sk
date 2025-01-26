@@ -36,7 +36,7 @@ export const validateUpdateUserData = (data: UpdateUserData) => {
     return parsedUser;
 }
 
-export type LoginData ={
+export type LoginData = {
     email: string;
     password: string;
 }
@@ -50,12 +50,15 @@ export const validateLoginData = (data: LoginData) => {
     return parsedUser;
 }
 
-export const validateKnihaData = (data: { nazov: string, rok_vydania: number, pocet_stran: number }) => {
-    const parsedKniha = z.object({
-        nazov: z.string().min(1, "Názov je povinný"),
-        rok_vydania: z.number().int().min(0, "Rok vydania musí byť kladné číslo"),
-        pocet_stran: z.number().int().min(0, "Počet strán musí byť kladné číslo"),
-    }).safeParse(data);
+export const knihaSchema = z.object({
+    nazov: z.string().min(1, "Názov je povinný"),
+    rok_vydania: z.number().int().min(0, "Rok vydania musí byť kladné číslo"),
+    pocet_stran: z.number().int().min(1, "Počet strán musí byť kladné číslo"),
+    autor_id: z.number().int().min(0, "Autor je povinný"),
+    zaner_id: z.number().int().min(0, "Žáner je povinný"),
+});
 
+export const validateKnihaData = (data: { nazov: string, rok_vydania: number, pocet_stran: number }) => {
+    const parsedKniha = knihaSchema.safeParse(data);
     return parsedKniha;
 }

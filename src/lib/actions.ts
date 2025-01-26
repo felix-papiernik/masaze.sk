@@ -10,6 +10,7 @@ import { Auth, AuthPayload } from "./types";
 
 import bcrypt from 'bcryptjs';
 import { validateKnihaData } from './zod';
+import { z } from 'zod';
 //dotenv.config();
 
 // require('dotenv').config();
@@ -261,31 +262,38 @@ export const deleteDemoKnihaAndRelations = async () => {
   });
 }
 
-export const createKniha = async (kniha: kniha): Promise<kniha | ErrorResponse> => {
-  const z = validateKnihaData(kniha);
-  if (z.error) {
-    return { error: z.error.errors[0].message };
-  }
+export interface UpsertKnihaResponse {
+  kniha: kniha | null;
+  error?: string;
+}
+
+
+
+export const createKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> => {
   try {
-    return await prisma.kniha.create({
+    const k = await prisma.kniha.create({
       data: kniha
     });
+    return { kniha: k };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      return { error: e.code === 'P2002' ? 'Kniha s týmto názvom už existuje' : 'Neznáma chyba' };
+      return { error: e.code === 'P2002' ? 'Kniha s týmto názvom už existuje' : 'Neznáma chyba' + e.message, kniha: null };
     }
-    return { error: 'Chyba' };
+    return { error: 'Neznáma chyba' + e, kniha: null };
   }
 }
-export const updateKniha = async (kniha: kniha): Promise<ErrorResponse | kniha> => {
 
-  const z = validateKnihaData(kniha);
-  if (z.error) {
-    return { error: z.error.errors[0].message };
+export const updateKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> => {
+  try {
+    const updatedKniha = await prisma.kniha.update({
+      where: { id: kniha.id },
+      data: kniha
+    });
+    return { kniha: updatedKniha };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? 'Kniha s týmto názvom už existuje' : 'Neznáma chyba' + e.message, kniha: null };
+    }
+    return { error: 'Neznáma chyba' + e, kniha: null };
   }
-
-  return await prisma.kniha.update({
-    where: { id: kniha.id },
-    data: kniha
-  });
 }
