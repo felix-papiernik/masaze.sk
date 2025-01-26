@@ -1,5 +1,6 @@
 "use client";
 
+import KnihaCard from '@/components/KnihaCard';
 import { addDemoKnihaAndRelations, deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
 import { Button, Typography } from '@mui/material';
 import { kniha } from '@prisma/client';
@@ -7,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 
 export default function Knihy() {
     //const vsetkyKnihy = await getKnihy()
-    const [knihy, setKnihy] = useState<kniha[]>([]);
+    const [knihy, setKnihy] = useState<Awaited<ReturnType<typeof getKnihy>>>([]);
     const [loading, setLoading] = useState(true);
     //ked si otvorim knihu a vratim sa spat, nech sa mi zobrazi to co bolo, nie znova vsetky knihy
     //moznosti:
@@ -31,13 +32,13 @@ export default function Knihy() {
             {
                 loading == true ? <p>Načítavam...</p> : (
                     <>
-                        {knihy.length == 0 &&
-                            <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>}
-                        <ul>{
+                        {knihy.length == 0 ?
+                            <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
+                            :
                             knihy.map(k => (
-                                <li key={k.id}>{k.nazov}, počet strán: {k.pocet_stran}</li>
+                                <KnihaCard key={k.id} kniha={k} autor={k.autor} redirectUrl='/knihy' />
                             ))
-                        }</ul>
+                        }
 
                     </>
 

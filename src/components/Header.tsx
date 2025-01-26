@@ -1,17 +1,18 @@
 "use client";
 
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, useTheme } from '@mui/material'
 import Link from 'next/link'
-import React, { use } from 'react'
+import React from 'react'
 import { SignOutButton } from './SignOutButton'
 import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
 
     const { auth } = useAuth();
+    const theme = useTheme();
 
     return (
-        <Stack component="header" sx={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2, backgroundColor: "grey" }}>
+        <Stack component="header" sx={{ backgroundColor: theme.palette.secondary.main, justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2}}>
             <Link href={"/"}>citaj.sk</Link>
             <Stack component="nav" direction="row" gap={4} alignItems="center">
                 <Link href={"/knihy"}>Knihy</Link>
@@ -37,7 +38,7 @@ export default function Header() {
                                 <Button
                                     component={Link}
                                     variant="outlined"
-                                    color='secondary'
+                                    color='primary'
                                     style={{ textTransform: "none", textDecoration: "none" }}
                                     href='/registracia'
                                 >

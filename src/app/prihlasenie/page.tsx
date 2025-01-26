@@ -4,17 +4,18 @@ import { useState } from "react";
 import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zod";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { createSession, tryToLogin } from "@/lib/actions";
 import { pouzivatel } from "@prisma/client";
 import { redirectUrlAfterLogin } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 
 export default function Page() {
 
   const { setAuth } = useAuth();
-
+  const router = useRouter();
   const [formState, setFormState] = useState({
     email: { value: "", error: "" },
     password: { value: "", error: "" },

@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from './prisma';
-import { pouzivatel, Prisma } from '@prisma/client';
+import { kniha, pouzivatel, Prisma } from '@prisma/client';
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { SignJWT } from "jose";
@@ -9,6 +9,8 @@ import { redirect } from "next/navigation"
 import { Auth, AuthPayload } from "./types";
 
 import bcrypt from 'bcryptjs';
+import { validateKnihaData } from './zod';
+import { z } from 'zod';
 //dotenv.config();
 
 // require('dotenv').config();
@@ -96,7 +98,7 @@ export async function tryToLogin({ email, password }: { email: string, password:
 
   if (pouzivatel === null) {
     return { error: "Používateľ neexistuje" };
-  } 
+  }
   const passwordMatch = bcrypt.compareSync(password, pouzivatel.hash_heslo);
   return passwordMatch ? pouzivatel : { error: "Nesprávne heslo" };
 }
@@ -183,7 +185,7 @@ export const createPouzivatel = async (createPouzivatelData: CreatePouzivatelDat
 }
 
 export const getKnihy = async () => {
-  return await prisma.kniha.findMany();
+  return await prisma.kniha.findMany({ include: { autor: true, zaner: true } });
 }
 
 export const deletePouzivatel = async (id: number) => {
@@ -212,6 +214,7 @@ export const addDemoKnihaAndRelations = async () => {
   const zaner = await prisma.zaner.create({
     data: {
       nazov: "Demo zaner",
+      popis: "Popis demo zanra",
     },
   });
 
@@ -257,4 +260,40 @@ export const deleteDemoKnihaAndRelations = async () => {
       nazov: "Demo zaner",
     }
   });
+}
+
+export interface UpsertKnihaResponse {
+  kniha: kniha | null;
+  error?: string;
+}
+
+
+
+export const createKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> => {
+  try {
+    const k = await prisma.kniha.create({
+      data: kniha
+    });
+    return { kniha: k };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? 'Kniha s týmto názvom už existuje' : 'Neznáma chyba' + e.message, kniha: null };
+    }
+    return { error: 'Neznáma chyba' + e, kniha: null };
+  }
+}
+
+export const updateKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> => {
+  try {
+    const updatedKniha = await prisma.kniha.update({
+      where: { id: kniha.id },
+      data: kniha
+    });
+    return { kniha: updatedKniha };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? 'Kniha s týmto názvom už existuje' : 'Neznáma chyba' + e.message, kniha: null };
+    }
+    return { error: 'Neznáma chyba' + e, kniha: null };
+  }
 }
