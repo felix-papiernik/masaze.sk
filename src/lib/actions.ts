@@ -188,6 +188,30 @@ export const getKnihy = async () => {
   return await prisma.kniha.findMany({ include: { autor: true, zaner: true } });
 }
 
+export const getAutori = async () => {
+  return await prisma.autor.findMany({
+    include: {
+      _count: {
+        select: {
+          kniha: true
+        }
+      }
+    }
+  });
+}
+
+export const getZanre = async () => {
+  return await prisma.zaner.findMany({
+    include: {
+      _count: {
+        select: {
+          kniha: true
+        }
+      }
+    }
+  });
+}
+
 export const deletePouzivatel = async (id: number) => {
   try {
     await prisma.pouzivatel.delete({

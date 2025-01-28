@@ -1,5 +1,6 @@
 //"use client";
 
+import EntityCard from '@/components/EntityCard';
 import KnihaCard from '@/components/KnihaCard';
 import { addDemoKnihaAndRelations, deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
 import { Button, Grid2, Typography } from '@mui/material';
@@ -34,17 +35,31 @@ export default async function Knihy() {
             {knihy.length == 0 ?
                 <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
                 :
-                <Grid2 container columns={{ xs: 1, md: 2, lg: 4 }} spacing={2} padding={2}>
-                    {knihy.map(k => (
-                        <Grid2 key={k.id} size={1}>
-                            <KnihaCard
-                                kniha={k}
-                                autor={k.autor}
-                                redirectUrl='/knihy'
-                            />
-                        </Grid2>
-                    ))}
-                </Grid2 >
+                <>
+                    <Grid2 container columns={{ xs: 1, md: 2, lg: 4 }} spacing={2} padding={2}>
+                        {knihy.map(k => (
+                            <Grid2 key={k.id} size={1}>
+                                <KnihaCard
+                                    kniha={k}
+                                    autor={k.autor}
+                                    redirectUrl='/knihy'
+                                />
+                            </Grid2>
+                        ))}
+                    </Grid2 >
+                    <Typography variant="h2" mb={0} mt={4}>Entity Cards</Typography>
+                    <Grid2 container columns={{ xs: 1, md: 2, lg: 4 }} spacing={2} padding={2}>
+                        {knihy.map(k => (
+                            <Grid2 key={k.id} size={1}>
+                                <EntityCard
+                                    type="kniha"
+                                    entity={k}
+                                    entityDetailUrl={'/knihy/' + k.id}
+                                />
+                            </Grid2>
+                        ))}
+                    </Grid2 >
+                </>
             }
         </>
     )
