@@ -26,7 +26,6 @@ export default function FilterEntityLayout(props: FilterProps) {
                         <Clear />
                     </IconButton>
                 </Stack>
-
             </Grid2>
             <Grid2 size={10}>
                 <EntityList data={props.filteredData} />
