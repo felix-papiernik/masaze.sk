@@ -47,7 +47,7 @@ export default async function Knihy() {
                             />
                         </Grid2>
                     ))}
-                </Grid2 >
+                </Grid2>
             }
             <Button
                 component={Link}
