@@ -35,6 +35,18 @@ export default function EntityCard(props: EntityCardProps) {
             )
             break;
         case 'autor':
+            cardComponent = (
+                <>
+                    <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.meno} {ed.data.priezvisko}</Link></Typography>
+                    <Typography variant="body2" mb={1}>Počet kníh v systéme: {ed.data._count.kniha}</Typography>
+                    {ed.edit && <Stack direction="row" spacing={1}>
+                        <Button variant="outlined" color="primary" component={Link} href={ed.edit.editUrl}>Upraviť</Button>
+                        <DeleteBookButton deleteBook={ed.edit.handleDelete} />
+                    </Stack>
+                    }
+                </>
+            )
+            break;
         case 'zaner':
     }
     return (
