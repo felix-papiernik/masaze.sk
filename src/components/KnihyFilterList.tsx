@@ -19,8 +19,6 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
         nazov: "",
         autor: "",
         zaner: "",
-        pocet_stran_od: "0",
-        pocet_stran_do: Math.max(...knihy.map(k => k.data.pocet_stran)).toString(),
     }
     const [currentFilterValues, setCurrentFilterValues] = useState({ ...defaultFilters });
     const [appliedFilters, setAppliedFilters] = useState({ ...defaultFilters });
@@ -60,7 +58,7 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
 
     const resetFilters = () => {
         setAppliedFilters({...defaultFilters})
-        router.push("");
+        router.replace(window.location.pathname)
     }
 
     // Lokálna filtrácia dát
@@ -70,10 +68,6 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
             if (!value) return true; // Ak filter nie je nastavený, preskoč ho
             if (key === "nazov" || key === "autor") {
                 return String(k.data[key] || "").toLowerCase().includes(value.toLowerCase());
-            } else if (key === "pocet_stran_od") {
-                return k.data.pocet_stran >= parseInt(value);
-            } else if (key === "pocet_stran_do") {
-                return k.data.pocet_stran <= parseInt(value);
             }
             // TODO: Implement Autocomplete and Slider filters
             return true;
@@ -94,6 +88,9 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                 />
                 <Autocomplete
                     options={[...new Map(knihy.map((k) => [k.data.autor.id, k.data.autor])).values()]}
+                    onChange={(event, newValue) => {
+                        handleFilterChange("autor")
+                    }}
                     getOptionLabel={(option) => option.meno + " " + option.priezvisko}
                     getOptionKey={(option) => option.id}
                     sx={{ mb: 2 }}
@@ -116,20 +113,6 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                         onChange={(e) => handleFilterChange("zaner", e.target.value)}
                     />}
                 />
-                <Stack direction="row" spacing={2} alignItems="center">
-                    <TextField
-                        label="Počet strán od"
-                        type="number"
-                        value={parseInt(currentFilterValues.pocet_stran_od)}
-                        onChange={(e) => handleFilterChange("pocet_stran_od", e.target.value)}
-                    />
-                    <TextField
-                        label="Počet strán do"
-                        type="number"
-                        value={parseInt(currentFilterValues.pocet_stran_do)}
-                        onChange={(e) => handleFilterChange("pocet_stran_do", e.target.value)}
-                    />
-                </Stack>
             </>}
             applyFilters={applyFilters}
             resetFilters={resetFilters}
