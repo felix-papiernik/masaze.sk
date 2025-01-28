@@ -5,9 +5,9 @@ import { notFound } from 'next/navigation';
 import React from 'react'
 
 export default async function Page({ params }
-    : { params: Promise<{ id: number }> }
+    : { params: Promise<{ id: string }> }
 ) {
-    const id = (await params).id;
+    const id = parseInt((await params).id);
     console.log(id)
 
     const data = await prisma.kniha.findUnique({

@@ -35,12 +35,11 @@ export default async function KnihaCard(props: knihaCardProps) {
             <Typography variant="h5"><Link href={redirectUrl}>{props.kniha.nazov}</Link></Typography>
             <Typography variant="body1">Autor: {props.autor.meno} {props.autor.priezvisko}</Typography>
             <Typography variant="body2" mb={1}>Počet strán: {props.kniha.pocet_stran}</Typography>
-            <Stack direction="row" spacing={1}>
-                {props.editUrl &&
-                    <Button variant="outlined" color="primary" component={Link} href={redirectUrl}>Upraviť</Button>
-                }
-                <DeleteBookButton deleteBook={deleteBook}/>
+            {props.editUrl && <Stack direction="row" spacing={1}>
+                <Button variant="outlined" color="primary" component={Link} href={redirectUrl}>Upraviť</Button>
+                <DeleteBookButton deleteBook={deleteBook} />
             </Stack>
+            }
         </Card>
     )
 }

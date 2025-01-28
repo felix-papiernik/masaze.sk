@@ -1,8 +1,10 @@
 'use client';
 import { createTheme, hexToRgb } from '@mui/material/styles';
-const richBlack = "#0C1618";
-const theme = createTheme({
 
+const richBlack = "#0C1618";
+//farebna paleta https://coolors.co/407899-faf4d3-ff595e-020300-36311f
+
+const theme = createTheme({
     palette: {
         primary: {
             main: "#407899", // Cererulean šedá pre neutrálny vzhľad
