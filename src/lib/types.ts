@@ -10,17 +10,32 @@ export interface AuthPayload extends JwtPayload {
     authData: Auth;
 }
 
-export interface KnihaGroupedData {
+
+export interface Editable {
+    editUrl: string,
+    handleDelete: () => Promise<void>
+}
+
+export interface DetailUrl {
+    detailUrl: string
+}
+
+export interface Actions {
+    view: DetailUrl,
+    edit?: Editable
+}
+
+export interface KnihaGroupedData extends Actions {
     type: "kniha",
     data: Awaited<ReturnType<typeof getKnihy>>[number]
 }
 
-export interface AutorGroupedData {
+export interface AutorGroupedData extends Actions {
     type: "autor",
     data: Awaited<ReturnType<typeof getAutori>>[number]
 }
 
-export interface ZanerGroupedData {
+export interface ZanerGroupedData extends Actions {
     type: "zaner",
     data: Awaited<ReturnType<typeof getZanre>>[number]
 }

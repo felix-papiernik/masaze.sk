@@ -61,13 +61,11 @@ export default function EntityList({ data, filters }: EntityListProps) {
             {data.length == 0 ?
                 <p>Mrzí nás to, no momentálne v systéme nemáme TODO :(</p>
                 :
-                <Grid2 container columns={{ xs: 1, md: 2, lg: 4 }} spacing={2} padding={2}>
-                    {filteredData.map((item, index) => (
-                        <Grid2 key={item.data.id} size={1}>
+                <Grid2 container columns={{ xs: 1, md: 2, lg: 4 }} spacing={2} pt={2}>
+                    {filteredData.map((entity, index) => (
+                        <Grid2 key={entity.data.id} size={1}>
                             <EntityCard
-                                entity={item}
-                                entityDetailUrl="/u/admin/knihy"
-                                editable={index % 2 === 0 ? { editUrl: "/u/admin/knihy/" + item.data.id, handleDelete: async () => { } } : undefined}
+                                entityGroupedData={entity}
                             />
                         </Grid2>
                     ))}
