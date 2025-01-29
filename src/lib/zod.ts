@@ -68,7 +68,8 @@ export const validateAutorData = (data: Pick<autor, "meno" | "priezvisko" | "dat
     const parsedAutor = z.object({
         meno: z.string().min(1, "Meno je povinné"),
         priezvisko: z.string().min(1, "Priezvisko je povinné"),
-        datum_nar: z.date({ message: "Nesprávny dátum" }),
+        //datum_nar: z.date({ message: "Nesprávny dátum" }),
+        datum_nar: z.date(),
         info: z.string().min(1, "Popis o autorovi je povinný"),
     }).safeParse(data);
 

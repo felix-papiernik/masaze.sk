@@ -6,7 +6,10 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { autor } from "@prisma/client";
 import React, { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/sk";
 
 type props = {
     autorToUpdate?: autor;
@@ -17,7 +20,12 @@ export default function AutorForm(props: props) {
         meno: { value: props.autorToUpdate?.meno ?? "", error: "" },
         priezvisko: { value: props.autorToUpdate?.priezvisko ?? "", error: "" },
         info: { value: props.autorToUpdate?.info ?? "", error: "" },
-        datum_nar: { value: props.autorToUpdate?.datum_nar ?? "1985-06-15", error: "" },
+        datum_nar: {
+            value: props.autorToUpdate?.datum_nar
+                ? dayjs(props.autorToUpdate.datum_nar, "YYYY-MM-DD") // Kvoli spracovaniu datumu prismou
+                : dayjs(),
+            error: ""
+        },
         error: "",
         isSubmitting: false,
     });
@@ -33,7 +41,7 @@ export default function AutorForm(props: props) {
             meno: formState.meno.value,
             priezvisko: formState.priezvisko.value,
             info: formState.info.value,
-            datum_nar: formState.datum_nar.value, // Dátum je uložený ako String
+            datum_nar: formState.datum_nar.value.format("YYYY-MM-DD"),
         } as autor;
 
         const validated = validateAutorData(autorData);
@@ -43,6 +51,7 @@ export default function AutorForm(props: props) {
                 meno: { value: formState.meno.value, error: validated.error.errors.find((e) => e.path.includes("meno"))?.message || "" },
                 priezvisko: { value: formState.priezvisko.value, error: validated.error.errors.find((e) => e.path.includes("priezvisko"))?.message || "" },
                 info: { value: formState.info.value, error: validated.error.errors.find((e) => e.path.includes("info"))?.message || "" },
+                datum_nar: { value: formState.datum_nar.value, error: validated.error.errors.find((e) => e.path.includes("datum_nar"))?.message || "" },
                 error: "Formulár obsahuje chyby",
             });
             return;
@@ -77,21 +86,30 @@ export default function AutorForm(props: props) {
             <TextField name="meno" label="Meno" value={formState.meno.value} onChange={updateField} required />
             <TextField name="priezvisko" label="Priezvisko" value={formState.priezvisko.value} onChange={updateField} required />
             <TextField name="info" label="Info" value={formState.info.value} onChange={updateField} required />
-
-            {/* DatePicker pre dátum narodenia */}
-            <DatePicker
-                label="Dátum narodenia"
-                value={dayjs(formState.datum_nar.value)} // Konverzia zo stringu na dayjs objekt
-                onChange={(newDate) => {
-                    if (newDate) {
-                        setFormState((prev) => ({
-                            ...prev,
-                            datum_nar: { value: newDate.format("YYYY-MM-DD"), error: "" }, // Uloženie dátumu ako string "YYYY-MM-DD"
-                        }));
-                    }
-                }}
-                slotProps={{ textField: { variant: "outlined", fullWidth: true, required: true } }}
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                    label="Dátum narodenia"
+                    value={formState.datum_nar.value}
+                    onChange={(newDate: Dayjs | null) => {
+                        if (newDate) {
+                            setFormState((prev) => ({
+                                ...prev,
+                                datum_nar: { value: newDate, error: "" },
+                            }));
+                        }
+                    }}
+                    format="DD.MM.YYYY"
+                    slotProps={{
+                        textField: {
+                            variant: "outlined",
+                            fullWidth: true,
+                            required: true,
+                            error: !!formState.datum_nar.error,
+                            helperText: formState.datum_nar.error,
+                        }
+                    }}
+                />
+            </LocalizationProvider>
 
             <Button type="submit" variant="contained" sx={{ width: "14rem" }}>
                 {props.autorToUpdate ? "Aktualizovať" : "Pridať"} autora
