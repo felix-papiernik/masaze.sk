@@ -18,17 +18,6 @@ export default async function Knihy() {
         view: { detailUrl: ("/knihy/" + k.id) }
     })) as EntityGroupedData[];
 
-    const autoriData = (await getAutori()).map(a => ({
-        type: 'autor',
-        data: a,
-        view: { detailUrl: ("/autori/" + a.id) }
-    })) as EntityGroupedData[];
-
-    async function filterBooks(formData: FormData) {
-        "use server";
-        const nazov = formData.get('nazov') as string;
-    }
-
     return (
         <>
             <Typography variant="h1" mb={6}>Knihy</Typography>
@@ -36,13 +25,6 @@ export default async function Knihy() {
                 <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
                 :
                 <KnihyFilterList knihy={knihyGrupedData as KnihaGroupedData[]} />
-            }
-            <KnihaCard kniha={knihy[0]} autor={knihy[0].autor} redirectUrl={'/knihy/'} />
-            <Typography variant="h2" mt={6}>Autori</Typography>
-            {autoriData.length == 0 ?
-                <p>Mrzí nás to, no momentálne v systéme nemáme žiadnych autorov :(</p>
-                :
-                <EntityList data={autoriData} />
             }
         </>
     )
