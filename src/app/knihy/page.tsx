@@ -5,7 +5,7 @@ import KnihaCard from '@/components/KnihaCard';
 import KnihyFilterList from '@/components/KnihyFilterList';
 import { getAutori, getKnihy } from '@/lib/actions';
 import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { kniha } from '@prisma/client';
 import React, { } from 'react'
 
@@ -19,13 +19,13 @@ export default async function Knihy() {
     })) as EntityGroupedData[];
 
     return (
-        <>
+        <Box px={4}>
             <Typography variant="h1" mb={6}>Knihy</Typography>
             {knihy.length == 0 ?
                 <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
                 :
                 <KnihyFilterList knihy={knihyGrupedData as KnihaGroupedData[]} />
             }
-        </>
+        </Box>
     )
 }

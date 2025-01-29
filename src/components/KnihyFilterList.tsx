@@ -4,27 +4,28 @@ import { KnihaGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Pagination, Stack, TextField } from "@mui/material";
 
 interface KnihyFilterListProps {
     knihy: KnihaGroupedData[];
 }
+type AutocompleteData = {
+    id: number | null;
+    value: string;
+};
+
+const knihyPerPage = 4;
+
+const defaultFilters = {
+    nazov: "",
+    autor: { id: null, value: "" } as AutocompleteData,
+    zaner: { id: null, value: "" } as AutocompleteData,
+    page: 1,
+};
 
 export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
-
-    type AutocompleteData = {
-        id: number | null;
-        value: string;
-    };
-
-    const defaultFilters = {
-        nazov: "",
-        autor: { id: null, value: "" } as AutocompleteData,
-        zaner: { id: null, value: "" } as AutocompleteData,
-    };
-
     const [currentFilterValues, setCurrentFilterValues] = useState({ ...defaultFilters });
     const [appliedFilters, setAppliedFilters] = useState({ ...defaultFilters });
 
@@ -45,12 +46,15 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                     if (zaner) {
                         params[key] = { id: zaner.id, value: zaner.nazov };
                     }
+                } else if (key === "page") {
+                    params.page = Number(value);
                 }
             }
         }
         setCurrentFilterValues(params);
         setAppliedFilters(params);
     }, [searchParams]);
+
 
     // Funkcia na aplikovanie filtrov a úpravu URL
     const applyFilters = () => {
@@ -60,10 +64,26 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
         if (currentFilterValues.nazov) filters["nazov"] = currentFilterValues.nazov;
         if (currentFilterValues.autor.id !== null) filters["autor"] = String(currentFilterValues.autor.id);
         if (currentFilterValues.zaner.id !== null) filters["zaner"] = String(currentFilterValues.zaner.id);
+        filters["page"] = "1";//po filtrovani reset
 
         const query = new URLSearchParams(filters).toString();
         router.push(`?${query}`);
     };
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+        setCurrentFilterValues((prev) => ({ ...prev, page: newPage }));
+        setAppliedFilters((prev) => ({ ...prev, page: newPage }));
+
+        const filters: { [key: string]: string } = {};
+        if (appliedFilters.nazov) filters["nazov"] = appliedFilters.nazov;
+        if (appliedFilters.autor.id !== null) filters["autor"] = String(appliedFilters.autor.id);
+        if (appliedFilters.zaner.id !== null) filters["zaner"] = String(appliedFilters.zaner.id);
+        filters["page"] = String(newPage);
+
+        const query = new URLSearchParams(filters).toString();
+        router.push(`?${query}`);
+    };
+
 
     const resetFilters = () => {
         setAppliedFilters({ ...defaultFilters });
@@ -75,7 +95,7 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
     const filteredData = knihy.filter((k) => {
         return Object.keys(defaultFilters).every((key) => {
             const value = appliedFilters[key as keyof typeof defaultFilters];
-            if (!value || 
+            if (!value ||
                 (key !== "nazov" && (value as AutocompleteData).id === null)) return true;
             if (key === "nazov") {
                 return k.data.nazov.toLowerCase().includes((value as string).toLowerCase());
@@ -88,7 +108,10 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
             return true;
         });
     });
-    console.log(filteredData);
+
+
+    const startIndex = (appliedFilters.page - 1) * knihyPerPage;
+    const paginatedData = filteredData.slice(startIndex, startIndex + knihyPerPage);
 
     // Extrahovanie unikátnych autorov a žánrov pre Autocomplete
     const uniqueAutors = [...new Map(knihy.map((k) => [k.data.autor.id, k.data.autor])).values()].map((a) => ({
@@ -162,8 +185,13 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
             }
             applyFilters={applyFilters}
             resetFilters={resetFilters}
-            filteredData={filteredData}
-            pagination={<div>Pagination</div>}
+            filteredData={paginatedData}
+            pagination={<Pagination sx={{ mt: 2 }}
+                count={Math.ceil(filteredData.length / knihyPerPage)}
+                page={appliedFilters.page}
+                onChange={handlePageChange}
+                color="primary"
+            />}
         />
     );
 }
