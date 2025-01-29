@@ -29,8 +29,8 @@ export default async function Page({ params }
         <>
             <Typography variant="h1">{data?.nazov}</Typography>
             <Typography variant="body1">Počet strán: {data?.pocet_stran}</Typography>
-            <Typography variant="body1">Autor: {data?.autor.meno} {data?.autor.priezvisko}</Typography>
-            <Typography variant="body1" component={Link} href={"/zanre/" + data.zaner_id}>Žáner: {data.zaner.nazov}</Typography>
+            <Typography variant="body1">Autor: <Link href={"/autori/" + data.autor_id}>{data?.autor.meno} {data?.autor.priezvisko}</Link></Typography>
+            <Typography variant="body1" >Žáner: <Link href={"/zanre/" + data.zaner_id}>{data.zaner.nazov}</Link></Typography>
         </>
     )
 }
