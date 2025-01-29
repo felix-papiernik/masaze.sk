@@ -23,7 +23,7 @@ export default function AutorForm(props: props) {
         datum_nar: {
             value: props.autorToUpdate?.datum_nar
                 ? dayjs(props.autorToUpdate.datum_nar, "YYYY-MM-DD") // Kvoli spracovaniu datumu prismou
-                : dayjs(),
+                : dayjs(null),
             error: ""
         },
         error: "",
@@ -85,8 +85,7 @@ export default function AutorForm(props: props) {
         <Stack component={"form"} onSubmit={handleSubmit} direction={"column"} gap={2} padding={2}>
             <TextField name="meno" label="Meno" value={formState.meno.value} onChange={updateField} required />
             <TextField name="priezvisko" label="Priezvisko" value={formState.priezvisko.value} onChange={updateField} required />
-            <TextField name="info" label="Info" value={formState.info.value} onChange={updateField} required />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="sk">
                 <DatePicker
                     label="Dátum narodenia"
                     value={formState.datum_nar.value}
@@ -110,7 +109,7 @@ export default function AutorForm(props: props) {
                     }}
                 />
             </LocalizationProvider>
-
+            <TextField name="info" label="Info" value={formState.info.value} onChange={updateField} required multiline minRows={3}/>
             <Button type="submit" variant="contained" sx={{ width: "14rem" }}>
                 {props.autorToUpdate ? "Aktualizovať" : "Pridať"} autora
             </Button>

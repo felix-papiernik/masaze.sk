@@ -7,7 +7,6 @@ export interface CreateUserData extends UpdateUserData {
 
 const password = z.string().min(8, "Heslo musí mať aspoň 8 znakov");
 const email = z.string().min(1, "Email je povinný").email("Nesprávny formát emailu");
-const phoneNumberRegex = /^[0-9]{10}$/;
 
 export const validateCreateUserData = (data: CreateUserData) => {
 
@@ -64,12 +63,12 @@ export const validateKnihaData = (data: { nazov: string, rok_vydania: number, po
     return parsedKniha;
 }
 
-export const validateAutorData = (data: Pick<autor, "meno" | "priezvisko" | "datum_nar" | "info">) => {
+export const validateAutorData = (data: Omit<autor, "id">) => {
     const parsedAutor = z.object({
         meno: z.string().min(1, "Meno je povinné"),
         priezvisko: z.string().min(1, "Priezvisko je povinné"),
         //datum_nar: z.date({ message: "Nesprávny dátum" }),
-        datum_nar: z.date(),
+        datum_nar: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Nesprávny dátum"),
         info: z.string().min(1, "Popis o autorovi je povinný"),
     }).safeParse(data);
 
