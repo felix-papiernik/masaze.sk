@@ -1,7 +1,7 @@
 // "use client";
 
 import KnihaCard from '@/components/KnihaCard';
-import KnihyFilterList from '@/components/KnihyFilterList';
+import KnihyFilterList from '@/components/layouts/KnihyFilterList';
 import { addDemoKnihaAndRelations, deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';

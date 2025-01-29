@@ -2,7 +2,7 @@
 
 import { KnihaGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
-import FilterEntityLayout from "./layouts/FilterEntityLayout";
+import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Autocomplete, Pagination, Stack, TextField } from "@mui/material";
 

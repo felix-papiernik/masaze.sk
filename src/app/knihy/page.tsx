@@ -1,13 +1,9 @@
 //"use client";
 
-import EntityList from '@/components/EntityList';
-import KnihaCard from '@/components/KnihaCard';
-import KnihyFilterList from '@/components/KnihyFilterList';
+import KnihyFilterList from '@/components/layouts/KnihyFilterList';
 import PublicEntityPageLayout from '@/components/layouts/PublicEntityPageLayout';
-import { getAutori, getKnihy } from '@/lib/actions';
+import { getKnihy } from '@/lib/actions';
 import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
-import { Box, Typography } from '@mui/material';
-import { kniha } from '@prisma/client';
 import React, { } from 'react'
 
 export default async function Knihy() {
@@ -17,7 +13,7 @@ export default async function Knihy() {
         type: 'kniha',
         data: k,
         view: { detailUrl: ("/knihy/" + k.id) }
-    })) as EntityGroupedData[];
+    })) as KnihaGroupedData[];
 
     return (
         <PublicEntityPageLayout
@@ -25,7 +21,7 @@ export default async function Knihy() {
             noEntitiesMessage='Momentálne v systéme nie sú žiadne knihy :('
             entityLength={knihy.length}
             filterList={<KnihyFilterList
-                knihy={knihyGrupedData as KnihaGroupedData[]}
+                knihy={knihyGrupedData}
                 direction='row'
             />}
         />

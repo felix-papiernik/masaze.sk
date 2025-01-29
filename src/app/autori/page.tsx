@@ -1,28 +1,28 @@
-import EntityList from '@/components/EntityList';
+import AutoriFilterList from '@/components/layouts/AutorFIlterList';
+import PublicEntityPageLayout from '@/components/layouts/PublicEntityPageLayout';
 import { getAutori } from '@/lib/actions';
-import prisma from '@/lib/prisma'
-import { EntityGroupedData } from '@/lib/types';
-import { Typography } from '@mui/material';
+import { AutorGroupedData } from '@/lib/types';
 import React from 'react'
 
 export default async function Autori() {
 
-    
+
     const autoriData = (await getAutori()).map(a => ({
         type: 'autor',
         data: a,
         view: { detailUrl: ("/autori/" + a.id) }
-    })) as EntityGroupedData[];
+    })) as AutorGroupedData[];
 
 
     return (
-        <>
-            <Typography variant="h2" mt={6}>Autori</Typography>
-            {autoriData.length == 0 ?
-                <p>Mrzí nás to, no momentálne v systéme nemáme žiadnych autorov :(</p>
-                :
-                <EntityList data={autoriData} />
-            }
-        </>
+        <PublicEntityPageLayout
+            title='Autori'
+            noEntitiesMessage='Momentálne v systéme nie sú žiadny autori :('
+            entityLength={autoriData.length}
+            filterList={<AutoriFilterList
+                autori={autoriData}
+                direction='row'
+            />}
+        />
     )
 }
