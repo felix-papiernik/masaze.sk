@@ -15,10 +15,20 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    type AutocompleteData = {
+        id: number | null,
+        value: string
+    }
     const defaultFilters = {
         nazov: "",
-        autor: "",
-        zaner: "",
+        autor: {
+            id: null,
+            value: "",
+        } as AutocompleteData,
+        zaner: {
+            id: null,
+            value: ""
+        } as AutocompleteData,
     }
     const [currentFilterValues, setCurrentFilterValues] = useState({ ...defaultFilters });
     const [appliedFilters, setAppliedFilters] = useState({ ...defaultFilters });
@@ -28,8 +38,24 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
 
         if (searchParams) {
             for (const [key, value] of searchParams.entries()) {
-                if (key in defaultFilters) {
-                    params[key as keyof typeof defaultFilters] = value;
+                if (key === "nazov") {
+                    params[key] = value;
+                } else if (key === "autor") {
+                    const autor = knihy.find((k) => k.data.autor.id === Number(value))?.data.autor;
+                    if (autor) {
+                        params[key] = {
+                            id: autor.id,
+                            value: autor.meno + " " + autor.priezvisko
+                        }
+                    }
+                } else if (key === "zaner") {
+                    const zaner = knihy.find((k) => k.data.zaner.id === Number(value))?.data.zaner;
+                    if (zaner) {
+                        params[key] = {
+                            id: zaner.id,
+                            value: zaner.nazov
+                        }
+                    }
                 }
             }
         }
@@ -46,18 +72,22 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
     // Aplikovanie filtrov a synchronizácia s URL
     const applyFilters = () => {
         setAppliedFilters(currentFilterValues);
-        let notEmptyFilters = { ...currentFilterValues };
-        for (const key in notEmptyFilters) {
-            if (notEmptyFilters[key as keyof typeof defaultFilters] === "") {
-                delete notEmptyFilters[key as keyof typeof defaultFilters];
+        let filters = {} as { [key: string]: string };
+        for (const key in currentFilterValues) {
+            if (key === "nazov" && currentFilterValues[key] !== "") {
+                filters[key] = currentFilterValues[key];
+            } else if (key === "autor" && currentFilterValues[key].id !== null) {
+                filters[key] = currentFilterValues[key].id!.toString();
+            } else if (key === "zaner" && currentFilterValues[key].id !== null) {
+                filters[key] = String(currentFilterValues[key].id);
             }
         }
-        const query = new URLSearchParams(notEmptyFilters).toString();
+        const query = new URLSearchParams(filters).toString();
         router.push(`?${query}`);
     };
 
     const resetFilters = () => {
-        setAppliedFilters({...defaultFilters})
+        setAppliedFilters({ ...defaultFilters })
         router.replace(window.location.pathname)
     }
 
@@ -66,8 +96,13 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
         return Object.keys(defaultFilters).every((key) => {
             const value = appliedFilters[key as keyof typeof defaultFilters];
             if (!value) return true; // Ak filter nie je nastavený, preskoč ho
-            if (key === "nazov" || key === "autor") {
-                return String(k.data[key] || "").toLowerCase().includes(value.toLowerCase());
+            if (key === "nazov") {
+                const filterValue = typeof value === 'string' ? value : value.value;
+                return String(k.data[key] || "").toLowerCase().includes(filterValue.toLowerCase());
+            } else if (key === "autor") {
+                return k.data.autor.id === parseInt(value.toString());
+            } else if (key === "zaner") {
+                return k.data.zaner.id === parseInt(value.toString());
             }
             // TODO: Implement Autocomplete and Slider filters
             return true;
@@ -75,6 +110,7 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
         });
     });
 
+    const uniqueAutors = [...new Map(knihy.map((k) => [k.data.autor.id, k.data.autor])).values()];
 
     return (
         <FilterEntityLayout
@@ -87,9 +123,20 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                     sx={{ mb: 2 }}
                 />
                 <Autocomplete
-                    options={[...new Map(knihy.map((k) => [k.data.autor.id, k.data.autor])).values()]}
+                    value={currentFilterValues.autor.id ? {
+                        id: currentFilterValues.autor.id,
+                        value: currentFilterValues.autor.value
+                    } : { id: null, value: ""
+                    }}
+                    options={[uniqueAutors.map((a) => ({ id: a.id, value: a.meno + " " + a.priezvisko }))]}
                     onChange={(event, newValue) => {
-                        handleFilterChange("autor")
+                        setCurrentFilterValues((prev) => ({
+                            ...prev,
+                            autor: {
+                                id: newValue?.id || null,
+                                value: newValue ? newValue.meno + " " + newValue.priezvisko : ""
+                            }
+                        }));
                     }}
                     getOptionLabel={(option) => option.meno + " " + option.priezvisko}
                     getOptionKey={(option) => option.id}
@@ -97,20 +144,25 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                     renderInput={(params) => <TextField
                         {...params}
                         label="Autor"
-                        value={currentFilterValues.autor}
-                        onChange={(e) => handleFilterChange("autor", e.target.value)}
                     />}
                 />
                 <Autocomplete
                     options={[...new Map(knihy.map((k) => [k.data.zaner.id, k.data.zaner])).values()]}
+                    onChange={(event, newValue) => {
+                        setCurrentFilterValues((prev) => ({
+                            ...prev,
+                            zaner: {
+                                id: newValue?.id || null,
+                                value: newValue ? newValue.nazov : ""
+                            }
+                        }));
+                    }}
                     getOptionLabel={(option) => option.nazov}
                     getOptionKey={(option) => option.id}
                     sx={{ mb: 2 }}
                     renderInput={(params) => <TextField
                         {...params}
                         label="Žáner"
-                        value={currentFilterValues.zaner}
-                        onChange={(e) => handleFilterChange("zaner", e.target.value)}
                     />}
                 />
             </>}
