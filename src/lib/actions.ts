@@ -332,10 +332,11 @@ export const createAutor = async (autor: autor): Promise<UpsertAutorResponse> =>
     });
     return { autor: a };
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      return { error: e.code === 'P2002' ? existingAutorMessage : 'Neznáma chyba' + e.message, autor: null };
-    }
-    return { error: 'Chyba pri vytváraní autora' + e, autor: null };
+    return {
+      error: e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
+        ? existingAutorMessage : 'Chyba pri aktualizovaní zanera' + e,
+      autor: null
+    };
   }
 }
 
@@ -347,10 +348,11 @@ export const updateAutor = async (autor: autor): Promise<UpsertAutorResponse> =>
     });
     return { autor: updatedAutor };
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      return { error: e.code === 'P2002' ? existingAutorMessage + e.message : e.message, autor: null };
-    }
-    return { error: 'Chyba pri aktualizovaní autora' + e, autor: null };
+    return {
+      error: e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
+        ? existingAutorMessage : 'Chyba pri aktualizovaní zanera' + e,
+      autor: null
+    };
   }
 }
 
@@ -366,10 +368,11 @@ export const createZaner = async (zaner: zaner): Promise<UpsertZanerResponse> =>
     });
     return { zaner: a };
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      return { error: e.code === 'P2002' ? existingZanerMessage + e.message : e.message, zaner: null };
-    }
-    return { error: 'Chyba pri vytváraní zanera' + e, zaner: null };
+    return {
+      error: e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
+        ? existingZanerMessage : 'Chyba pri aktualizovaní zanera' + e,
+      zaner: null
+    };
   }
 }
 
@@ -381,9 +384,10 @@ export const updateZaner = async (zaner: zaner): Promise<UpsertZanerResponse> =>
     });
     return { zaner: updatedzaner };
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      return { error: e.code === 'P2002' ? existingZanerMessage + e.message : e.message, zaner: null };
-    }
-    return { error: 'Chyba pri aktualizovaní zanera' + e, zaner: null };
+    return {
+      error: e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
+        ? existingZanerMessage : 'Chyba pri aktualizovaní zanera' + e,
+      zaner: null
+    };
   }
 }

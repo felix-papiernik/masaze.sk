@@ -108,7 +108,7 @@ export default function ZanreFilterList({ zanre: initZanre, direction }: AutoriF
 
     const uniqueZanre = [...new Map(zanre.map((z) => [z.data.id, z.data])).values()].map((a) => ({
         id: a.id,
-        value: a.popis,
+        value: a.nazov,
     }));
 
     // const handleAddDemoAutor = async () => {
@@ -140,10 +140,11 @@ export default function ZanreFilterList({ zanre: initZanre, direction }: AutoriF
                                 }));
                             }}
                             getOptionLabel={(option) => option.value}
+                            getOptionKey={(option) => option.id}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
                             sx={{ mb: 2, minWidth: direction === "row" ? "100%" : "16rem" }}
-                            renderInput={(params) => <TextField {...params} label="Autor" />}
-                            noOptionsText="Nenašiel sa žiaden autor"
+                            renderInput={(params) => <TextField {...params} label="Žáner" />}
+                            noOptionsText="Nenašiel sa žiaden žáner"
                         />
                     </>
                 }

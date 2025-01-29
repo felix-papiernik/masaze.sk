@@ -22,6 +22,7 @@ export default async function page() {
         }
 
     })) as ZanerGroupedData[];
+    
     return (
         <>
             <Typography variant='h1' mb={2}>Žánre</Typography>

@@ -17,7 +17,7 @@ type AutorAutocompleteData = {
     value: string;
 };
 
-const autoriPerPage = 4;
+const autoriPerPage = 3;
 
 const defaultFilters = {
     autor: { id: null, value: "" } as AutorAutocompleteData,
@@ -159,11 +159,7 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
                     onChange={handlePageChange}
                     color="primary"
                 />}
-
             />
-            <Button variant="contained" onClick={async () => { await addDemoKnihaAndRelations(); revalidatePath("/u/admin/autori") }}>
-                Add demo autor
-            </Button>
         </>
     );
 }

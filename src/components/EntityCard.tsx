@@ -50,7 +50,8 @@ export default function EntityCard(props: EntityCardProps) {
             cardComponent = (
                 <>
                     <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.nazov}</Link></Typography>
-                    <Typography variant="body2" mb={1}>Počet kníh v systéme: {ed.data._count.kniha}</Typography>
+                    <Typography variant="body1">Počet kníh v systéme: {ed.data._count.kniha}</Typography>
+                    <Typography variant="body2" mb={1}>{ed.data.popis.slice(0, 100) + "..."}</Typography>
                     {ed.edit && <Button
                         variant="outlined"
                         color="primary"

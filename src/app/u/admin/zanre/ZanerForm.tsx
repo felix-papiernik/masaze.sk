@@ -53,10 +53,7 @@ export default function ZanerForm(props: props) {
         }
 
         setUpserted(true);
-        if (!props.zanerToUpdate) {
-            setFormState(getEmptyFormState);
-            return;
-        }
+        setFormState(props.zanerToUpdate ? { ...formState, error: "" } : getEmptyFormState());
     };
 
     const updateField = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +65,7 @@ export default function ZanerForm(props: props) {
 
     return (
         <Stack component={"form"} onSubmit={handleSubmit} direction={"column"} gap={2} padding={2}>
-            <TextField name="nazov" label="Názov" value={formState.nazov.value} onChange={updateField} required />            
+            <TextField name="nazov" label="Názov" value={formState.nazov.value} onChange={updateField} required />
             <TextField name="popis" label="Popis žánru" value={formState.popis.value} onChange={updateField} required multiline minRows={3} />
             <Button type="submit" variant="contained" sx={{ width: "14rem" }}>
                 {props.zanerToUpdate ? "Aktualizovať" : "Pridať"} žáner

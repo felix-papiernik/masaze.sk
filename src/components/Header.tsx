@@ -17,6 +17,7 @@ export default function Header() {
             <Stack component="nav" direction="row" gap={4} alignItems="center">
                 <Link href={"/knihy"}>Knihy</Link>
                 <Link href={"/autori"}>Autori</Link>
+                <Link href={"/zanre"}>Žánre</Link>
                 {
                     auth ? <>
                         {auth.pouzivatel.je_admin && <Link href={"/u/admin/"}>Správa systému</Link>}
