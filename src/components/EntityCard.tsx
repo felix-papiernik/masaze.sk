@@ -1,8 +1,6 @@
 import { Button, Card, Link, Stack, Typography } from '@mui/material'
-import { autor, kniha, zaner } from '@prisma/client'
 import React from 'react'
 import DeleteBookButton from './deleteEntityButtons/DeleteBookButton'
-import { getAutori, getKnihy, getZanre } from '@/lib/actions'
 import { EntityGroupedData } from '@/lib/types'
 import DeleteAutorButton from './deleteEntityButtons/DeleteAutorButton'
 

@@ -28,7 +28,7 @@ model kniha {
   nazov            String             @unique
   rok_vydania      Int
   pocet_stran      Int
-  autor            autor              @relation(fields: [autor_id], references: [id])
+  autor            autor              @relation(fields: [autor_id], references: [id], onDelete: Cascade)
   autor_id         Int
   zaner            zaner              @relation(fields: [zaner_id], references: [id])
   zaner_id         Int

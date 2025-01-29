@@ -1,5 +1,6 @@
 import AutoriFilterList from '@/components/layouts/AutorFIlterList';
 import { deleteDemoKnihaAndRelations, getAutori } from '@/lib/actions';
+import prisma from '@/lib/prisma';
 import { AutorGroupedData } from '@/lib/types';
 import { Typography, Button } from '@mui/material';
 import Link from 'next/link';
@@ -15,7 +16,11 @@ export default async function Autori() {
             handleDelete: async () => {
                 "use server";
                 //TODO: delete autor
-                await deleteDemoKnihaAndRelations();
+                await prisma.autor.delete({
+                    where: {
+                        id: a.id
+                    }
+                })
             }
         }
 

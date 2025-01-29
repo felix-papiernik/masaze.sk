@@ -17,7 +17,7 @@ export default function DeleteAutorButton({ deleteAutor }: { deleteAutor: () => 
 
     return (
         <Button variant="text" color={deleteCounter === 0 ? "primary" : "warning"} onClick={handleDelete} >{
-            deleteCounter === 0 ? "Vymazať autora" : "Potvrdiť vymazanie"
+            deleteCounter === 0 ? "Vymazať autora a jeho knihy" : "Potvrdiť vymazanie"
         }</Button>
     )
 }
