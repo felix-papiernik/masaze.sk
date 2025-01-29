@@ -42,11 +42,12 @@ model autor {
   datum_nar  String
   info       String  @default("")
   kniha      kniha[]
+  @@unique([meno, priezvisko])
 }
 
 model zaner {
   id    Int     @id @default(autoincrement())
-  nazov String
+  nazov String  @unique
   popis String
   kniha kniha[]
 }

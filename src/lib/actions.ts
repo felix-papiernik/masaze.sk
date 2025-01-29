@@ -321,17 +321,21 @@ export const updateKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> =>
 }
 
 export interface UpsertAutorResponse {
-  zaner: autor | null;
+  autor: autor | null;
   error?: string;
 }
+const existingAutorMessage = 'Autor s týmto menom a priezviskom už existuje';
 export const createAutor = async (autor: autor): Promise<UpsertAutorResponse> => {
   try {
     const a = await prisma.autor.create({
       data: autor
     });
-    return { zaner: a };
+    return { autor: a };
   } catch (e) {
-    return { error: 'Chyba pri vytváraní autora' + e, zaner: null };
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? existingAutorMessage : 'Neznáma chyba' + e.message, autor: null };
+    }
+    return { error: 'Chyba pri vytváraní autora' + e, autor: null };
   }
 }
 
@@ -341,9 +345,12 @@ export const updateAutor = async (autor: autor): Promise<UpsertAutorResponse> =>
       where: { id: autor.id },
       data: autor
     });
-    return { zaner: updatedAutor };
+    return { autor: updatedAutor };
   } catch (e) {
-    return { error: 'Chyba pri aktualizovaní autora' + e, zaner: null };
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? existingAutorMessage + e.message : e.message, autor: null };
+    }
+    return { error: 'Chyba pri aktualizovaní autora' + e, autor: null };
   }
 }
 
@@ -351,6 +358,7 @@ export interface UpsertZanerResponse {
   zaner: zaner | null;
   error?: string;
 }
+const existingZanerMessage = 'Žáner s týmto názvom už existuje';
 export const createZaner = async (zaner: zaner): Promise<UpsertZanerResponse> => {
   try {
     const a = await prisma.zaner.create({
@@ -358,6 +366,9 @@ export const createZaner = async (zaner: zaner): Promise<UpsertZanerResponse> =>
     });
     return { zaner: a };
   } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? existingZanerMessage + e.message : e.message, zaner: null };
+    }
     return { error: 'Chyba pri vytváraní zanera' + e, zaner: null };
   }
 }
@@ -370,6 +381,9 @@ export const updateZaner = async (zaner: zaner): Promise<UpsertZanerResponse> =>
     });
     return { zaner: updatedzaner };
   } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return { error: e.code === 'P2002' ? existingZanerMessage + e.message : e.message, zaner: null };
+    }
     return { error: 'Chyba pri aktualizovaní zanera' + e, zaner: null };
   }
 }
