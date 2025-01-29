@@ -1,3 +1,4 @@
+import { autor } from "@prisma/client";
 import { z } from "zod";
 
 export interface CreateUserData extends UpdateUserData {
@@ -61,4 +62,15 @@ export const knihaSchema = z.object({
 export const validateKnihaData = (data: { nazov: string, rok_vydania: number, pocet_stran: number }) => {
     const parsedKniha = knihaSchema.safeParse(data);
     return parsedKniha;
+}
+
+export const validateAutorData = (data: Pick<autor, "meno" | "priezvisko" | "datum_nar" | "info">) => {
+    const parsedAutor = z.object({
+        meno: z.string().min(1, "Meno je povinné"),
+        priezvisko: z.string().min(1, "Priezvisko je povinné"),
+        datum_nar: z.date({ message: "Nesprávny dátum" }),
+        info: z.string().min(1, "Popis o autorovi je povinný"),
+    }).safeParse(data);
+
+    return parsedAutor;
 }

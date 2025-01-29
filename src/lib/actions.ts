@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from './prisma';
-import { kniha, pouzivatel, Prisma } from '@prisma/client';
+import { autor, kniha, pouzivatel, Prisma } from '@prisma/client';
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { SignJWT } from "jose";
@@ -230,8 +230,8 @@ export const addDemoKnihaAndRelations = async () => {
     data: {
       meno: "Demo",
       priezvisko: "Autor",
-      narodnost: "Unknown",
-      datum_nar: new Date(),
+      info: "Info o demo autorovi",
+      datum_nar: "1985-06-15",
     },
   });
 
@@ -291,8 +291,6 @@ export interface UpsertKnihaResponse {
   error?: string;
 }
 
-
-
 export const createKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> => {
   try {
     const k = await prisma.kniha.create({
@@ -319,5 +317,32 @@ export const updateKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> =>
       return { error: e.code === 'P2002' ? 'Kniha s týmto názvom už existuje' : 'Neznáma chyba' + e.message, kniha: null };
     }
     return { error: 'Neznáma chyba' + e, kniha: null };
+  }
+}
+
+export interface UpsertAutorResponse {
+  autor: autor | null;
+  error?: string;
+}
+export const createAutor = async (autor: autor): Promise<UpsertAutorResponse> => {
+  try {
+    const a = await prisma.autor.create({
+      data: autor
+    });
+    return { autor: a };
+  } catch (e) {
+    return { error: 'Chyba pri vytváraní autora' + e, autor: null };
+  }
+}
+
+export const updateAutor = async (autor: autor): Promise<UpsertAutorResponse> => {
+  try {
+    const updatedAutor = await prisma.autor.update({
+      where: { id: autor.id },
+      data: autor
+    });
+    return { autor: updatedAutor };
+  } catch (e) {
+    return { error: 'Chyba pri aktualizovaní autora' + e, autor: null };
   }
 }

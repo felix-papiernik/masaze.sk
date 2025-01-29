@@ -4,7 +4,9 @@ import { AutorGroupedData, KnihaGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Autocomplete, Pagination, Stack, TextField } from "@mui/material";
+import { Autocomplete, Button, Pagination, Stack, TextField } from "@mui/material";
+import { addDemoKnihaAndRelations } from "@/lib/actions";
+import { revalidatePath } from "next/cache";
 
 interface AutoriFilterListProps {
     autori: AutorGroupedData[];
@@ -102,45 +104,56 @@ export default function AutoriFilterList({ autori: knihy, direction }: AutoriFil
         value: `${a.meno} ${a.priezvisko}`,
     }));
 
+    // const handleAddDemoAutor = async () => {
+    //     "use server";
+    //     await addDemoKnihaAndRelations();
+    // }
+
     return (
-        <FilterEntityLayout
-            direction={direction || "row"}
-            filters={
-                <>
-                    <Autocomplete
-                        value={uniqueAutors.find((a) => a.id === currentFilterValues.autor.id) || null}
-                        options={uniqueAutors}
-                        onChange={(event, newValue) => {
-                            setCurrentFilterValues((prev) => ({
-                                ...prev,
-                                autor: newValue || { id: null, value: "" },
-                            }));
-                        }}
-                        inputValue={currentFilterValues.autor.value}
-                        onInputChange={(event, newInputValue) => {
-                            console.log("newInputValue", newInputValue);
-                            setCurrentFilterValues((prev) => ({
-                                ...prev,
-                                autor: { id: null, value: newInputValue },
-                            }));
-                        }}
-                        getOptionLabel={(option) => option.value}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        sx={{ mb: 2, minWidth: direction === "row" ? "100%" : "16rem" }}
-                        renderInput={(params) => <TextField {...params} label="Autor" />}
-                        noOptionsText="Nenašiel sa žiaden autor"
-                    />
-                </>
-            }
-            applyFilters={applyFilters}
-            resetFilters={resetFilters}
-            filteredData={paginatedData}
-            pagination={<Pagination sx={{ mt: 2 }}
-                count={Math.ceil(filteredData.length / autoriPerPage)}
-                page={appliedFilters.page}
-                onChange={handlePageChange}
-                color="primary"
-            />}
-        />
+        <>
+            <FilterEntityLayout
+                direction={direction || "row"}
+                filters={
+                    <>
+                        <Autocomplete
+                            value={uniqueAutors.find((a) => a.id === currentFilterValues.autor.id) || null}
+                            options={uniqueAutors}
+                            onChange={(event, newValue) => {
+                                setCurrentFilterValues((prev) => ({
+                                    ...prev,
+                                    autor: newValue || { id: null, value: "" },
+                                }));
+                            }}
+                            inputValue={currentFilterValues.autor.value}
+                            onInputChange={(event, newInputValue) => {
+                                console.log("newInputValue", newInputValue);
+                                setCurrentFilterValues((prev) => ({
+                                    ...prev,
+                                    autor: { id: null, value: newInputValue },
+                                }));
+                            }}
+                            getOptionLabel={(option) => option.value}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            sx={{ mb: 2, minWidth: direction === "row" ? "100%" : "16rem" }}
+                            renderInput={(params) => <TextField {...params} label="Autor" />}
+                            noOptionsText="Nenašiel sa žiaden autor"
+                        />
+                    </>
+                }
+                applyFilters={applyFilters}
+                resetFilters={resetFilters}
+                filteredData={paginatedData}
+                pagination={<Pagination sx={{ mt: 2 }}
+                    count={Math.ceil(filteredData.length / autoriPerPage)}
+                    page={appliedFilters.page}
+                    onChange={handlePageChange}
+                    color="primary"
+                />}
+
+            />
+            <Button variant="contained" onClick={async () => {await addDemoKnihaAndRelations();revalidatePath("/u/admin/autori")}}>
+                Add demo autor
+            </Button>
+        </>
     );
 }

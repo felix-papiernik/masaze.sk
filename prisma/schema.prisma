@@ -39,8 +39,8 @@ model autor {
   id         Int      @id @default(autoincrement())
   meno       String
   priezvisko String
-  narodnost  String
-  datum_nar  DateTime
+  datum_nar  String
+  info       String  @default("")
   kniha      kniha[]
 }
 
