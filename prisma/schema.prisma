@@ -36,7 +36,7 @@ model kniha {
 }
 
 model autor {
-  id         Int      @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   meno       String
   priezvisko String
   datum_nar  String

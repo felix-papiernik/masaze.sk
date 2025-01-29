@@ -57,7 +57,7 @@ export default function AutorForm(props: props) {
             return;
         }
 
-        let res = props.autorToUpdate ? await updateAutor(autorData) : await createAutor(autorData);
+        let res = props.autorToUpdate ? await updateAutor({ ...autorData, id: props.autorToUpdate.id }) : await createAutor(autorData);
 
         if (res.error) {
             setFormState({
@@ -109,7 +109,7 @@ export default function AutorForm(props: props) {
                     }}
                 />
             </LocalizationProvider>
-            <TextField name="info" label="Info" value={formState.info.value} onChange={updateField} required multiline minRows={3}/>
+            <TextField name="info" label="Info" value={formState.info.value} onChange={updateField} required multiline minRows={3} />
             <Button type="submit" variant="contained" sx={{ width: "14rem" }}>
                 {props.autorToUpdate ? "Aktualizovať" : "Pridať"} autora
             </Button>
