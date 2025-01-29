@@ -126,7 +126,7 @@ export default function AutoriFilterList({ autori: knihy, direction }: AutoriFil
                         }}
                         getOptionLabel={(option) => option.value}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                        sx={{ mb: 2, minWidth: "12rem" }}
+                        sx={{ mb: 2, minWidth: direction === "row" ? "100%" : "16rem" }}
                         renderInput={(params) => <TextField {...params} label="Autor" />}
                         noOptionsText="Nenašiel sa žiaden autor"
                     />

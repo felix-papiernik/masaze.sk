@@ -1,9 +1,10 @@
 import { Button, Card, Link, Stack, Typography } from '@mui/material'
 import { autor, kniha, zaner } from '@prisma/client'
 import React from 'react'
-import DeleteBookButton from './DeleteBookButton'
+import DeleteBookButton from './deleteEntityButtons/DeleteBookButton'
 import { getAutori, getKnihy, getZanre } from '@/lib/actions'
 import { EntityGroupedData } from '@/lib/types'
+import DeleteAutorButton from './deleteEntityButtons/DeleteAutorButton'
 
 export interface Editable {
     editUrl: string,
@@ -41,7 +42,7 @@ export default function EntityCard(props: EntityCardProps) {
                     <Typography variant="body2" mb={1}>Počet kníh v systéme: {ed.data._count.kniha}</Typography>
                     {ed.edit && <Stack direction="row" spacing={1}>
                         <Button variant="outlined" color="primary" component={Link} href={ed.edit.editUrl}>Upraviť</Button>
-                        <DeleteBookButton deleteBook={ed.edit.handleDelete} />
+                        <DeleteAutorButton deleteAutor={ed.edit.handleDelete} />
                     </Stack>
                     }
                 </>

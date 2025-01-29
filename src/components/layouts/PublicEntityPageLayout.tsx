@@ -11,7 +11,7 @@ interface PublicEntityPageLayoutProps {
 export default function PublicEntityPageLayout(props: PublicEntityPageLayoutProps) {
     return (
         <Box px={4}>
-            <Typography variant="h1" mb={6}>{props.title}</Typography>
+            <Typography variant="h1" my={6}>{props.title}</Typography>
             {props.entityLength == 0 ?
                 <Typography>{props.noEntitiesMessage}</Typography>
                 :

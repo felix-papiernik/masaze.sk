@@ -4,7 +4,7 @@ import { Button, Card, Stack, Typography } from '@mui/material'
 import { autor, kniha } from '@prisma/client'
 import Link from 'next/link'
 import React from 'react'
-import DeleteBookButton from './DeleteBookButton';
+import DeleteBookButton from './deleteEntityButtons/DeleteBookButton';
 import prisma from '@/lib/prisma';
 import { redirectUrlAfterLogin } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';

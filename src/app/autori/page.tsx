@@ -17,7 +17,7 @@ export default async function Autori() {
     return (
         <PublicEntityPageLayout
             title='Autori'
-            noEntitiesMessage='Momentálne v systéme nie sú žiadny autori :('
+            noEntitiesMessage='Momentálne v systéme nie je žiaden autor :('
             entityLength={autoriData.length}
             filterList={<AutoriFilterList
                 autori={autoriData}
