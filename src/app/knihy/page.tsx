@@ -3,6 +3,7 @@
 import EntityList from '@/components/EntityList';
 import KnihaCard from '@/components/KnihaCard';
 import KnihyFilterList from '@/components/KnihyFilterList';
+import PublicEntityPageLayout from '@/components/layouts/PublicEntityPageLayout';
 import { getAutori, getKnihy } from '@/lib/actions';
 import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
 import { Box, Typography } from '@mui/material';
@@ -19,13 +20,14 @@ export default async function Knihy() {
     })) as EntityGroupedData[];
 
     return (
-        <Box px={4}>
-            <Typography variant="h1" mb={6}>Knihy</Typography>
-            {knihy.length == 0 ?
-                <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
-                :
-                <KnihyFilterList knihy={knihyGrupedData as KnihaGroupedData[]} />
-            }
-        </Box>
+        <PublicEntityPageLayout
+            title='Knihy'
+            noEntitiesMessage='Momentálne v systéme nie sú žiadne knihy :('
+            entityLength={knihy.length}
+            filterList={<KnihyFilterList
+                knihy={knihyGrupedData as KnihaGroupedData[]}
+                direction='row'
+            />}
+        />
     )
 }
