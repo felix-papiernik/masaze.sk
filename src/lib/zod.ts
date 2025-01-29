@@ -74,3 +74,12 @@ export const validateAutorData = (data: Omit<autor, "id">) => {
 
     return parsedAutor;
 }
+
+export const validateZanerData = (data: { nazov: string, popis: string }) => {
+    const parsedZaner = z.object({
+        nazov: z.string().min(1, "Názov je povinný"),
+        popis: z.string().min(1, "Popis je povinný"),
+    }).safeParse(data);
+
+    return parsedZaner;
+}

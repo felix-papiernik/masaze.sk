@@ -1,6 +1,6 @@
 "use client";
 
-import { AutorGroupedData, KnihaGroupedData } from "@/lib/types";
+import { AutorGroupedData, KnihaGroupedData, ZanerGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,10 +9,10 @@ import { addDemoKnihaAndRelations } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
 
 interface AutoriFilterListProps {
-    autori: AutorGroupedData[];
+    zanre: ZanerGroupedData[];
     direction?: "row" | "column";
 }
-type AutorAutocompleteData = {
+type ZanerAutocompleteData = {
     id: number | null;
     value: string;
 };
@@ -20,22 +20,22 @@ type AutorAutocompleteData = {
 const autoriPerPage = 4;
 
 const defaultFilters = {
-    autor: { id: null, value: "" } as AutorAutocompleteData,
+    zaner: { id: null, value: "" } as ZanerAutocompleteData,
     page: 1,
 };
 
-export default function AutoriFilterList({ autori: propsAutori, direction }: AutoriFilterListProps) {
+export default function ZanreFilterList({ zanre: initZanre, direction }: AutoriFilterListProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [currentFilterValues, setCurrentFilterValues] = useState({ ...defaultFilters });
     const [appliedFilters, setAppliedFilters] = useState({ ...defaultFilters });
-    const [autori, setAutori] = useState<AutorGroupedData[]>(propsAutori.map(autor => ({
-        ...autor,
-        edit: autor.edit ? {
-            ...autor.edit,
+    const [zanre, setZanre] = useState<ZanerGroupedData[]>(initZanre.map(zaner => ({
+        ...zaner,
+        edit: zaner.edit ? {
+            ...zaner.edit,
             handleDelete: async () => {
-                autor.edit!.handleDelete();
-                setAutori((prev) => prev.filter((a) => a.data.id !== autor.data.id));
+                zaner.edit!.handleDelete();
+                setZanre((prev) => prev.filter((a) => a.data.id !== zaner.data.id));
                 applyFilters();
             }
         } : undefined
@@ -46,10 +46,10 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
 
         if (searchParams) {
             for (const [key, value] of searchParams.entries()) {
-                if (key === "autor") {
-                    const autor = autori.find((a) => a.data.id === Number(value))?.data;
-                    if (autor) {
-                        params[key] = { id: autor.id, value: `${autor.meno} ${autor.priezvisko}` };
+                if (key === "zaner") {
+                    const zaner = zanre.find((a) => a.data.id === Number(value))?.data;
+                    if (zaner) {
+                        params[key] = { id: zaner.id, value: zaner.nazov };
                     }
                 } else if (key === "page") {
                     params.page = Number(value);
@@ -66,7 +66,7 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
         setAppliedFilters(currentFilterValues);
 
         const filters: { [key: string]: string } = {};
-        if (currentFilterValues.autor.id !== null) filters["autor"] = String(currentFilterValues.autor.id);
+        if (currentFilterValues.zaner.id !== null) filters["zaner"] = String(currentFilterValues.zaner.id);
         filters["page"] = "1";//po filtrovani reset
 
         const query = new URLSearchParams(filters).toString();
@@ -78,7 +78,7 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
         setAppliedFilters((prev) => ({ ...prev, page: newPage }));
 
         const filters: { [key: string]: string } = {};
-        if (appliedFilters.autor.id !== null) filters["autor"] = String(appliedFilters.autor.id);
+        if (appliedFilters.zaner.id !== null) filters["zaner"] = String(appliedFilters.zaner.id);
         filters["page"] = String(newPage);
 
         const query = new URLSearchParams(filters).toString();
@@ -93,13 +93,12 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
     };
 
     // Lokálna filtrácia dát
-    const filteredData = autori.filter((a) => {
+    const filteredData = zanre.filter((a) => {
         return Object.keys(defaultFilters).every((key) => {
             const value = appliedFilters[key as keyof typeof defaultFilters];
-            if (!value || (value as AutorAutocompleteData).id === null) return true;
-            if (key === "autor") {
-                console.log("k.data.autor.id and value", a.data.id, (value as AutorAutocompleteData).id);
-                return a.data.id === (value as AutorAutocompleteData).id;
+            if (!value || (value as ZanerAutocompleteData).id === null) return true;
+            if (key === "zaner") {
+                return a.data.id === (value as ZanerAutocompleteData).id;
             }
             return true;
         });
@@ -109,9 +108,9 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
     const startIndex = (appliedFilters.page - 1) * autoriPerPage;
     const paginatedData = filteredData.slice(startIndex, startIndex + autoriPerPage);
 
-    const uniqueAutors = [...new Map(autori.map((a) => [a.data.id, a.data])).values()].map((a) => ({
+    const uniqueZanre = [...new Map(zanre.map((z) => [z.data.id, z.data])).values()].map((a) => ({
         id: a.id,
-        value: `${a.meno} ${a.priezvisko}`,
+        value: a.popis,
     }));
 
     // const handleAddDemoAutor = async () => {
@@ -126,20 +125,20 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
                 filters={
                     <>
                         <Autocomplete
-                            value={uniqueAutors.find((a) => a.id === currentFilterValues.autor.id) || null}
-                            options={uniqueAutors}
+                            value={uniqueZanre.find((a) => a.id === currentFilterValues.zaner.id) || null}
+                            options={uniqueZanre}
                             onChange={(event, newValue) => {
                                 setCurrentFilterValues((prev) => ({
                                     ...prev,
-                                    autor: newValue || { id: null, value: "" },
+                                    zaner: newValue || { id: null, value: "" },
                                 }));
                             }}
-                            inputValue={currentFilterValues.autor.value}
+                            inputValue={currentFilterValues.zaner.value}
                             onInputChange={(event, newInputValue) => {
                                 console.log("newInputValue", newInputValue);
                                 setCurrentFilterValues((prev) => ({
                                     ...prev,
-                                    autor: { id: null, value: newInputValue },
+                                    zaner: { id: null, value: newInputValue },
                                 }));
                             }}
                             getOptionLabel={(option) => option.value}
@@ -159,11 +158,7 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
                     onChange={handlePageChange}
                     color="primary"
                 />}
-
             />
-            <Button variant="contained" onClick={async () => { await addDemoKnihaAndRelations(); revalidatePath("/u/admin/autori") }}>
-                Add demo autor
-            </Button>
         </>
     );
 }

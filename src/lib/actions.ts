@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from './prisma';
-import { autor, kniha, pouzivatel, Prisma } from '@prisma/client';
+import { autor, kniha, pouzivatel, Prisma, zaner } from '@prisma/client';
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { SignJWT } from "jose";
@@ -321,7 +321,7 @@ export const updateKniha = async (kniha: kniha): Promise<UpsertKnihaResponse> =>
 }
 
 export interface UpsertAutorResponse {
-  autor: autor | null;
+  zaner: autor | null;
   error?: string;
 }
 export const createAutor = async (autor: autor): Promise<UpsertAutorResponse> => {
@@ -329,9 +329,9 @@ export const createAutor = async (autor: autor): Promise<UpsertAutorResponse> =>
     const a = await prisma.autor.create({
       data: autor
     });
-    return { autor: a };
+    return { zaner: a };
   } catch (e) {
-    return { error: 'Chyba pri vytváraní autora' + e, autor: null };
+    return { error: 'Chyba pri vytváraní autora' + e, zaner: null };
   }
 }
 
@@ -341,8 +341,35 @@ export const updateAutor = async (autor: autor): Promise<UpsertAutorResponse> =>
       where: { id: autor.id },
       data: autor
     });
-    return { autor: updatedAutor };
+    return { zaner: updatedAutor };
   } catch (e) {
-    return { error: 'Chyba pri aktualizovaní autora' + e, autor: null };
+    return { error: 'Chyba pri aktualizovaní autora' + e, zaner: null };
+  }
+}
+
+export interface UpsertZanerResponse {
+  zaner: zaner | null;
+  error?: string;
+}
+export const createZaner = async (zaner: zaner): Promise<UpsertZanerResponse> => {
+  try {
+    const a = await prisma.zaner.create({
+      data: zaner
+    });
+    return { zaner: a };
+  } catch (e) {
+    return { error: 'Chyba pri vytváraní zanera' + e, zaner: null };
+  }
+}
+
+export const updateZaner = async (zaner: zaner): Promise<UpsertZanerResponse> => {
+  try {
+    const updatedzaner = await prisma.zaner.update({
+      where: { id: zaner.id },
+      data: zaner
+    });
+    return { zaner: updatedzaner };
+  } catch (e) {
+    return { error: 'Chyba pri aktualizovaní zanera' + e, zaner: null };
   }
 }

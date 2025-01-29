@@ -47,6 +47,22 @@ export default function EntityCard(props: EntityCardProps) {
             )
             break;
         case 'zaner':
+            cardComponent = (
+                <>
+                    <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.nazov}</Link></Typography>
+                    <Typography variant="body2" mb={1}>Počet kníh v systéme: {ed.data._count.kniha}</Typography>
+                    {ed.edit && <Button
+                        variant="outlined"
+                        color="primary"
+                        component={Link}
+                        href={ed.edit.editUrl}>Upraviť</Button>
+                    }
+                </>
+            )
+            break;
+        default:
+            throw new Error("Nepodporovaný typ entity")
+
     }
     return (
         <Card sx={{ p: 1 }}>

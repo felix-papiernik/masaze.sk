@@ -124,7 +124,7 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
         id: z.id,
         value: z.nazov,
     }));
-
+    console.log("uniqueZanre", uniqueZanre);
     return (
         <FilterEntityLayout
             direction={direction || "row"}
@@ -155,6 +155,7 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
                             }));
                         }}
                         getOptionLabel={(option) => option.value}
+                        getOptionKey={(option) => option.id}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         sx={{ mb: 2, minWidth: "12rem" }}
                         renderInput={(params) => <TextField {...params} label="Autor" />}
@@ -178,6 +179,7 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
                             }));
                         }}
                         getOptionLabel={(option) => option.value}
+                        getOptionKey={(option) => option.id}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         sx={{ mb: 2, minWidth: "12rem" }}
                         renderInput={(params) => <TextField {...params} label="Žáner" />}

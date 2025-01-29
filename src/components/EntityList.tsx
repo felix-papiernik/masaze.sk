@@ -1,5 +1,3 @@
-"use client";
-
 import { Grid2 } from "@mui/material";
 import React, { } from "react";
 import EntityCard from "./EntityCard";
@@ -8,7 +6,7 @@ import { EntityGroupedData } from "@/lib/types";
 
 export default function EntityList(props: { data: EntityGroupedData[] }) {
 
-    const type = props.data[0].type
+    const type = props.data[0]?.type
     const lgColumns = type === "kniha" ? 4 : type === "autor" ? 3 : 1
 
     return (

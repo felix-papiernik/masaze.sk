@@ -3,6 +3,7 @@ import { deleteDemoKnihaAndRelations, getAutori } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { AutorGroupedData } from '@/lib/types';
 import { Typography, Button } from '@mui/material';
+import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import React from 'react'
 
@@ -21,11 +22,11 @@ export default async function Autori() {
                         id: a.id
                     }
                 })
+                revalidatePath("/u/admin");
             }
         }
 
     })) as AutorGroupedData[];
-
     return (
         <>
             <Typography variant='h1' mb={2}>Autori</Typography>

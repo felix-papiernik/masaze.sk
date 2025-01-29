@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from '@mui/material';
-import { revalidatePath } from 'next/cache';
 import React, { useState } from 'react'
 
 export default function DeleteAutorButton({ deleteAutor }: { deleteAutor: () => Promise<void> }) {
@@ -14,7 +13,6 @@ export default function DeleteAutorButton({ deleteAutor }: { deleteAutor: () => 
             return
         }
         await deleteAutor()
-        revalidatePath("/u/admin/autori")
     }
 
     return (

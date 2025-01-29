@@ -167,7 +167,7 @@ export default function KnihaForm(props: props) {
                 }}
                 options={props.autori}
                 getOptionLabel={(option) => option.meno + " " + option.priezvisko}
-                //getOptionKey={(option) => option.id}
+                getOptionKey={(option) => option.id}
                 renderInput={(params) => <TextField
                     {...params}
                     label="Autor"
@@ -195,6 +195,7 @@ export default function KnihaForm(props: props) {
                 }}
                 options={props.zanre}
                 getOptionLabel={(option) => option.nazov}
+                getOptionKey={(option) => option.id}
                 renderInput={(params) => <TextField
                     {...params}
                     label="Žáner"
