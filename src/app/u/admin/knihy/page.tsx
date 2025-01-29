@@ -46,25 +46,9 @@ export default async function Knihy() {
 
     return (
         <>
-            <Typography variant='h1'>Knihy</Typography>
+            <Typography variant='h1' mb={2}>Knihy</Typography>
             {knihy.length == 0 ?
-                <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
-                :
-                <Grid2 container columns={{ xs: 1, md: 2, lg: 4 }} spacing={2} padding={2}>
-                    {knihy.map(k => (
-                        <Grid2 key={k.id} size={1}>
-                            <KnihaCard
-                                kniha={k}
-                                autor={k.autor}
-                                redirectUrl='/u/admin/knihy'
-                                editUrl={"/u/admin/knihy/" + k.id}
-                            />
-                        </Grid2>
-                    ))}
-                </Grid2>
-            }
-            {knihy.length == 0 ?
-                <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
+                <p>Momentálne v systéme nie sú žiadne knihy :(</p>
                 :
                 <KnihyFilterList knihy={knihyGrupedData as KnihaGroupedData[]} direction='column'/>
             }
@@ -72,6 +56,7 @@ export default async function Knihy() {
                 component={Link}
                 href='/u/admin/knihy/nova'
                 variant='contained'
+                sx={{ mt: knihy.length > 0 ? 2 : 0 }}
             >Vytvoriť novú knihu</Button>
         </>
     )
