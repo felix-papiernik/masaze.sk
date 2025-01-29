@@ -1,12 +1,10 @@
 "use client";
 
-import { AutorGroupedData, KnihaGroupedData, ZanerGroupedData } from "@/lib/types";
+import { ZanerGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Autocomplete, Button, Pagination, Stack, TextField } from "@mui/material";
-import { addDemoKnihaAndRelations } from "@/lib/actions";
-import { revalidatePath } from "next/cache";
+import { Autocomplete, Pagination, TextField } from "@mui/material";
 
 interface AutoriFilterListProps {
     zanre: ZanerGroupedData[];
