@@ -8,6 +8,7 @@ import { Autocomplete, Pagination, Stack, TextField } from "@mui/material";
 
 interface KnihyFilterListProps {
     knihy: KnihaGroupedData[];
+    direction?: "row" | "column";
 }
 type AutocompleteData = {
     id: number | null;
@@ -23,7 +24,7 @@ const defaultFilters = {
     page: 1,
 };
 
-export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
+export default function KnihyFilterList({ knihy, direction }: KnihyFilterListProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [currentFilterValues, setCurrentFilterValues] = useState({ ...defaultFilters });
@@ -126,6 +127,7 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
 
     return (
         <FilterEntityLayout
+            direction={direction || "row"}
             filters={
                 <>
                     <TextField
@@ -154,7 +156,7 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                         }}
                         getOptionLabel={(option) => option.value}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 2, minWidth: "12rem" }}
                         renderInput={(params) => <TextField {...params} label="Autor" />}
                         noOptionsText="Nenašiel sa žiaden autor"
                     />
@@ -177,7 +179,7 @@ export default function KnihyFilterList({ knihy }: KnihyFilterListProps) {
                         }}
                         getOptionLabel={(option) => option.value}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 2, minWidth: "12rem" }}
                         renderInput={(params) => <TextField {...params} label="Žáner" />}
                         noOptionsText="Nenašiel sa žiaden žáner"
                     />

@@ -10,24 +10,30 @@ interface FilterProps {
     resetFilters: () => void;
     filteredData: EntityGroupedData[]
     pagination: React.ReactNode;
+    direction?: "row" | "column";
 }
 
 export default function FilterEntityLayout(props: FilterProps) {
+
+    const directionRow = props.direction === "row";
+
     return (
-        <Grid2 container spacing={8}>
-            <Grid2 size={2}>
-                <Typography variant="h5" mb={2}>Filtrovať</Typography>
-                {props.filters}
-                <Stack direction={"row"} mt={2}>
-                    <Button variant="contained" onClick={props.applyFilters}>
-                        Filtrovať
-                    </Button>
-                    <IconButton onClick={props.resetFilters} >
-                        <Clear />
-                    </IconButton>
+        <Grid2 container spacing={directionRow ? 8 : 2} direction={props.direction}>
+            <Grid2 size={directionRow ? 2 : 12} sx={{ display: "flex", flexDirection: directionRow ? "column" : "row" }}>
+                <Stack direction={directionRow ? "column" : "row"} spacing={2}>
+                    {directionRow && <Typography variant="h5" mb={2}>Filtrovať</Typography>}
+                    {props.filters}
+                    <Stack direction={"row"} mt={2}>
+                        <Button variant="contained" onClick={props.applyFilters}>
+                            Filtrovať
+                        </Button>
+                        <IconButton onClick={props.resetFilters} >
+                            <Clear />
+                        </IconButton>
+                    </Stack>
                 </Stack>
             </Grid2>
-            <Grid2 size={10}>
+            <Grid2 size={directionRow ? 10 : 12}>
                 <EntityList data={props.filteredData} />
                 {props.pagination}
             </Grid2>

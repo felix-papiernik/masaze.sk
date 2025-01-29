@@ -1,8 +1,10 @@
 // "use client";
 
 import KnihaCard from '@/components/KnihaCard';
+import KnihyFilterList from '@/components/KnihyFilterList';
 import { addDemoKnihaAndRelations, deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
 import prisma from '@/lib/prisma';
+import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
 import { Button, Grid2, Stack, Typography } from '@mui/material';
 import { kniha } from '@prisma/client';
 import Link from 'next/link';
@@ -28,7 +30,19 @@ export default async function Knihy() {
     //     nacitajKnihy();
     // }, []);
 
-    const knihy = await prisma.kniha.findMany({ include: { autor: true } })
+    const knihy = await getKnihy();
+    const knihyGrupedData = knihy.map(k => ({
+        type: 'kniha',
+        data: k,
+        view: { detailUrl: ("/knihy/" + k.id) },
+        edit: {
+            editUrl: ("/u/admin/knihy/" + k.id),
+            handleDelete: async () => {
+                "use server";
+                await deleteDemoKnihaAndRelations();
+            }
+        }
+    })) as EntityGroupedData[];
 
     return (
         <>
@@ -48,6 +62,11 @@ export default async function Knihy() {
                         </Grid2>
                     ))}
                 </Grid2>
+            }
+            {knihy.length == 0 ?
+                <p>Mrzí nás to, no momentálne v systéme nemáme žiadne knihy :(</p>
+                :
+                <KnihyFilterList knihy={knihyGrupedData as KnihaGroupedData[]} direction='column'/>
             }
             <Button
                 component={Link}
