@@ -1,17 +1,10 @@
-import { SignOutButton } from "@/components/buttons/SignOutButton";
-import { Stack, Typography } from "@mui/material";
-
+import { Stack } from "@mui/material";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-
-    //let entityData = await getEntityDataFromServerCookies();
 
     return (
         <Stack spacing={2} sx={{ background: "lightGrey", padding: 2 }}>
             {children}
-            <div>
-                <SignOutButton />
-            </div>
         </Stack>
     );
 }

@@ -31,7 +31,7 @@ export default function EntityCard(props: EntityCardProps) {
                         <DeleteBookButton deleteBook={ed.edit.handleDelete} />
                     </Stack>
                     }
-                    {ed.edit === undefined && < AddToListButton id={ed.data.id}/>}
+                    {ed.edit === undefined && < AddToListButton kniha_id={ed.data.id}/>}
                 </>
             )
             break;
@@ -60,6 +60,16 @@ export default function EntityCard(props: EntityCardProps) {
                         component={Link}
                         href={ed.edit.editUrl}>Upraviť</Button>
                     }
+                </>
+            )
+            break;
+        case 'kniha_pouzivatel':
+            cardComponent = (
+                <>
+                    <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.kniha.nazov}</Link></Typography>
+                    <Typography variant="body1">Autor: {ed.data.kniha.autor.meno} {ed.data.kniha.autor.priezvisko}</Typography>
+                    <Typography variant="body2" mb={1}>Počet strán: {ed.data.kniha.pocet_stran}</Typography>
+                    <Typography variant="body2" mb={1}>Stav: {ed.data.stav}</Typography>
                 </>
             )
             break;

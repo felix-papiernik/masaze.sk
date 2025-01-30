@@ -4,8 +4,9 @@ import { useAuth } from '@/context/AuthContext';
 import { stav } from '@prisma/client';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react'
+import { upsertPouzivatelovaKniha } from '@/lib/actions';
 
-export default function AddToListButton({ id }: { id: number }) {
+export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
 
     const { auth } = useAuth();
 
@@ -24,10 +25,15 @@ export default function AddToListButton({ id }: { id: number }) {
         setFormState(getEmptyFormState())
     }
 
-    const handleAdd = () => {
-        //send request to add book to list
-        //close modal
-        setOpen(false);
+    const handleAdd = async () => {
+        const success = await upsertPouzivatelovaKniha({
+            kniha_id: kniha_id,
+            pouzivatel_id: auth!.pouzivatel.id,
+            poznamka: formState.poznamka,
+            stav: formState.stav as stav
+        })
+        !success && setFormState({ ...formState, poznamka: "Nepodarilo sa pridať knihu do zoznamu" })
+        success && setOpen(false);
     }
 
 
@@ -36,7 +42,7 @@ export default function AddToListButton({ id }: { id: number }) {
             <Button variant="contained" onClick={() => setOpen(!open)}>Pridať do zoznamu</Button>
             {open && (
                 <Dialog open={open} onClose={handleClose} fullWidth>
-                    <DialogTitle>Pridať knihu {id} do zoznamu</DialogTitle>
+                    <DialogTitle>Pridať knihu {kniha_id} do zoznamu</DialogTitle>
                     <DialogContent>
                         <FormControl sx={{ mt: 1, minWidth: "12rem" }} required>
                             <InputLabel id="stavLabel">Vyber zoznam kníh</InputLabel>

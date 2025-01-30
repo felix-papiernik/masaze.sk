@@ -2,7 +2,7 @@
 
 import EntityList from '@/components/EntityList';
 import { useAuth } from '@/context/AuthContext';
-import { getKnihy } from '@/lib/actions';
+import { getKnihy, getPouzivateloveKnihy } from '@/lib/actions';
 import { EntityGroupedData } from '@/lib/types';
 import { Typography } from '@mui/material'
 import Link from 'next/link';
@@ -16,14 +16,14 @@ export default function MojeKnihy() {
     useEffect(() => {
         if (!auth) return;
         const getUserBooks = async () => {
-            return await getKnihy(auth?.pouzivatel.id)
+            return await getPouzivateloveKnihy(auth?.pouzivatel.id)
         }
 
         getUserBooks().then((books) => {
             const knihaGroupedData = books.map(k => ({
-                type: "kniha",
+                type: "kniha_pouzivatel",
                 data: k,
-                view: { detailUrl: `/knihy/${k.id}` }
+                view: { detailUrl: `/u/moje-knihy/${k.id}` }
             })) as EntityGroupedData[]
             setUserBooks(knihaGroupedData);
         });

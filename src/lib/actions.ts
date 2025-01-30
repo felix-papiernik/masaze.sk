@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from './prisma';
-import { autor, kniha, pouzivatel, Prisma, zaner } from '@prisma/client';
+import { autor, kniha, pouzivatel, Prisma, stav, zaner } from '@prisma/client';
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { SignJWT } from "jose";
@@ -184,6 +184,48 @@ export const getKnihy = async (autor_id?: number) => {
     include: { autor: true, zaner: true }
   });
 }
+
+export const getPouzivateloveKnihy = async (pouzivatel_id: number) => {
+  return await prisma.kniha_pouzivatel.findMany({
+    where: { pouzivatel_id: pouzivatel_id },
+    include: {
+      kniha: {
+        include: { autor: true, zaner: true }
+      },
+      pouzivatel: true
+    },
+  });
+}
+
+export const upsertPouzivatelovaKniha = async (pouzivatelovaKniha: {
+  kniha_id: number, pouzivatel_id: number, stav: stav, poznamka: string
+}) => {
+  try {
+    await prisma.kniha_pouzivatel.upsert({
+      where: {
+        kniha_id_pouzivatel_id: {
+          kniha_id: pouzivatelovaKniha.kniha_id,
+          pouzivatel_id: pouzivatelovaKniha.pouzivatel_id
+        }
+      },
+      create: {
+        kniha_id: pouzivatelovaKniha.kniha_id,
+        pouzivatel_id: pouzivatelovaKniha.pouzivatel_id,
+        stav: pouzivatelovaKniha.stav,
+        poznamka: pouzivatelovaKniha.poznamka
+      },
+      update: {
+        stav: pouzivatelovaKniha.stav,
+        poznamka: pouzivatelovaKniha.poznamka
+      }
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+
 
 export const getAutori = async () => {
   return await prisma.autor.findMany({

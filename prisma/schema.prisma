@@ -51,11 +51,12 @@ model kniha_pouzivatel {
   id            Int        @id @default(autoincrement())
   kniha_id      Int
   pouzivatel_id Int
-  stav          stav
+  stav          stav       @default(chcemPrecitat)
   vytvorene     DateTime   @default(now())
-  poznamka      String?
+  poznamka      String     @default("")
   kniha         kniha      @relation(fields: [kniha_id], references: [id])
   pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id])
+  @@unique([kniha_id, pouzivatel_id])
 }
 
 enum stav {

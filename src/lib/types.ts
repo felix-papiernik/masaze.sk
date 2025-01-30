@@ -1,6 +1,6 @@
 import { pouzivatel } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
-import { getKnihy, getAutori, getZanre } from "./actions";
+import { getKnihy, getAutori, getZanre, getPouzivateloveKnihy } from "./actions";
 
 export interface Auth {
     pouzivatel: pouzivatel;
@@ -40,4 +40,9 @@ export interface ZanerGroupedData extends Actions {
     data: Awaited<ReturnType<typeof getZanre>>[number]
 }
 
-export type EntityGroupedData = KnihaGroupedData | AutorGroupedData | ZanerGroupedData
+export interface KnihaPouzivatelData extends Actions {
+    type: "kniha_pouzivatel",
+    data: Awaited<ReturnType<typeof getPouzivateloveKnihy>>[number],
+}
+
+export type EntityGroupedData = KnihaGroupedData | AutorGroupedData | ZanerGroupedData | KnihaPouzivatelData;
