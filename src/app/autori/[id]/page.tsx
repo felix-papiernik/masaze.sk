@@ -20,8 +20,9 @@ export default async function Page({ params }
     const autoroveKnihy = await getKnihy(id)
     const knihaGroupedData = autoroveKnihy.map(k => ({
         type: "kniha",
-        data: k
-    })) as KnihaGroupedData[]
+        data: k,
+        view: { detailUrl: `/knihy/${k.id}` }
+    })) as EntityGroupedData[]
 
     return (
         autor ? <>
@@ -29,7 +30,7 @@ export default async function Page({ params }
             <Typography variant="h3">O autorovi</Typography>
             <Typography variant="body1">Dátum narodenia: {autor?.datum_nar}</Typography>
             <Typography variant="body1">Popis: {autor?.info}</Typography>
-            <Typography variant="h4" mt={4}>Knihy od autora</Typography>
+            <Typography variant="h4" mt={4} mb={1}>Knihy od autora</Typography>
             <EntityList data={knihaGroupedData} />
         </> : <Typography variant="h1" color='error'>Autor nebol nájdený</Typography>
     )
