@@ -2,9 +2,10 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { stav } from '@prisma/client';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react'
 import { insertPouzivatelovaKniha } from '@/lib/actions';
+import { Add } from '@mui/icons-material';
 
 export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
 
@@ -18,7 +19,7 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
         stav: stav,
         error: string
     }
-    const getEmptyFormState = () : FormStateType =>  { return { poznamka: "", stav: stav.chcemPrecitat, error: "" } }
+    const getEmptyFormState = (): FormStateType => { return { poznamka: "", stav: stav.chcemPrecitat, error: "" } }
     const [formState, setFormState] = useState<FormStateType>(getEmptyFormState());
 
     const handleClose = () => {
@@ -40,7 +41,7 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
 
     return (
         auth ? <>
-            <Button variant="contained" onClick={() => setOpen(!open)}>Pridať do zoznamu</Button>
+            <IconButton onClick={() => setOpen(!open)} size="small" color="primary"><Add /></IconButton>
             {open && (
                 <Dialog open={open} onClose={handleClose} fullWidth>
                     <DialogTitle>Pridať knihu do zoznamu</DialogTitle>

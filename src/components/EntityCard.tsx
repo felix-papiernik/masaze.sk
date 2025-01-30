@@ -24,7 +24,10 @@ export default function EntityCard(props: EntityCardProps) {
         case 'kniha':
             cardComponent = (
                 <>
-                    <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.nazov}</Link></Typography>
+                    <Stack direction="row" justifyContent={"space-between"} spacing={1} alignItems={"flex-start"}>
+                        <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.nazov}</Link></Typography>
+                        {ed.edit === undefined && < AddToListButton kniha_id={ed.data.id} />}
+                    </Stack>
                     <Typography variant="body1">Autor: {ed.data.autor.meno} {ed.data.autor.priezvisko}</Typography>
                     <Typography variant="body2" mb={1}>Počet strán: {ed.data.pocet_stran}</Typography>
                     {ed.edit && <Stack direction="row" spacing={1}>
@@ -32,7 +35,6 @@ export default function EntityCard(props: EntityCardProps) {
                         <DeleteBookButton deleteBook={ed.edit.handleDelete} />
                     </Stack>
                     }
-                    {ed.edit === undefined && < AddToListButton kniha_id={ed.data.id} />}
                 </>
             )
             break;
