@@ -1,4 +1,4 @@
-import { SignOutButton } from "@/components/SignOutButton";
+import { SignOutButton } from "@/components/buttons/SignOutButton";
 import { Stack, Typography } from "@mui/material";
 
 

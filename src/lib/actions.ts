@@ -78,9 +78,9 @@ export async function verifySession(): Promise<Auth | null> {
   return { ...session.authData };
 }
 
-export async function deleteSession() {
+export async function deleteSession(redirect?: boolean) {
   (await cookies()).delete(cookieO.name);
-  redirect("/prihlasenie");
+  redirect && redirect("/prihlasenie");
 }
 
 

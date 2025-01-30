@@ -1,8 +1,8 @@
 import { Button, Card, Link, Stack, Typography } from '@mui/material'
 import React from 'react'
-import DeleteBookButton from './deleteEntityButtons/DeleteBookButton'
+import DeleteBookButton from './buttons/DeleteBookButton'
 import { EntityGroupedData } from '@/lib/types'
-import DeleteAutorButton from './deleteEntityButtons/DeleteAutorButton'
+import DeleteAutorButton from './buttons/DeleteAutorButton'
 
 export interface Editable {
     editUrl: string,

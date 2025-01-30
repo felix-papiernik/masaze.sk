@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getKnihy } from '@/lib/actions';
 import { EntityGroupedData } from '@/lib/types';
 import { Typography } from '@mui/material'
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 
 export default function MojeKnihy() {
@@ -37,7 +38,10 @@ export default function MojeKnihy() {
         <>
             <Typography variant="h3" mt={4} mb={2}>Moje knihy</Typography>
             <Typography variant="body1">Tuto nájdeš knihy, ktoré si si uložil do zoznamu, alebo si ich už prečítal.</Typography>
-            <EntityList data={userBooks} />
+            <EntityList
+                data={userBooks}
+                notFoundElement={<Typography>V tvojom zozname nie sú žiadne knihy, <Link href={"/knihy"}>poď si ich nájsť</Link></Typography>}
+            />
         </>
     )
 }

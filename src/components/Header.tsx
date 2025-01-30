@@ -3,7 +3,7 @@
 import { Button, Stack, useTheme } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
-import { SignOutButton } from './SignOutButton'
+import { SignOutButton } from './buttons/SignOutButton'
 import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
