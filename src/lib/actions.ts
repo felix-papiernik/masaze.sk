@@ -178,8 +178,11 @@ export const createPouzivatel = async (createPouzivatelData: CreatePouzivatelDat
   }
 }
 
-export const getKnihy = async () => {
-  return await prisma.kniha.findMany({ include: { autor: true, zaner: true } });
+export const getKnihy = async (autor_id?: number) => {
+  return await prisma.kniha.findMany({
+    where: { autor_id: autor_id },
+    include: { autor: true, zaner: true }
+  });
 }
 
 export const getAutori = async () => {

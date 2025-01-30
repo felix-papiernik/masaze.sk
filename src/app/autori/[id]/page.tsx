@@ -1,6 +1,7 @@
 import EntityList from '@/components/EntityList';
+import { getKnihy } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import { EntityGroupedData } from '@/lib/types';
+import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
 import { Typography } from '@mui/material';
 import React from 'react'
 
@@ -16,9 +17,11 @@ export default async function Page({ params }
         },
     })
 
-    const knihaGroupedData = ({
-
-    }) as EntityGroupedData
+    const autoroveKnihy = await getKnihy(id)
+    const knihaGroupedData = autoroveKnihy.map(k => ({
+        type: "kniha",
+        data: k
+    })) as KnihaGroupedData[]
 
     return (
         autor ? <>
@@ -27,7 +30,7 @@ export default async function Page({ params }
             <Typography variant="body1">Dátum narodenia: {autor?.datum_nar}</Typography>
             <Typography variant="body1">Popis: {autor?.info}</Typography>
             <Typography variant="h4" mt={4}>Knihy od autora</Typography>
-            <EntityList data={autor.kniha} />
+            <EntityList data={knihaGroupedData} />
         </> : <Typography variant="h1" color='error'>Autor nebol nájdený</Typography>
     )
 }
