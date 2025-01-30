@@ -171,16 +171,10 @@ export const createPouzivatel = async (createPouzivatelData: CreatePouzivatelDat
     })
     return pouzivatelCreate;
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      // The .code property can be accessed in a type-safe manner
-      if (e.code === 'P2002') {
-        console.log(
-          'There is a unique constraint violation, a new user cannot be created with this email'
-        )
-      }
-      return { error: e.code === 'P2002' ? 'Používateľ s týmto email už existuje' : 'Neznáma chyba' };
+    return {
+      error: e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
+        ? 'Používateľ s týmto email už existuje' : 'Chyba pri vytváraní používateľa' + e,
     }
-    return { error: 'Neznáma chyba' };
   }
 }
 

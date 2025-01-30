@@ -121,14 +121,6 @@ export default function Page() {
                     >
                         {pending ? "Aktualizuje sa..." : "Aktualizovať údaje"}
                     </Button>
-                    <Button
-                        type="button"
-                        disabled={pending}
-                        variant="outlined"
-                        sx={{ width: "14rem" }}
-                    >
-                        Zmeniť heslo TODO
-                    </Button>
                     <DeleteUserButton />
                 </Stack>
                 {updated && <p>Údaje boli úspešne aktualizované</p>}

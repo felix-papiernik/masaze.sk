@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL(dashUrl, req.url));
     }
 
-    // Prevent citatel users from accessing admin routes
+    // Prevent citatel from accessing admin routes
     if (auth.pouzivatel.je_admin == false && path.startsWith("/u/admin")) {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
