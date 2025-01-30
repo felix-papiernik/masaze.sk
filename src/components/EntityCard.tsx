@@ -31,7 +31,7 @@ export default function EntityCard(props: EntityCardProps) {
                         <DeleteBookButton deleteBook={ed.edit.handleDelete} />
                     </Stack>
                     }
-                    {ed.edit === undefined && < AddToListButton />}
+                    {ed.edit === undefined && < AddToListButton id={ed.data.id}/>}
                 </>
             )
             break;

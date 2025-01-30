@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -28,10 +22,10 @@ model kniha {
   nazov            String             @unique
   rok_vydania      Int
   pocet_stran      Int
-  autor            autor              @relation(fields: [autor_id], references: [id], onDelete: Cascade)
   autor_id         Int
-  zaner            zaner              @relation(fields: [zaner_id], references: [id])
   zaner_id         Int
+  autor            autor              @relation(fields: [autor_id], references: [id], onDelete: Cascade)
+  zaner            zaner              @relation(fields: [zaner_id], references: [id])
   kniha_pouzivatel kniha_pouzivatel[]
 }
 
@@ -42,6 +36,7 @@ model autor {
   datum_nar  String
   info       String  @default("")
   kniha      kniha[]
+
   @@unique([meno, priezvisko])
 }
 
@@ -52,19 +47,18 @@ model zaner {
   kniha kniha[]
 }
 
+model kniha_pouzivatel {
+  id            Int        @id @default(autoincrement())
+  kniha_id      Int
+  pouzivatel_id Int
+  stav          stav
+  vytvorene     DateTime   @default(now())
+  poznamka      String?
+  kniha         kniha      @relation(fields: [kniha_id], references: [id])
+  pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id])
+}
+
 enum stav {
   chcemPrecitat
   precitane
-  vratene
-}
-
-model kniha_pouzivatel {
-  id            Int        @id @default(autoincrement())
-  kniha         kniha      @relation(fields: [kniha_id], references: [id])
-  kniha_id      Int
-  pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id])
-  pouzivatel_id Int
-  precitane     Boolean    @default(false)
-  oblubene      Boolean    @default(false)
-  poznamka      String?
 }
