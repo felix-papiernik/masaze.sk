@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { stav } from '@prisma/client';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react'
-import { upsertPouzivatelovaKniha } from '@/lib/actions';
+import { insertPouzivatelovaKniha } from '@/lib/actions';
 
 export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
 
@@ -15,9 +15,10 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
     const [open, setOpen] = useState(false);
     type FormStateType = {
         poznamka: string,
-        stav: stav
+        stav: stav,
+        error: string
     }
-    const getEmptyFormState = () : FormStateType =>  { return { poznamka: "", stav: stav.chcemPrecitat } }
+    const getEmptyFormState = () : FormStateType =>  { return { poznamka: "", stav: stav.chcemPrecitat, error: "" } }
     const [formState, setFormState] = useState<FormStateType>(getEmptyFormState());
 
     const handleClose = () => {
@@ -26,14 +27,14 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
     }
 
     const handleAdd = async () => {
-        const success = await upsertPouzivatelovaKniha({
+        const res = await insertPouzivatelovaKniha({
             kniha_id: kniha_id,
             pouzivatel_id: auth!.pouzivatel.id,
             poznamka: formState.poznamka,
             stav: formState.stav as stav
         })
-        !success && setFormState({ ...formState, poznamka: "Nepodarilo sa pridať knihu do zoznamu" })
-        success && setOpen(false);
+        res.error && setFormState({ ...formState, error: res.error });
+        res.error === undefined && setOpen(false);
     }
 
 
@@ -42,7 +43,7 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
             <Button variant="contained" onClick={() => setOpen(!open)}>Pridať do zoznamu</Button>
             {open && (
                 <Dialog open={open} onClose={handleClose} fullWidth>
-                    <DialogTitle>Pridať knihu {kniha_id} do zoznamu</DialogTitle>
+                    <DialogTitle>Pridať knihu do zoznamu</DialogTitle>
                     <DialogContent>
                         <FormControl sx={{ mt: 1, minWidth: "12rem" }} required>
                             <InputLabel id="stavLabel">Vyber zoznam kníh</InputLabel>
@@ -67,6 +68,7 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
                             fullWidth
                             sx={{ mt: 2 }}
                         />
+                        <Typography variant='body2' color='error'>{formState.error}</Typography>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Zrušiť</Button>

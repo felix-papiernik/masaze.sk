@@ -11,6 +11,7 @@ import { Auth, AuthPayload } from "./types";
 import bcrypt from 'bcryptjs';
 import { validateKnihaData } from './zod';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 //dotenv.config();
 
 // require('dotenv').config();
@@ -197,31 +198,38 @@ export const getPouzivateloveKnihy = async (pouzivatel_id: number) => {
   });
 }
 
-export const upsertPouzivatelovaKniha = async (pouzivatelovaKniha: {
+export interface EntityResponse {
+  error?: string;
+  returnValue?: any;
+}
+export const insertPouzivatelovaKniha = async (pouzivatelovaKniha: {
   kniha_id: number, pouzivatel_id: number, stav: stav, poznamka: string
-}) => {
+}): Promise<EntityResponse> => {
   try {
-    await prisma.kniha_pouzivatel.upsert({
-      where: {
-        kniha_id_pouzivatel_id: {
-          kniha_id: pouzivatelovaKniha.kniha_id,
-          pouzivatel_id: pouzivatelovaKniha.pouzivatel_id
-        }
-      },
-      create: {
+    const d = await prisma.kniha_pouzivatel.create({
+      data: {
         kniha_id: pouzivatelovaKniha.kniha_id,
         pouzivatel_id: pouzivatelovaKniha.pouzivatel_id,
-        stav: pouzivatelovaKniha.stav,
-        poznamka: pouzivatelovaKniha.poznamka
-      },
-      update: {
-        stav: pouzivatelovaKniha.stav,
+        stav: pouzivatelovaKniha.stav as stav,
         poznamka: pouzivatelovaKniha.poznamka
       }
     });
-    return true;
+    return { returnValue: d };
   } catch (e) {
-    return false;
+    return { error: e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002' ? "Kniha sa už v zozname nachádza" : "Chyba" };
+  }
+}
+
+export async function deletePouzivatelovaKniha(id: number) {
+  try {
+    await prisma.kniha_pouzivatel.delete({
+      where: {
+        id: id
+      }
+    })
+    revalidatePath("/u/moje-knihy");
+  } catch (e) {
+    return
   }
 }
 

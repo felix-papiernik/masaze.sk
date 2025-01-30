@@ -1,9 +1,10 @@
-import { Button, Card, Link, Stack, Typography } from '@mui/material'
+import { Button, Card, Chip, Link, Stack, Typography } from '@mui/material'
 import React from 'react'
 import DeleteBookButton from './buttons/DeleteBookButton'
 import { EntityGroupedData } from '@/lib/types'
 import DeleteAutorButton from './buttons/DeleteAutorButton'
 import AddToListButton from './buttons/AddToListButton'
+import DeleteKnihaPouzivatelButton from './buttons/DeleteKnihaPouzivatelButton'
 
 export interface Editable {
     editUrl: string,
@@ -64,13 +65,16 @@ export default function EntityCard(props: EntityCardProps) {
             )
             break;
         case 'kniha_pouzivatel':
+            let naPrecitanie = ed.data.stav === "chcemPrecitat";
             cardComponent = (
                 <>
-                    <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.kniha.nazov}</Link></Typography>
+                    <Stack direction="row" justifyContent={"space-between"} spacing={1}>
+                        <Typography variant="h5"><Link href={ed.view.detailUrl}>{ed.data.kniha.nazov}</Link></Typography>
+                        <DeleteKnihaPouzivatelButton kniha_pouzivatel_id={ed.data.id} />
+                    </Stack>
                     <Typography variant="body1">Autor: {ed.data.kniha.autor.meno} {ed.data.kniha.autor.priezvisko}</Typography>
                     <Typography variant="body2" mb={1}>Počet strán: {ed.data.kniha.pocet_stran}</Typography>
-                    <Typography variant="body2" mb={1}>Stav: {ed.data.stav}</Typography>
-                    <DeleteKnihaPouzivatelButton kniha_pouzivatel_id={ed.data.id} />
+                    <Chip label={naPrecitanie ? "Na prečítanie" : "Prečítané"} color={naPrecitanie ? 'info' : 'success'} />
                 </>
             )
             break;

@@ -1,19 +1,20 @@
+"use client";
+
 import { IconButton } from '@mui/material';
-import React from 'react'
+import React, { useTransition } from 'react'
 import { Delete } from '@mui/icons-material';
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
+import { deletePouzivatelovaKniha } from '@/lib/actions';
+import { useRouter } from 'next/navigation';
 
 export default function DeleteKnihaPouzivatelButton({ kniha_pouzivatel_id }: { kniha_pouzivatel_id: number }) {
 
-    async function handleDelete() {
-        "use server";
-        await prisma.kniha_pouzivatel.delete({ where: { id: kniha_pouzivatel_id } });
-        revalidatePath("/u/moje-knihy");
-    }
-
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter();
     return (
-        <IconButton onClick={handleDelete}>
+        <IconButton
+            onClick={() => startTransition(() => {deletePouzivatelovaKniha(kniha_pouzivatel_id);router.refresh();})}
+            disabled={isPending}
+        >
             <Delete />
         </IconButton>
     )

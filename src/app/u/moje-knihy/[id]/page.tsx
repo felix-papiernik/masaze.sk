@@ -25,7 +25,7 @@ export default async function Page({ params }
     return (
         pouzivatelovaKniha ? <>
             <Typography variant="h1">{pouzivatelovaKniha.kniha.nazov}</Typography>
-            <Typography variant="h5">Stav knihy {pouzivatelovaKniha.stav}</Typography>
+            <Typography variant="h5">Stav knihy {pouzivatelovaKniha.stav === "chcemPrecitat" ? "Na prečítanie" : "Prečítané"}</Typography>
             <Typography variant="h5">Poznámka: {pouzivatelovaKniha.poznamka}</Typography>
         </>
             : <Typography variant="h1">Používateľova kniha neexistuje</Typography>
