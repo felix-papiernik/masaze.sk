@@ -3,6 +3,7 @@ import React from 'react'
 import DeleteBookButton from './buttons/DeleteBookButton'
 import { EntityGroupedData } from '@/lib/types'
 import DeleteAutorButton from './buttons/DeleteAutorButton'
+import AddToListButton from './buttons/AddToListButton'
 
 export interface Editable {
     editUrl: string,
@@ -30,6 +31,7 @@ export default function EntityCard(props: EntityCardProps) {
                         <DeleteBookButton deleteBook={ed.edit.handleDelete} />
                     </Stack>
                     }
+                    {ed.edit === undefined && < AddToListButton />}
                 </>
             )
             break;

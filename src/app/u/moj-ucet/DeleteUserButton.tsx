@@ -4,6 +4,7 @@ import CustomSnackbar from '@/components/CustomSnackbar';
 import { useAuth } from '@/context/AuthContext';
 import { deletePouzivatel, deleteSession } from '@/lib/actions';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
+import { redirect } from 'next/navigation';
 import React, { useState } from 'react'
 
 export default function DeleteUserButton() {
@@ -24,9 +25,10 @@ export default function DeleteUserButton() {
             const deletedSuccessfully = true
     
             if (deletedSuccessfully) {
+                await deleteSession(false);
                 setAuth(null);
-                await deleteSession();
                 setSnackbarData({ open: true, message: "Účet bol úspešne vymazaný." });
+                redirect("/prihlasenie");
             } else {
                 setSnackbarData({ open: true, message: "Účet sa nepodarilo vymazať." });
             }
