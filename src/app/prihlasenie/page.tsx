@@ -4,12 +4,11 @@ import { useState } from "react";
 import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zod";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { createSession, tryToLogin } from "@/lib/actions";
 import { pouzivatel } from "@prisma/client";
 import { redirectUrlAfterLogin } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
 
 
 export default function Page() {
@@ -59,9 +58,12 @@ export default function Page() {
 
     const pouzivatel = userLoginTry as pouzivatel;
     await createSession({ pouzivatel });
-
     setAuth({ pouzivatel });
-    redirect(redirectUrlAfterLogin(pouzivatel.je_admin));
+    //refresh kvoli server header
+    router.push(redirectUrlAfterLogin(pouzivatel.je_admin));
+    router.refresh();
+
+    //redirect(redirectUrlAfterLogin(pouzivatel.je_admin));
   };
 
   const [showPassword, setShowPassword] = useState(false);

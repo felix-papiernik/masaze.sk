@@ -1,18 +1,17 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
 import { deleteSession } from "@/lib/actions";
 import { Button } from "@mui/material";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export function SignOutButton() {
 
-    const { setAuth } = useAuth();
+    const router = useRouter();
 
     const signOutAuth = async () => {
 
         await deleteSession(false);
-        setAuth(null);
+        router.refresh();
         redirect("/prihlasenie");
     }
 

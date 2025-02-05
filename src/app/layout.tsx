@@ -1,11 +1,11 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Box, Stack, ThemeProvider } from "@mui/material";
 import type { Metadata } from "next";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getAuthFromCookies } from "@/lib/actions";
 import { AuthProvider } from "@/context/AuthContext";
 import theme from "@/theme";
+import Header from '@/components/Header';
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +22,7 @@ export default async function RootLayout({
   let initialAuth = await getAuthFromCookies();
 
   //console.log("root layout initialAuth: ", initialAuth);
-
+  
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>

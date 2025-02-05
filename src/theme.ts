@@ -1,8 +1,13 @@
 'use client';
 import { createTheme, hexToRgb } from '@mui/material/styles';
 
-const richBlack = "#0C1618";
 //farebna paleta https://coolors.co/407899-faf4d3-ff595e-020300-36311f
+
+
+const richBlack = "#0C1618";
+// Cornsilk sheen gold šedá pre doplnkové prvky
+export const secondaryMain = "#FAF4D3";
+
 
 const theme = createTheme({
     palette: {
@@ -12,7 +17,7 @@ const theme = createTheme({
         },
         secondary: {
             //main: "#B7990D", // Satin sheen gold šedá pre doplnkové prvky
-            main: "#FAF4D3", // Cornsilk sheen gold šedá pre doplnkové prvky
+            main: secondaryMain, 
         },
     },
     typography: {

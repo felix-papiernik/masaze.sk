@@ -1,28 +1,27 @@
-"use client";
-
-import { Button, Stack, useTheme } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 import { SignOutButton } from './buttons/SignOutButton'
-import { useAuth } from '@/context/AuthContext';
+import { verifySession } from '@/lib/actions';
+import { secondaryMain } from '@/theme';
 
-export default function Header() {
+export default async function Header() {
 
-    const { auth } = useAuth();
-    const theme = useTheme();
-
+    const session = await verifySession();
+    const user = session ? session.pouzivatel : null;
+    
     return (
-        <Stack component="header" sx={{ backgroundColor: theme.palette.secondary.main, justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2}}>
+        <Stack component="header" sx={{ backgroundColor: secondaryMain, justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2 }}>
             <Link href={"/"}>citaj.sk</Link>
             <Stack component="nav" direction="row" gap={4} alignItems="center">
                 <Link href={"/knihy"}>Knihy</Link>
                 <Link href={"/autori"}>Autori</Link>
                 <Link href={"/zanre"}>Žánre</Link>
                 {
-                    auth ? <>
-                        {auth.pouzivatel.je_admin && <Link href={"/u/admin/"}>Správa systému</Link>}
+                    user ? <>
+                        {user.je_admin && <Link href={"/u/admin/"}>Správa systému</Link>}
                         <Link href={"/u/moje-knihy"}>Moje knihy</Link>
-                        <Link href={"/u/moj-ucet"}>Môj účet - {auth.pouzivatel.meno}</Link>
+                        <Link href={"/u/moj-ucet"}>Môj účet - {user.meno}</Link>
                         <SignOutButton />
                     </> :
                         (
