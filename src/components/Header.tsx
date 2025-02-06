@@ -13,16 +13,15 @@ export default async function Header() {
     return (
         <Stack component="header" sx={{ backgroundColor: secondaryMain, justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2 }}>
             <Link href={"/"}>citaj.sk</Link>
-            <Stack component="nav" direction="row" gap={4} alignItems="center">
+            <Stack component="nav" direction="row" gap={6} alignItems="center">
                 <Link href={"/knihy"}>Knihy</Link>
                 <Link href={"/autori"}>Autori</Link>
                 <Link href={"/zanre"}>Žánre</Link>
                 {
                     user ? <>
                         {user.je_admin && <Link href={"/u/admin/"}>Správa systému</Link>}
-                        <Link href={"/u/moje-knihy"}>Moje knihy</Link>
-                        <Link href={"/u/moj-ucet"}>Môj účet</Link>
-                        <SignOutButton />
+                        <Link href={"/u/"}>Nástenka</Link>
+                        <SignOutButton variant='outlined' includeIcon/>
                     </> :
                         (
                             <>
