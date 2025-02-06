@@ -36,7 +36,6 @@ Po získaní .env ho vložte do koreňového adresára projektu.
 Po inštalácii závislostí a pridaní .env súboru spustite vývojový server:
 
 ```bash
-Kopírovať
 npm run dev
 # alebo
 yarn dev
