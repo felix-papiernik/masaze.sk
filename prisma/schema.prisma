@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,19 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int    @id @default(autoincrement())
-  email     String @unique
-  password  String
-  phone     String // if there'd be user with same number, new user couldn't write his number
-  firstName String
-  lastName  String
-  role      Role   @default(CLIENT)
+model pouzivatel {
+  id               Int                @id @default(autoincrement())
+  meno             String
+  priezvisko       String
+  email            String             @unique
+  hash_heslo       String
+  je_admin         Boolean
+  kniha_pouzivatel kniha_pouzivatel[]
 }
 
-enum Role {
-  SUPERADMIN
-  OWNER
-  MASSEUR
-  CLIENT
+model kniha {
+  id               Int                @id @default(autoincrement())
+  nazov            String             @unique
+  rok_vydania      Int
+  pocet_stran      Int
+  autor_id         Int
+  zaner_id         Int
+  autor            autor              @relation(fields: [autor_id], references: [id], onDelete: Cascade)
+  zaner            zaner              @relation(fields: [zaner_id], references: [id])
+  kniha_pouzivatel kniha_pouzivatel[]
+}
+
+model autor {
+  id         Int     @id @default(autoincrement())
+  meno       String
+  priezvisko String
+  datum_nar  String
+  info       String  @default("")
+  kniha      kniha[]
+
+  @@unique([meno, priezvisko])
+}
+
+model zaner {
+  id    Int     @id @default(autoincrement())
+  nazov String  @unique
+  popis String
+  kniha kniha[]
+}
+
+model kniha_pouzivatel {
+  id            Int        @id @default(autoincrement())
+  kniha_id      Int
+  pouzivatel_id Int
+  stav          stav       @default(chcemPrecitat)
+  vytvorene     DateTime   @default(now())
+  poznamka      String     @default("")
+  kniha         kniha      @relation(fields: [kniha_id], references: [id])
+  pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id])
+  @@unique([kniha_id, pouzivatel_id])
+}
+
+enum stav {
+  chcemPrecitat
+  precitane
 }

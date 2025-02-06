@@ -1,114 +1,170 @@
 'use client';
 
-import { CreateUserData, validateCreateUserData } from '@/lib/zodValidations';
+import { useAuth } from '@/context/AuthContext';
+import { createPouzivatel, createSession } from '@/lib/actions';
+import { Auth } from '@/lib/types';
+import { redirectUrlAfterLogin } from '@/lib/utils';
+import { validateCreateUserData } from '@/lib/zod';
 import { Box, Typography, Button, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-export const createUserData: CreateUserData = {
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    password: '',
-}
-
 export default function Page() {
 
-    const [formData, setFormData] = useState({ ...createUserData });
-    const [errors, setErrors] = useState({ ...createUserData, general: "" });
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { setAuth } = useAuth();
+
+    const [formState, setFormState] = useState({
+        meno: {
+            value: 'John',
+            error: ''
+        },
+        priezvisko: {
+            value: 'Doe',
+            error: ''
+        },
+        email: {
+            value: 'john.doe@gmail.com',
+            error: ''
+        },
+        heslo: {
+            value: 'heslo123',
+            error: ''
+        },
+        error: '',
+        isSubmitting: false
+    });
+
 
     const router = useRouter();
 
     const handleSubmit = async () => {
         event?.preventDefault();
-        setIsSubmitting(true);
-        setErrors({ ...createUserData, general: "" });
+        setFormState({ ...formState, isSubmitting: true, error: '' });
 
-        const parsedUser = validateCreateUserData(formData);
-        console.log("validacia na strane klienta")
+        const parsedUser = validateCreateUserData({
+            meno: formState.meno.value,
+            priezvisko: formState.priezvisko.value,
+            email: formState.email.value,
+            heslo: formState.heslo.value
+        });
+        // console.log("CLIENT FORM VALIDATION - registracia")
         if (!parsedUser.success) {
-            let newErrors = { ...createUserData };
-            parsedUser.error.errors.forEach((err) => {
-                const key = err.path[0];
-                if (key) {
-                    newErrors = { ...newErrors, [key]: err.message };
+            setFormState({
+                ...formState, isSubmitting: false,
+                meno: {
+                    value: formState.meno.value,
+                    error: parsedUser.error.issues?.find(issue => issue.path[0] == "meno")?.message ?? ""
+                },
+                priezvisko: {
+                    value: formState.priezvisko.value,
+                    error: parsedUser.error.issues?.find(issue => issue.path[0] == "priezvisko")?.message ?? ""
+                },
+                email: {
+                    value: formState.email.value,
+                    error: parsedUser.error.issues?.find(issue => issue.path[0] == "email")?.message ?? ""
+                },
+                heslo: {
+                    value: formState.heslo.value,
+                    error: parsedUser.error.issues?.find(issue => issue.path[0] == "heslo")?.message ?? ""
                 }
             });
-            setIsSubmitting(false);
-            setErrors({ ...newErrors, general: "Formulár obsahuje chyby" });
             return;
         }
 
-        try {
-            const response = await fetch(`/api/signup/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-
-            console.log("body", JSON.stringify(formData));
-
-            if (response.ok) {
-                //const res = response.status;
-                // console.log("response.json()", res);
-                alert("Registrácia prebehla úspešne");
-                router.push('/prihlasenie');
-            } else {
-                const data = await response.json();
-                // console.log("response", data);
-                setErrors({ ...createUserData, general: "Registrácia sa nepodarila. " + data.error });
-            }
-        } catch (err) {
-            console.error('Sign-up error:', err);
-            alert("Registrácia sa nepodarila");
-        } finally {
-            setIsSubmitting(false);
+        const newUser = await createPouzivatel({
+            meno: formState.meno.value,
+            priezvisko: formState.priezvisko.value,
+            email: formState.email.value,
+            heslo: formState.heslo.value
+        })
+        if ("error" in newUser) {
+            setFormState({ ...formState, isSubmitting: false, error: newUser.error });
+            return;
         }
+        await createSession({ pouzivatel: newUser } as Auth);
+        setAuth({ pouzivatel: newUser });
+        router.push(redirectUrlAfterLogin(newUser.je_admin));
     };
-
-    // console.log("formData", formData);
-
-    const getLabel = (key: string) => {
-        switch (key) {
-            case 'firstName':
-                return 'Meno';
-            case 'lastName':
-                return 'Priezvisko';
-            case 'phone':
-                return 'Telefón';
-            case 'email':
-                return 'Email';
-            case 'password':
-                return 'Heslo';
-            default:
-                return '';
-        }
-    }
 
     return (
         <Box sx={{ width: { xs: "100%", md: "60vw", lg: "600px" }, mx: "auto" }}>
-            <Typography variant="h1" mb={2} textAlign={"center"}>Registrácia</Typography>
-            <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                {Object.keys(formData).map((key) => (
-
-                    <React.Fragment key={key}>
-                        <TextField
-                            label={getLabel(key)}
-                            name={key}
-                            type={'text'}
-                            required
-                            value={formData[key as keyof typeof formData]}
-                            onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-                            error={errors[key as keyof typeof errors] !== "" ? true : false}
-                            helperText={errors[key as keyof typeof errors]}
-                        />
-                    </React.Fragment>
-                ))}
-                {errors.general && <Typography color="error">{errors.general}</Typography>}
-                <Button type="submit" disabled={isSubmitting} variant="contained" onClick={handleSubmit}>{isSubmitting ? "Odosiela sa..." : "Registrovať sa"}</Button>
+            <Typography variant="h1" mt={4} mb={2} textAlign={"center"}>Registrácia</Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+                <TextField
+                    label="Meno"
+                    type="text"
+                    required
+                    error={formState.meno.error !== ""}
+                    helperText={formState.meno.error}
+                    value={formState.meno.value}
+                    onChange={(e) => setFormState({ ...formState, meno: { value: e.target.value, error: formState.meno.error } })}
+                />
+                <TextField
+                    label="Priezvisko"
+                    type="text"
+                    required
+                    error={formState.priezvisko.error !== ""}
+                    helperText={formState.priezvisko.error}
+                    value={formState.priezvisko.value}
+                    onChange={(e) => setFormState({ ...formState, priezvisko: { value: e.target.value, error: formState.priezvisko.error } })}
+                />
+                <TextField
+                    label="Email"
+                    type="email"
+                    required
+                    error={formState.email.error !== ""}
+                    helperText={formState.email.error}
+                    value={formState.email.value}
+                    onChange={(e) => setFormState({ ...formState, email: { value: e.target.value, error: formState.email.error } })}
+                />
+                <TextField
+                    label="Heslo"
+                    type="text"
+                    required
+                    error={formState.heslo.error !== ""}
+                    helperText={formState.heslo.error}
+                    value={formState.heslo.value}
+                    onChange={(e) => setFormState({ ...formState, heslo: { value: e.target.value, error: formState.heslo.error } })}
+                />
+                <Typography color="error">{formState.error}</Typography>
+                <Button type="submit" disabled={formState.isSubmitting} variant="contained">{formState.isSubmitting ? "Registruje sa..." : "Registrovať sa"}</Button>
             </Box>
+            <Button
+                fullWidth
+                sx={{ mt: 2 }}
+                type="button"
+                variant="outlined"
+                onClick={() => {
+                    setFormState({
+                        meno: { value: "Félix", error: "" },
+                        priezvisko: { value: "Papiernik", error: "" },
+                        email: { value: "felixpapiernik42@gmail.com", error: "" },
+                        heslo: { value: "heslo123", error: "" },
+                        error: "",
+                        isSubmitting: false
+                    });
+                }}
+            >
+                {formState.isSubmitting ? "Registruje sa..." : "Setform as felixpapiernik42@gmail.com"}
+            </Button>
+            <Button
+                fullWidth
+                sx={{ mt: 2 }}
+                type="button"
+                variant="outlined"
+                onClick={() => {
+                    setFormState({
+                        meno: { value: "John", error: "" },
+                        priezvisko: { value: "Doe", error: "" },
+                        email: { value: "john.doe@gmail.com", error: "" },
+                        heslo: { value: "heslo123", error: "" },
+                        error: "",
+                        isSubmitting: false
+                    });
+                }}
+            >
+                {formState.isSubmitting ? "Registruje sa..." : "Setform as john.doe@gmail.com"}
+            </Button>
         </Box>
     )
 }

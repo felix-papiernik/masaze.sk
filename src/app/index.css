@@ -1,0 +1,123 @@
+.container {
+    max-width: 700px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center !important;
+}
+  
+.highlighted-text {
+    color: #ff5722;
+    font-weight: bold;
+}
+
+.hero-image {
+    border-radius: 10px;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: auto;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #444;
+    text-align: center;
+    margin-top: 2rem !important;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.button-primary {
+    background-color: #1976d2 !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+}
+
+.button-secondary {
+    border-color: #1976d2 !important;
+    color: #1976d2 !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+}
+
+.explore-text {
+    font-size: 1rem;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.explore-link {
+    color: #d32f2f;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.explore-link:hover {
+    text-decoration: underline;
+}
+
+.welcome-message {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.container a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+.container {
+    width: 90vw;
+    padding: 10px;
+}
+
+.hero-title {
+    font-size: 2rem;
+}
+}
+
+.button-primary:hover, .button-secondary:hover {
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero-image:hover {
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+}
+
+
+.button-primary, .button-secondary {
+    border-radius: 50px;
+}
+
+.button-primary:active, .button-secondary:active {
+    transform: scale(0.98);
+}
+  
