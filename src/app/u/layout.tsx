@@ -1,7 +1,7 @@
 import { SignOutButton } from "@/components/buttons/SignOutButton";
 import { verifySession } from "@/lib/actions";
 import { Abc, Book, CollectionsBookmark, Edit, Group, Person } from "@mui/icons-material";
-import { Box, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from "@mui/material";
+import { Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import MenuItemLink from "./MenuItemLink";
 
@@ -12,7 +12,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
     const adminLinks = [
         { href: "/u/admin/knihy", label: "Knihy", icon: <CollectionsBookmark /> },
-        { href: "/u/admin/autori", label: "Autori", icon: <Group />  },
+        { href: "/u/admin/autori", label: "Autori", icon: <Group /> },
         { href: "/u/admin/zanre", label: "Žánre", icon: <Abc /> },
     ]
 
@@ -23,26 +23,22 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <Stack direction={"column"} spacing={2} sx={{ margin: "auto", minHeight: "100%", backgroundColor: "white", minWidth: "250px" }}>
                 <List>
                     {jeAdmin && <>
-                        <ListItemButton component={Link} href="/u/admin/knihy">
-                            <ListItemIcon>
-                                <Edit />
-                            </ListItemIcon>
-                            <ListItemText primary="Správa systému" />
-                        </ListItemButton>
-                        <Box> {/* Indent submenu */}
-                            <List sx={{ py: 0 }}>
-                                {adminLinks.map((link) => (
-                                    <ListItemButton key={link.href} component={Link} href={link.href} sx={{ pl: 4 }}>
-                                        <ListItemIcon>
-                                            {link.icon}
-                                        </ListItemIcon>
-                                        <ListItemText primary={link.label} />
-                                    </ListItemButton>
-                                ))}
-                            </List>
-                        </Box>
+                        <MenuItemLink url={"/u/admin"} text={"Správa systému"} icon={<Edit />} isActivePredicate="exact" />
+                        <List sx={{ py: 0 }}>
+                            {adminLinks.map((link) => (
+                                <MenuItemLink
+                                    key={link.href}
+                                    url={link.href}
+                                    text={link.label}
+                                    icon={link.icon}
+                                    paddingLeft={4}
+                                    isActivePredicate={"startsWith"}
+                                />
+                            ))}
+                        </List>
                     </>
                     }
+                    <Divider />
                     <MenuItemLink url={"/u/moje-knihy"} text={"Moje knihy"} icon={<Book />} />
                     <MenuItemLink url={"/u/moj-ucet"} text={"Môj účet"} icon={<Person />} />
                 </List>

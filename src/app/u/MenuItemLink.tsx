@@ -11,20 +11,22 @@ export interface MenuItemLinkProps {
     text: string;
     paddingLeft?: number;
     icon: React.ReactNode;
+    isActivePredicate?: "startsWith" | "exact";
 }
 
 export default function MenuItemLink(props : MenuItemLinkProps) {
 
     const pathname = usePathname();
     const theme = useTheme();
-    const isActive = pathname?.startsWith(props.url);
+    // const isActive = pathname?.startsWith(props.url);
+    const isActive = props.isActivePredicate === "startsWith" ? pathname?.startsWith(props.url) : pathname === props.url;
 
     return (
-        <ListItemButton component={Link} href="/u/moje-knihy" sx={{
+        <ListItemButton component={Link} href={props.url} sx={{
             backgroundColor: isActive ? theme.palette.primary.light : null,
             color: isActive ? theme.palette.primary.contrastText : "inherit",
             "&:hover": {
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: theme.palette.primary.light,
                 color: theme.palette.primary.contrastText
             },
             "&:hover .menu-icon": {
