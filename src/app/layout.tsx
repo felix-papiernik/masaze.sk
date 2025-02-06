@@ -22,7 +22,7 @@ export default async function RootLayout({
   let initialAuth = await getAuthFromCookies();
 
   //console.log("root layout initialAuth: ", initialAuth);
-  
+
   return (
     <html lang="en">
       <body style={{ height: "100%", margin: 0 }}>
@@ -31,7 +31,7 @@ export default async function RootLayout({
             <AuthProvider initialAuth={initialAuth}>
               <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
                 <Header />
-                <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box", display: "flex", flexWrap: "nowrap"  }}>
+                <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box", display: "flex", flexWrap: "nowrap" }}>
                   {children}
                 </Box>
                 <Footer />

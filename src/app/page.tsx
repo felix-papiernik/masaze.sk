@@ -1,10 +1,8 @@
-"use client"
-
-import { useAuth } from "@/context/AuthContext"
+import { verifySession } from "@/lib/actions"
 import { Box, Typography } from "@mui/material"
 import Link from "next/link"
 
-export default function Page() {
+export default async function Page() {
 
   /**
    * Nezabudni skusit pouzit Image komponentu z Next.js
@@ -18,7 +16,8 @@ export default function Page() {
         />
    */
 
-  const { auth } = useAuth()
+  const session = await verifySession();
+  const auth = session ? session.pouzivatel : undefined;
 
   return (
     <Box sx={{ width: { xs: "100%", md: "60vw", lg: "700px" }, mx: "auto" }}>
@@ -32,9 +31,10 @@ export default function Page() {
       {auth == null ? (
         <>
           <Typography variant="body1" mt={4} mb={1}>Pre prístup k tejto funkcionalite sa musíš prihlásiť alebo sa zaregistrovať</Typography>
-          
+
           <Link href={"/prihlasenie"} style={{ marginRight: 16 }}>Prihlásiť sa</Link>
           <Link href={"/registracia"}>Zaregistrovať sa</Link>
+          <p>Ak však nemáš záujem, kľudne si iba <Link href={"/knihy"}>prezri knihy</Link></p>
         </>
       ) : (
         <>

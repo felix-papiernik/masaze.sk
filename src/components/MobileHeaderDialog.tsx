@@ -20,7 +20,7 @@ export default function MobileHeaderDialog({ pouzivatel }: { pouzivatel?: pouziv
             <IconButton onClick={() => setMenuOpen(true)}>
                 <MenuIcon />
             </IconButton>
-            <Dialog open={menuOpen} onClose={() => setMenuOpen(false)} fullScreen>
+            <Dialog open={menuOpen} onClose={() => setMenuOpen(false)} fullScreen onClick={() => setMenuOpen(false)}>
                 <IconButton
                     onClick={() => setMenuOpen(false)}
                     sx={{ marginLeft: "auto" }}>

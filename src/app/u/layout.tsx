@@ -39,7 +39,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
                     <SignOutButton includeIcon variant="outlined" />
                 </Box>
             </Stack>
-            <Box sx={{ display: "block", width: "100%", flexGrow: 1 }}>
+            <Box sx={{ display: "block", width: "100%", flexGrow: 1, backgroundColor: { lg: "background.paper" }, borderRadius: { lg: 2 }, p: { lg: 3 } }}>
                 {children}
             </Box>
         </Stack>

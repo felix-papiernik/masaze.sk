@@ -7,7 +7,7 @@ import { EntityGroupedData } from "@/lib/types";
 export default function EntityList(props: { data: EntityGroupedData[], notFoundElement?: JSX.Element, notFoundMessage?: string }) {
 
     const type = props.data[0]?.type
-    const lgColumns = type === "kniha" ? 4 : type === "kniha_pouzivatel" ? 2 : 3
+    const lgColumns = type === "kniha_pouzivatel" ? 2 : 3
 
     return (
         <>
