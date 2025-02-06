@@ -1,12 +1,10 @@
 "use client";
 
-import { AutorGroupedData, KnihaGroupedData } from "@/lib/types";
+import { AutorGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Autocomplete, Button, Pagination, Stack, TextField } from "@mui/material";
-import { addDemoKnihaAndRelations } from "@/lib/actions";
-import { revalidatePath } from "next/cache";
+import { Autocomplete, Pagination, TextField } from "@mui/material";
 
 interface AutoriFilterListProps {
     autori: AutorGroupedData[];
@@ -17,7 +15,7 @@ type AutorAutocompleteData = {
     value: string;
 };
 
-const autoriPerPage = 3;
+const autoriPerPage = 6;
 
 const defaultFilters = {
     autor: { id: null, value: "" } as AutorAutocompleteData,
@@ -113,11 +111,6 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
         id: a.id,
         value: `${a.meno} ${a.priezvisko}`,
     }));
-
-    // const handleAddDemoAutor = async () => {
-    //     "use server";
-    //     await addDemoKnihaAndRelations();
-    // }
 
     return (
         <>

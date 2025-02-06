@@ -111,11 +111,6 @@ export default function ZanreFilterList({ zanre: initZanre, direction }: AutoriF
         value: a.nazov,
     }));
 
-    // const handleAddDemoAutor = async () => {
-    //     "use server";
-    //     await addDemoKnihaAndRelations();
-    // }
-
     return (
         <>
             <FilterEntityLayout

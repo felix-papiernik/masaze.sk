@@ -26,7 +26,7 @@ export default async function Page({ params }
     })) as EntityGroupedData[]
 
     return (
-        autor ? <Box>
+        autor ? <Box width={"100%"}>
             <Typography variant="h1">{autor?.meno} {autor?.priezvisko}</Typography>
             <Typography variant="h3">O autorovi</Typography>
             <Typography variant="body1">Dátum narodenia: {dayjs(autor?.datum_nar).format("DD.MM.YYYY")}</Typography>

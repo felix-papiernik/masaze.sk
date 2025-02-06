@@ -15,7 +15,7 @@ type AutocompleteData = {
     value: string;
 };
 
-const knihyPerPage = 4;
+const knihyPerPage = 6;
 
 const defaultFilters = {
     nazov: "",

@@ -9,12 +9,7 @@ import { redirect } from "next/navigation"
 import { Auth, AuthPayload } from "./types";
 
 import bcrypt from 'bcryptjs';
-import { validateKnihaData } from './zod';
-import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-//dotenv.config();
-
-// require('dotenv').config();
 
 export async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -58,14 +53,8 @@ export const createSession = async (auth: Auth) => {
   const session = await encrypt({ authData: auth });
   const cookiesSet = await cookies();
   cookiesSet.set(cookieO.name, session, { ...cookies, expires });
-  // return auth;
-  //redirect("/u/dashboard");
 }
 
-// export const updateCookiesAuth = async (auth: Auth): Promise<Auth | null> => {
-//   let a = await createSession(auth);
-//   return a;
-// }
 
 export async function verifySession(): Promise<Auth | null> {
   const cookie = (await cookies()).get(cookieO.name)?.value;
@@ -83,6 +72,8 @@ export async function deleteSession(redirectToPrihlasenie?: boolean) {
   (await cookies()).delete(cookieO.name);
   redirectToPrihlasenie && redirect("/prihlasenie");
 }
+
+
 
 
 
@@ -104,28 +95,6 @@ export async function tryToLogin({ email, password }: { email: string, password:
   return passwordMatch ? pouzivatel : { error: "Nesprávne heslo" };
 }
 
-
-
-
-// export const getEntityDataFromServerCookies = async (): Promise<EntityData | null> => {
-//   let ed: EntityData | null = null;
-//   // Načítanie údajov z HTTP-only cookies na serveri
-//   const cookieStore = await cookies();
-//   const token = cookieStore.get("session")?.value;
-
-//   if (token) {
-//     try {
-//       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-//       const { payload } = await jwtVerify(token, secret);
-//       let p = payload as EntityDataPayload; // Predpokladáme, že payload obsahuje údaje používateľa
-//       ed = p.entityData;
-//     } catch (err) {
-//       console.error("Invalid or expired token:", err);
-//     }
-//   }
-//   //console.log("returning EntityData from server cookies: ", ed)
-//   return ed;
-// }
 
 export const getAuthFromCookies = async (): Promise<Auth | null> => {
   // Načítanie údajov z HTTP-only cookies na serveri
@@ -270,43 +239,6 @@ export const deletePouzivatel = async (id: number) => {
   } catch (e) {
     return false;
   }
-}
-
-export const addDemoKnihaAndRelations = async () => {
-  const autor = await prisma.autor.create({
-    data: {
-      meno: "Demo",
-      priezvisko: "Autor",
-      info: "Info o demo autorovi",
-      datum_nar: "1985-06-15",
-    },
-  });
-
-  const zaner = await prisma.zaner.create({
-    data: {
-      nazov: "Demo zaner",
-      popis: "Popis demo zanra",
-    },
-  });
-
-  const pocetKnih = await prisma.kniha.count();
-  return await prisma.kniha.create({
-    data: {
-      nazov: "Demo kniha " + pocetKnih,
-      rok_vydania: 2023,
-      pocet_stran: 100,
-      autor: {
-        connect: {
-          id: autor.id ?? 1,
-        },
-      },
-      zaner: {
-        connect: {
-          id: zaner.id ?? 1,
-        },
-      },
-    }
-  })
 }
 
 export const deleteKniha = async (knihaId: number) => {
