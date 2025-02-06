@@ -24,7 +24,7 @@ export default async function MojeKnihy() {
     return (
         <>
             <Typography variant="h3" mt={4} mb={2}>Moje knihy</Typography>
-            <Typography variant="body1">Tuto nájdeš knihy, ktoré si si uložil do zoznamu, alebo si ich už prečítal.</Typography>
+            <Typography variant="body1" mb={4}>Tuto nájdeš knihy, ktoré si si uložil do zoznamu, alebo si ich už prečítal.</Typography>
             <EntityList
                 data={knihaGroupedData}
                 notFoundElement={<Typography>V tvojom zozname nie sú žiadne knihy, <Link href={"/knihy"}>poď si ich nájsť</Link></Typography>}

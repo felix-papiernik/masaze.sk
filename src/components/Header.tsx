@@ -19,7 +19,6 @@ export default async function Header() {
                 <Link href={"/zanre"}>Žánre</Link>
                 {
                     user ? <>
-                        {user.je_admin && <Link href={"/u/admin/"}>Správa systému</Link>}
                         <Link href={"/u/"}>Nástenka</Link>
                         <SignOutButton variant='outlined' includeIcon/>
                     </> :
