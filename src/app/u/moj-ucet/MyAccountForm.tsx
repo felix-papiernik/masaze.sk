@@ -29,7 +29,7 @@ export default function MyAccountForm({ pouzivatel }: { pouzivatel: pouzivatel }
         }
     });
 
-    console.log(userData);
+    //console.log(userData);
 
     const handleUserUpdate = async () => {
         event?.preventDefault();

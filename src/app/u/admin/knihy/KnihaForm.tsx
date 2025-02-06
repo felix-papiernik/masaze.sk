@@ -57,10 +57,10 @@ export default function KnihaForm(props: props) {
             pocet_stran: parseInt(formState.pocet_stran.value.toString())
         } as kniha;
         props.knihaToUpdate && (knihaData.id = props.knihaToUpdate.id);
-        console.log("knihaData", knihaData);
+        //console.log("knihaData", knihaData);
         const validated = validateKnihaData(knihaData);
         if (validated.error) {
-            console.log("autor_id error", validated.error.errors.find(e => e.path.includes("autor_id"))?.message);
+            //console.log("autor_id error", validated.error.errors.find(e => e.path.includes("autor_id"))?.message);
             setFormState({
                 ...formState,
                 nazov: { value: formState.nazov.value, error: validated.error.errors.find(e => e.path.includes("nazov"))?.message || "" },

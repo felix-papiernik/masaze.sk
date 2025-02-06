@@ -128,7 +128,7 @@ export default function ZanreFilterList({ zanre: initZanre, direction }: AutoriF
                             }}
                             inputValue={currentFilterValues.zaner.value}
                             onInputChange={(event, newInputValue) => {
-                                console.log("newInputValue", newInputValue);
+                                //console.log("newInputValue", newInputValue);
                                 setCurrentFilterValues((prev) => ({
                                     ...prev,
                                     zaner: { id: null, value: newInputValue },

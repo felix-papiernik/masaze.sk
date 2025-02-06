@@ -101,7 +101,7 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
             if (key === "nazov") {
                 return k.data.nazov.toLowerCase().includes((value as string).toLowerCase());
             } else if (key === "autor") {
-                console.log("k.data.autor.id and value", k.data.autor.id, (value as AutocompleteData).id);
+                //console.log("k.data.autor.id and value", k.data.autor.id, (value as AutocompleteData).id);
                 return k.data.autor.id === (value as AutocompleteData).id;
             } else if (key === "zaner") {
                 return k.data.zaner.id === (value as AutocompleteData).id;
@@ -124,7 +124,8 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
         id: z.id,
         value: z.nazov,
     }));
-    console.log("uniqueZanre", uniqueZanre);
+    //console.log("uniqueZanre", uniqueZanre);
+    
     return (
         <FilterEntityLayout
             direction={direction || "row"}
@@ -147,7 +148,7 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
                         }}
                         inputValue={currentFilterValues.autor.value}
                         onInputChange={(event, newInputValue) => {
-                            console.log("newInputValue", newInputValue);
+                            //console.log("newInputValue", newInputValue);
                             setCurrentFilterValues((prev) => ({
                                 ...prev,
                                 autor: { id: null, value: newInputValue },
@@ -171,7 +172,7 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
                         }}
                         inputValue={currentFilterValues.zaner.value}
                         onInputChange={(event, newInputValue) => {
-                            console.log("newInputValue", newInputValue);
+                            //console.log("newInputValue", newInputValue);
                             setCurrentFilterValues((prev) => ({
                                 ...prev,
                                 zaner: { id: null, value: newInputValue },

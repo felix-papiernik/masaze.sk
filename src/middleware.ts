@@ -4,7 +4,7 @@ import { redirectUrlAfterLogin } from './lib/utils';
 import { verifySession } from './lib/actions';
 
 export async function middleware(req: NextRequest) {
-  console.log("middleware run")
+  //console.log("middleware run")
   const auth = await verifySession();
   const path = req.nextUrl.pathname;
 
@@ -29,10 +29,10 @@ export async function middleware(req: NextRequest) {
 
     return NextResponse.next();
   } else if (!auth && !path.startsWith("/prihlasenie") && !path.startsWith("/registracia")) {
-    console.log("redirecting to /prihlasenie from middleware")
+    //console.log("redirecting to /prihlasenie from middleware")
     return NextResponse.redirect(new URL('/prihlasenie', req.url));
   }
-  console.log("nextResponse.next")
+  //console.log("nextResponse.next")
   return NextResponse.next();
 }
 

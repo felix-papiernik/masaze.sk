@@ -96,7 +96,7 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
             const value = appliedFilters[key as keyof typeof defaultFilters];
             if (!value || (value as AutorAutocompleteData).id === null) return true;
             if (key === "autor") {
-                console.log("k.data.autor.id and value", a.data.id, (value as AutorAutocompleteData).id);
+                //console.log("k.data.autor.id and value", a.data.id, (value as AutorAutocompleteData).id);
                 return a.data.id === (value as AutorAutocompleteData).id;
             }
             return true;
@@ -129,7 +129,7 @@ export default function AutoriFilterList({ autori: propsAutori, direction }: Aut
                             }}
                             inputValue={currentFilterValues.autor.value}
                             onInputChange={(event, newInputValue) => {
-                                console.log("newInputValue", newInputValue);
+                                //console.log("newInputValue", newInputValue);
                                 setCurrentFilterValues((prev) => ({
                                     ...prev,
                                     autor: { id: null, value: newInputValue },
