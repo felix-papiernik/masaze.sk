@@ -77,7 +77,6 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
                     </DialogActions>
                 </Dialog>
             )}
-
-        </> : <span>NoAuth</span>
+        </> : null
     )
 }

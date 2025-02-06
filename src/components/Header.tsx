@@ -16,23 +16,20 @@ export type LinkGroup = {
 export default async function Header() {
 
     const session = await verifySession();
-    const user = session ? session.pouzivatel : null;
-    
-    //na pc chcem aby iba prihlasit sa/registracia/odhlasit boli tlacidla, ostatne vsetko linky bez ikon
-    //na mobile nech su vsetko tlacidla
+    const user = session ? session.pouzivatel : undefined;
 
     return (
         <Stack component="header" sx={{ backgroundColor: secondaryMain, justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2 }}>
             <Link href={"/"}>citaj.sk</Link>
-            <MobileHeaderDialog />
-            <Stack component="nav" direction="row" gap={6} alignItems="center">
+            <MobileHeaderDialog pouzivatel={user} />
+            <Stack component="nav" direction="row" gap={6} alignItems="center" sx={{display: { xs: "none", lg: "flex" }}}>
                 <Link href={"/knihy"}>Knihy</Link>
                 <Link href={"/autori"}>Autori</Link>
                 <Link href={"/zanre"}>Žánre</Link>
                 {
                     user ? <>
                         <Link href={"/u/"}>Nástenka</Link>
-                        <SignOutButton variant='outlined' includeIcon/>
+                        <SignOutButton variant='outlined' includeIcon />
                     </> :
                         (
                             <>

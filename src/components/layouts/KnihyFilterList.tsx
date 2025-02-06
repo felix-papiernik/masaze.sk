@@ -131,11 +131,10 @@ export default function KnihyFilterList({ knihy, direction }: KnihyFilterListPro
             filters={
                 <>
                     <TextField
-                        fullWidth
                         label="Názov"
                         value={currentFilterValues.nazov}
                         onChange={(e) => setCurrentFilterValues((prev) => ({ ...prev, nazov: e.target.value }))}
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 2, minWidth: "12rem" }}
                     />
                     <Autocomplete
                         value={uniqueAutors.find((a) => a.id === currentFilterValues.autor.id) || null}

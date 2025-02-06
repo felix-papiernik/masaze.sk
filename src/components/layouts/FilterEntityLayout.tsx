@@ -18,9 +18,9 @@ export default function FilterEntityLayout(props: FilterProps) {
     const directionRow = props.direction === "row";
 
     return (
-        <Grid2 container spacing={directionRow ? 8 : 2} direction={props.direction}>
-            <Grid2 size={directionRow ? 2 : 12} sx={{ display: "flex", flexDirection: directionRow ? "column" : "row" }}>
-                <Stack direction={directionRow ? "column" : "row"} spacing={2}>
+        <Grid2 container spacing={{ xs: 4, lg: directionRow ? 8 : 2 }}>
+            <Grid2 size={{ xs: 12, lg: directionRow ? 3 : 12, xl: directionRow ? 2 : 12 }} sx={{ display: "flex", flexDirection: directionRow ? "column" : "row" }}>
+                <Stack direction={directionRow ? "column" : "row"} spacing={2} flexWrap={"wrap"}>
                     {directionRow && <Typography variant="h5" mb={2}>Filtrovať</Typography>}
                     {props.filters}
                     <Stack direction={"row"} mt={2}>
@@ -33,7 +33,7 @@ export default function FilterEntityLayout(props: FilterProps) {
                     </Stack>
                 </Stack>
             </Grid2>
-            <Grid2 size={directionRow ? 10 : 12}>
+            <Grid2 size={{ xs: 12, lg: directionRow ? 9 : 12, xl: directionRow ? 10 : 12 }}>
                 <EntityList data={props.filteredData} />
                 {props.pagination}
             </Grid2>
