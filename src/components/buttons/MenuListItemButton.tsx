@@ -1,6 +1,5 @@
 "use client";
 
-import { Book } from '@mui/icons-material';
 import { ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -18,7 +17,7 @@ export default function MenuListItemButton(props : MenuItemLinkProps) {
 
     const pathname = usePathname();
     const theme = useTheme();
-    // const isActive = pathname?.startsWith(props.url);
+    
     const isActive = props.isActivePredicate === "startsWith" ? pathname?.startsWith(props.url) : pathname === props.url;
 
     return (

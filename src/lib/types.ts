@@ -10,7 +10,6 @@ export interface AuthPayload extends JwtPayload {
     authData: Auth;
 }
 
-
 export interface Editable {
     editUrl: string,
     handleDelete: () => Promise<void>
@@ -22,6 +21,7 @@ export interface DetailUrl {
 
 export interface Actions {
     view: DetailUrl,
+    pouzivatel_id?: number,
     edit?: Editable
 }
 

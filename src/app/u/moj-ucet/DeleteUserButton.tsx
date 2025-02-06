@@ -1,15 +1,14 @@
 "use client";
 
 import CustomSnackbar from '@/components/CustomSnackbar';
-import { useAuth } from '@/context/AuthContext';
 import { deletePouzivatel, deleteSession } from '@/lib/actions';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
-export default function DeleteUserButton() {
+export default function DeleteUserButton({userId}: {userId: number}) {
 
-    const {auth, setAuth} = useAuth();
+    const router = useRouter();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [snackbarData, setSnackbarData] = useState({ open: false, message: "" });
     const [isDeleting, setIsDeleting] = useState(false);
@@ -21,14 +20,12 @@ export default function DeleteUserButton() {
     const handleDeleteUser = async () => {
         try {
             setIsDeleting(true);
-            //const deletedSuccessfully = await deletePouzivatel(auth!.pouzivatel.id);
-            const deletedSuccessfully = true
+            const deletedSuccessfully = await deletePouzivatel(userId);
     
             if (deletedSuccessfully) {
                 await deleteSession(false);
-                setAuth(null);
                 setSnackbarData({ open: true, message: "Účet bol úspešne vymazaný." });
-                redirect("/prihlasenie");
+                router.refresh();
             } else {
                 setSnackbarData({ open: true, message: "Účet sa nepodarilo vymazať." });
             }
@@ -52,7 +49,7 @@ export default function DeleteUserButton() {
                 Vymazať účet
             </Button>
             <Dialog open={dialogOpen} onClose={handleClose}>
-                <DialogTitle>Naozaj chcete vymazať svoj účet? NEZMAZE SA NAOZAJ</DialogTitle>
+                <DialogTitle>Naozaj chcete vymazať svoj účet?</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleClose}>Nie</Button>
                     <Button onClick={handleDeleteUser} autoFocus>

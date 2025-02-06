@@ -2,7 +2,6 @@ import PublicEntityPageLayout from '@/components/layouts/PublicEntityPageLayout'
 import ZanreFilterList from '@/components/layouts/ZanreFilterList';
 import { getZanre } from '@/lib/actions';
 import { ZanerGroupedData } from '@/lib/types';
-import { Typography } from '@mui/material';
 import React from 'react'
 
 export default async function page() {

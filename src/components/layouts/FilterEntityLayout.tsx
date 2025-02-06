@@ -2,7 +2,7 @@ import { Grid2, Typography, Button, IconButton, Stack } from '@mui/material';
 import React from 'react'
 import EntityList from '../EntityList';
 import { EntityGroupedData } from '@/lib/types';
-import { Clear, Delete } from '@mui/icons-material';
+import { Clear } from '@mui/icons-material';
 
 interface FilterProps {
     filters: React.ReactNode;

@@ -54,8 +54,8 @@ model kniha_pouzivatel {
   stav          stav       @default(chcemPrecitat)
   vytvorene     DateTime   @default(now())
   poznamka      String     @default("")
-  kniha         kniha      @relation(fields: [kniha_id], references: [id])
-  pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id])
+  kniha         kniha      @relation(fields: [kniha_id], references: [id], onDelete: Cascade)
+  pouzivatel    pouzivatel @relation(fields: [pouzivatel_id], references: [id], onDelete: Cascade)
   @@unique([kniha_id, pouzivatel_id])
 }
 

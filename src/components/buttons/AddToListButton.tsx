@@ -1,15 +1,12 @@
 "use client";
 
-import { useAuth } from '@/context/AuthContext';
 import { stav } from '@prisma/client';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react'
 import { insertPouzivatelovaKniha } from '@/lib/actions';
 import { Add } from '@mui/icons-material';
 
-export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
-
-    const { auth } = useAuth();
+export default function AddToListButton({ kniha_id, pouzivatel_id }: { kniha_id: number, pouzivatel_id?: number }) {
 
     //there's no performance or memory issue with generating modal for each button
     //because it's not rendered until the button is clicked
@@ -30,7 +27,7 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
     const handleAdd = async () => {
         const res = await insertPouzivatelovaKniha({
             kniha_id: kniha_id,
-            pouzivatel_id: auth!.pouzivatel.id,
+            pouzivatel_id: pouzivatel_id || -1,
             poznamka: formState.poznamka,
             stav: formState.stav as stav
         })
@@ -40,7 +37,7 @@ export default function AddToListButton({ kniha_id }: { kniha_id: number }) {
 
 
     return (
-        auth ? <>
+        pouzivatel_id ? <>
             <IconButton onClick={() => setOpen(!open)} size="small" color="primary"><Add /></IconButton>
             {open && (
                 <Dialog open={open} onClose={handleClose} fullWidth>

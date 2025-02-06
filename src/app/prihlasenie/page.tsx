@@ -5,7 +5,6 @@ import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, I
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { validateLoginData } from "@/lib/zod";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import { createSession, tryToLogin } from "@/lib/actions";
 import { pouzivatel } from "@prisma/client";
 import { redirectUrlAfterLogin } from "@/lib/utils";
@@ -13,7 +12,6 @@ import { redirectUrlAfterLogin } from "@/lib/utils";
 
 export default function Page() {
 
-  const { setAuth } = useAuth();
   const router = useRouter();
   const [formState, setFormState] = useState({
     email: { value: "", error: "" },
@@ -24,7 +22,6 @@ export default function Page() {
 
   const handleLogin = async () => {
     event?.preventDefault();
-    //console.log(JSON.stringify(formState));
     setFormState({ ...formState, isSubmitting: true });
 
     const validatedLoginData = validateLoginData({
@@ -57,7 +54,6 @@ export default function Page() {
 
     const pouzivatel = userLoginTry as pouzivatel;
     await createSession({ pouzivatel });
-    setAuth({ pouzivatel });
     //refresh kvoli server header
     router.push(redirectUrlAfterLogin(pouzivatel.je_admin));
     router.refresh();

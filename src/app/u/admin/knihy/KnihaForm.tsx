@@ -1,11 +1,9 @@
 "use client";
 
 import { createKniha, updateKniha } from '@/lib/actions';
-import prisma from '@/lib/prisma'
 import { validateKnihaData } from '@/lib/zod';
-import { Autocomplete, Box, Button, FormControl, Stack, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, Stack, TextField } from '@mui/material';
 import { autor, kniha, zaner } from '@prisma/client';
-import { error } from 'console';
 import React, { useState } from 'react'
 
 type props = {
@@ -14,12 +12,6 @@ type props = {
     zanre: zaner[]
 }
 
-/**
- * formular na pridanie knihy
- * errory ku fieldom
- * 
- * po pridani vymazat formular
- */
 export default function KnihaForm(props: props) {
     const getEmptyFormState = () => ({
         nazov: { value: props.knihaToUpdate?.nazov ?? "", error: "" },

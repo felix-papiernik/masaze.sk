@@ -11,5 +11,3 @@ export type PrismaModels = {
     null
   >;
 };
-
-export type USER = PrismaModels["User"];

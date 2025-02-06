@@ -31,7 +31,7 @@ export default function EntityCard(props: EntityCardProps) {
                 <>
                     <Stack direction="row" justifyContent={"space-between"} spacing={1} alignItems={"flex-start"}>
                         {getTitle(ed.view.detailUrl, ed.data.nazov)}
-                        {ed.edit === undefined && < AddToListButton kniha_id={ed.data.id} />}
+                        {ed.edit === undefined && < AddToListButton kniha_id={ed.data.id} pouzivatel_id={ed.pouzivatel_id}/>}
                     </Stack>
                     <Typography variant="body1">Autor: {ed.data.autor.meno} {ed.data.autor.priezvisko}</Typography>
                     <Typography variant="body2" mb={1}>Počet strán: {ed.data.pocet_stran}</Typography>

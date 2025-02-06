@@ -2,21 +2,8 @@ import { verifySession } from "@/lib/actions"
 import { Box, Button, Typography } from "@mui/material"
 import Link from "next/link"
 import "./index.css"
-import Image from "next/image";
 
 export default async function Page() {
-
-  /**
-   * Nezabudni skusit pouzit Image komponentu z Next.js
-   * <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-   */
 
   const session = await verifySession();
   const auth = session ? session.pouzivatel : undefined;

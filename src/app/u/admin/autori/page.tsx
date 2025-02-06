@@ -1,5 +1,5 @@
 import AutoriFilterList from '@/components/layouts/AutorFIlterList';
-import { deleteKniha, getAutori } from '@/lib/actions';
+import { getAutori } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { AutorGroupedData } from '@/lib/types';
 import { Typography, Button } from '@mui/material';

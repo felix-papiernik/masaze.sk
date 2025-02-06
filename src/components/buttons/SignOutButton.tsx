@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteSession } from "@/lib/actions";
-import { ExitToApp, PowerOff, PowerSettingsNew } from "@mui/icons-material";
+import { PowerSettingsNew } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { redirect, useRouter } from "next/navigation";
 export interface SignOutButtonProps {

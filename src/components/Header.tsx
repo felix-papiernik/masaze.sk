@@ -3,7 +3,6 @@ import Link from 'next/link'
 import React from 'react'
 import { SignOutButton } from './buttons/SignOutButton'
 import { verifySession } from '@/lib/actions';
-import { secondaryMain } from '@/theme';
 import MobileHeaderDialog from './MobileHeaderDialog';
 import { MenuItemLinkProps } from './buttons/MenuListItemButton';
 
