@@ -62,8 +62,6 @@ export default function Page() {
     //refresh kvoli server header
     router.push(redirectUrlAfterLogin(pouzivatel.je_admin));
     router.refresh();
-
-    //redirect(redirectUrlAfterLogin(pouzivatel.je_admin));
   };
 
   const [showPassword, setShowPassword] = useState(false);

@@ -21,7 +21,7 @@ export default async function Header() {
                     user ? <>
                         {user.je_admin && <Link href={"/u/admin/"}>Správa systému</Link>}
                         <Link href={"/u/moje-knihy"}>Moje knihy</Link>
-                        <Link href={"/u/moj-ucet"}>Môj účet - {user.meno}</Link>
+                        <Link href={"/u/moj-ucet"}>Môj účet</Link>
                         <SignOutButton />
                     </> :
                         (
