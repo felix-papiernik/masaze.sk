@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuth } from '@/context/AuthContext';
 import { createPouzivatel, createSession } from '@/lib/actions';
 import { Auth } from '@/lib/types';
 import { redirectUrlAfterLogin } from '@/lib/utils';
@@ -11,23 +10,21 @@ import React, { useState } from 'react';
 
 export default function Page() {
 
-    const { setAuth } = useAuth();
-
     const [formState, setFormState] = useState({
         meno: {
-            value: 'John',
+            value: '',
             error: ''
         },
         priezvisko: {
-            value: 'Doe',
+            value: '',
             error: ''
         },
         email: {
-            value: 'john.doe@gmail.com',
+            value: '',
             error: ''
         },
         heslo: {
-            value: 'heslo123',
+            value: '',
             error: ''
         },
         error: '',
@@ -82,7 +79,6 @@ export default function Page() {
             return;
         }
         await createSession({ pouzivatel: newUser } as Auth);
-        setAuth({ pouzivatel: newUser });
         router.push(redirectUrlAfterLogin(newUser.je_admin));
     };
 
@@ -129,42 +125,6 @@ export default function Page() {
                 <Typography color="error">{formState.error}</Typography>
                 <Button type="submit" disabled={formState.isSubmitting} variant="contained">{formState.isSubmitting ? "Registruje sa..." : "Registrovať sa"}</Button>
             </Box>
-            <Button
-                fullWidth
-                sx={{ mt: 2 }}
-                type="button"
-                variant="outlined"
-                onClick={() => {
-                    setFormState({
-                        meno: { value: "Félix", error: "" },
-                        priezvisko: { value: "Papiernik", error: "" },
-                        email: { value: "felixpapiernik42@gmail.com", error: "" },
-                        heslo: { value: "heslo123", error: "" },
-                        error: "",
-                        isSubmitting: false
-                    });
-                }}
-            >
-                {formState.isSubmitting ? "Registruje sa..." : "Setform as felixpapiernik42@gmail.com"}
-            </Button>
-            <Button
-                fullWidth
-                sx={{ mt: 2 }}
-                type="button"
-                variant="outlined"
-                onClick={() => {
-                    setFormState({
-                        meno: { value: "John", error: "" },
-                        priezvisko: { value: "Doe", error: "" },
-                        email: { value: "john.doe@gmail.com", error: "" },
-                        heslo: { value: "heslo123", error: "" },
-                        error: "",
-                        isSubmitting: false
-                    });
-                }}
-            >
-                {formState.isSubmitting ? "Registruje sa..." : "Setform as john.doe@gmail.com"}
-            </Button>
         </Box>
     )
 }

@@ -1,9 +1,9 @@
 import EntityList from '@/components/EntityList';
 import { getKnihy } from '@/lib/actions';
 import prisma from '@/lib/prisma';
-import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
+import { EntityGroupedData } from '@/lib/types';
 import { Box, Typography } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import React from 'react'
 
 export default async function Page({ params }

@@ -1,4 +1,4 @@
-import { getUser, verifySession } from '@/lib/actions'
+import { verifySession } from '@/lib/actions'
 import Link from 'next/link';
 import React from 'react'
 

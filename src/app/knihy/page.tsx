@@ -1,18 +1,17 @@
-//"use client";
-
 import KnihyFilterList from '@/components/layouts/KnihyFilterList';
 import PublicEntityPageLayout from '@/components/layouts/PublicEntityPageLayout';
-import { getKnihy } from '@/lib/actions';
-import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
+import { getKnihy, verifySession } from '@/lib/actions';
+import { KnihaGroupedData } from '@/lib/types';
 import React, { } from 'react'
 
 export default async function Knihy() {
-
+    const session = await verifySession();
     const knihy = await getKnihy();
-    const knihyGrupedData = knihy.map(k => ({
+    const knihyGroupedData = knihy.map(k => ({
         type: 'kniha',
         data: k,
-        view: { detailUrl: ("/knihy/" + k.id) }
+        view: { detailUrl: ("/knihy/" + k.id) },
+        pouzivatel_id: session?.pouzivatel.id
     })) as KnihaGroupedData[];
 
     return (
@@ -21,7 +20,7 @@ export default async function Knihy() {
             noEntitiesMessage='Momentálne v systéme nie sú žiadne knihy :('
             entityLength={knihy.length}
             filterList={<KnihyFilterList
-                knihy={knihyGrupedData}
+                knihy={knihyGroupedData}
                 direction='row'
             />}
         />

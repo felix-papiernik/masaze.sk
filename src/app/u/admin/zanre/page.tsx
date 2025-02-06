@@ -1,10 +1,7 @@
-import AutoriFilterList from '@/components/layouts/AutorFIlterList';
 import ZanreFilterList from '@/components/layouts/ZanreFilterList';
-import { deleteKniha, getAutori, getZanre } from '@/lib/actions';
-import prisma from '@/lib/prisma';
-import { AutorGroupedData, ZanerGroupedData } from '@/lib/types';
+import { getZanre } from '@/lib/actions';
+import { ZanerGroupedData } from '@/lib/types';
 import { Typography, Button } from '@mui/material';
-import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import React from 'react'
 
