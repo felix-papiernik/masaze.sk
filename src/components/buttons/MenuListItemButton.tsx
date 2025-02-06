@@ -14,7 +14,7 @@ export interface MenuItemLinkProps {
     isActivePredicate?: "startsWith" | "exact";
 }
 
-export default function MenuItemLink(props : MenuItemLinkProps) {
+export default function MenuListItemButton(props : MenuItemLinkProps) {
 
     const pathname = usePathname();
     const theme = useTheme();

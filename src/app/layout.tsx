@@ -31,7 +31,7 @@ export default async function RootLayout({
             <AuthProvider initialAuth={initialAuth}>
               <Stack direction={"column"} minHeight={"100vh"} width={"100%"}>
                 <Header />
-                <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box", display: "flex", flexWrap: "nowrap",  backgroundColor: "darkgray"  }}>
+                <Box component="main" sx={{ flexGrow: 1, padding: 2, minHeight: "100%", width: "100%", boxSizing: "border-box", display: "flex", flexWrap: "nowrap"  }}>
                   {children}
                 </Box>
                 <Footer />

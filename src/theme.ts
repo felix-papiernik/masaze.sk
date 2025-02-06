@@ -19,6 +19,9 @@ const theme = createTheme({
             //main: "#B7990D", // Satin sheen gold šedá pre doplnkové prvky
             main: secondaryMain, 
         },
+        background: {
+            paper: "#fafaf7"
+        }
     },
     typography: {
         h1: {
