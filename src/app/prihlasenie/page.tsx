@@ -48,9 +48,8 @@ export default function Page() {
       return;
     }
 
-    //const createAuthSession = await createSession(credentials.email, credentials.password);
+    //AJAX
     let userLoginTry = await tryToLogin({ email: formState.email.value, password: formState.password.value });
-    // console.log("userLoginTry", userLoginTry);
     if ("error" in userLoginTry) {
       setFormState({ ...formState, isSubmitting: false, generalError: userLoginTry.error });
       return;
