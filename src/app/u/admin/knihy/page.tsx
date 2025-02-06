@@ -1,7 +1,8 @@
 import KnihyFilterList from '@/components/layouts/KnihyFilterList';
-import { deleteDemoKnihaAndRelations, getKnihy } from '@/lib/actions';
+import { deleteKniha, getKnihy } from '@/lib/actions';
 import { EntityGroupedData, KnihaGroupedData } from '@/lib/types';
 import { Button, Typography } from '@mui/material';
+import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import React, {  } from 'react'
 
@@ -16,8 +17,8 @@ export default async function Knihy() {
             editUrl: ("/u/admin/knihy/" + k.id),
             handleDelete: async () => {
                 "use server";
-                //TODO: delete kniha
-                await deleteDemoKnihaAndRelations();
+                await deleteKniha(k.id);
+                revalidatePath("/u/admin");
             }
         }
     })) as EntityGroupedData[];

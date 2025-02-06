@@ -57,6 +57,7 @@ export default function AutorForm(props: props) {
             return;
         }
 
+        //AJAX
         let res = props.autorToUpdate ? await updateAutor({ ...autorData, id: props.autorToUpdate.id }) : await createAutor(autorData);
 
         if (res.error) {

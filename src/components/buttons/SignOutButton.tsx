@@ -14,7 +14,6 @@ export function SignOutButton(props: SignOutButtonProps) {
     const router = useRouter();
 
     const signOutAuth = async () => {
-        //AJAX ??? REFRESH SPRAVI PAGE RELOAD
         await deleteSession(false);
         router.refresh();
         redirect("/prihlasenie");

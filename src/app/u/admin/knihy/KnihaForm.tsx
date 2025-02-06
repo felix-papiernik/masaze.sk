@@ -30,9 +30,7 @@ export default function KnihaForm(props: props) {
         error: "",
         isSubmitting: false,
     })
-
-    //todo remove zaner completely, merge autor to formState
-    //todo add pridat-autora button that triggers modal with autor form
+    
     const [formState, setFormState] = useState(getEmptyFormState);
     const [upserted, setUpserted] = useState(false);
 
@@ -83,6 +81,7 @@ export default function KnihaForm(props: props) {
             return;
         }
 
+        //AJAX
         let res = props.knihaToUpdate ? await updateKniha(knihaData) : await createKniha(knihaData);
 
         if (res.error) {

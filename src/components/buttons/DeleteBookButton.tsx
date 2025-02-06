@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 export default function DeleteBookButton({ deleteBook }: { deleteBook: () => Promise<void> }) {
 
     const [deleteCounter, setDeleteCounter] = useState(0);
-    //todo confirm dialog
+    
     const handleDelete = async () => {
         if (deleteCounter === 0) {
             setDeleteCounter(1)

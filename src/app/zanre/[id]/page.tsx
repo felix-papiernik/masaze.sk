@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react'
 
 export default async function Page({ params }
@@ -15,9 +15,9 @@ export default async function Page({ params }
     })
 
     return (
-        <>
+        <Box>
             <Typography variant="h1">{data?.nazov}</Typography>
             <Typography variant="body1">Popis: {data?.popis}</Typography>
-        </>
+        </Box>
     )
 }

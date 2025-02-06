@@ -19,7 +19,7 @@ export default async function Header() {
     const user = session ? session.pouzivatel : undefined;
 
     return (
-        <Stack component="header" sx={{ backgroundColor: secondaryMain, justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2 }}>
+        <Stack component="header" sx={{ backgroundColor: "lightgray", justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: 2 }}>
             <Link href={"/"}>citaj.sk</Link>
             <MobileHeaderDialog pouzivatel={user} />
             <Stack component="nav" direction="row" gap={6} alignItems="center" sx={{display: { xs: "none", lg: "flex" }}}>

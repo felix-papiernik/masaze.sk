@@ -309,26 +309,10 @@ export const addDemoKnihaAndRelations = async () => {
   })
 }
 
-export const deleteDemoKnihaAndRelations = async () => {
-  const demoKnihy = await prisma.kniha.findMany();
-  let filteredKnihy = demoKnihy.filter(kniha => kniha.nazov.includes("Demo kniha"));
-  await prisma.kniha.deleteMany({
+export const deleteKniha = async (knihaId: number) => {
+  await prisma.kniha.delete({
     where: {
-      id: {
-        in: filteredKnihy.map(kniha => kniha.id),
-      }
-    }
-  });
-  await prisma.autor.deleteMany({
-    where: {
-      meno: "Demo",
-      priezvisko: "Autor",
-    }
-  });
-
-  await prisma.zaner.deleteMany({
-    where: {
-      nazov: "Demo zaner",
+      id: knihaId
     }
   });
 }

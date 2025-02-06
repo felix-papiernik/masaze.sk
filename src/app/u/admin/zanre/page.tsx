@@ -1,6 +1,6 @@
 import AutoriFilterList from '@/components/layouts/AutorFIlterList';
 import ZanreFilterList from '@/components/layouts/ZanreFilterList';
-import { deleteDemoKnihaAndRelations, getAutori, getZanre } from '@/lib/actions';
+import { deleteKniha, getAutori, getZanre } from '@/lib/actions';
 import prisma from '@/lib/prisma';
 import { AutorGroupedData, ZanerGroupedData } from '@/lib/types';
 import { Typography, Button } from '@mui/material';
