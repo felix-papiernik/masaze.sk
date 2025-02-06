@@ -1,3 +1,23 @@
+# Semestrálna práca z predmetu Vývoj aplikácií pre internet a intranet - citaj.sk
+
+Toto je **Next.js** projekt vytvorený pomocou [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## 📌 Návod na inštaláciu
+
+Tento projekt je určený **iba na lokálne spustenie**. Pre správne fungovanie je potrebné mať nainštalovaný:
+
+- **[Node.js](https://nodejs.org/)** (odporúčaná verzia **18+**)
+- **npm** (automaticky súčasťou Node.js)
+
+### 1️⃣ Klonovanie repozitára
+
+Najprv si klonujte repozitár na svoj počítač:
+
+```bash
+git clone <URL_TO_REPOSITORY>
+cd <REPOSITORY_FOLDER>
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
