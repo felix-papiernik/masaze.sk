@@ -4,7 +4,7 @@ import { KnihaGroupedData } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import FilterEntityLayout from "./FilterEntityLayout";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Autocomplete, Pagination, Stack, TextField } from "@mui/material";
+import { Autocomplete, Pagination, TextField } from "@mui/material";
 
 interface KnihyFilterListProps {
     knihy: KnihaGroupedData[];

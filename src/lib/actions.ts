@@ -15,7 +15,9 @@ export async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
+/**
+ * funkcie pre prácu s cookies su založené na príklade z https://www.youtube.com/watch?v=N_sUsq_y10U&t=1s
+ */
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 const cookieO = {
