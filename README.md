@@ -16,22 +16,6 @@ Najprv si naklonujte repozitár na svoj počítač:
 ```bash
 git clone https://github.com/felix-papiernik/masaze.sk/tree/master
 cd master
-
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 ### Inštalácia závislostí
@@ -43,3 +27,20 @@ yarn install
 # alebo
 pnpm install
 ```
+
+### Vloženie .env súboru
+Pre správne fungovanie aplikácie je potrebný .env súbor s konfiguráciou. Kontaktujte ma, ak ho nemáte na email felixpapiernik42@gmail.com
+Po získaní .env ho vložte do koreňového adresára projektu.
+
+### Spustenie vývojového servera
+Po inštalácii závislostí a pridaní .env súboru spustite vývojový server:
+
+```bash
+Kopírovať
+npm run dev
+# alebo
+yarn dev
+# alebo
+pnpm dev
+```
+Otvorte http://localhost:3000 vo svojom prehliadači a uvidíte výsledok.
